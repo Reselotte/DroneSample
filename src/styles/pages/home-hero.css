@@ -1,0 +1,115 @@
+/* หน้าแรก: ส่วนหัวใหญ่ (Hero) พร้อมวิดีโอพื้นหลัง */
+.hero{position:relative;color:#fff;text-align:left;padding:72px 0 56px;background:#0a1a36;overflow:hidden;min-height:calc(100vh - 100px);min-height:calc(100svh - 100px);display:flex;align-items:center}
+.hero>.wrap{width:100%}
+.hero .bg{position:absolute;inset:0}
+.hero .bg video{width:100%;height:100%;object-fit:cover;display:block}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,16,38,.85),rgba(6,16,38,.4))}
+.hero .wrap{position:relative;z-index:2}
+.vbtn{position:absolute;right:14px;bottom:14px;z-index:3;width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.5);background:rgba(0,0,0,.4);color:#fff;font-size:12px;cursor:pointer}
+.hero h1 span{color:#9db9f2}
+.hero p.lead{max-width:560px;margin:0 0 22px;color:#e5ece7}
+.pts{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:560px;margin-bottom:24px}
+@media(min-width:700px){
+  .pts{grid-template-columns:repeat(4,1fr);max-width:640px}
+}
+.pts b{display:block;font-size:15px}
+.pts small{color:#cfd9d3;font-size:12.5px;line-height:1.35;display:block}
+.cta{display:flex;flex-wrap:wrap;gap:10px}
+.hero h1{text-shadow:0 2px 14px rgba(0,0,0,.45)}
+.hero h1 span{font-weight:800}
+.hero p.lead{font-size:clamp(19px,3.2vw,24px);max-width:640px;line-height:1.5;text-shadow:0 1px 8px rgba(0,0,0,.5);color:#fff}
+.hero .hl{background:rgba(157,185,242,.4);color:#fff}
+.pts{max-width:700px}
+.pts b{font-size:18px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);border-radius:10px;padding:10px 12px;text-align:center}
+.hero:after{background:linear-gradient(90deg,rgba(6,16,38,.88),rgba(6,16,38,.35)),linear-gradient(0deg,rgba(6,16,38,.7),transparent 35%)}
+.hero h1{letter-spacing:-.01em}
+.pts b{backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:14px}
+section[data-page]:not([hidden]):not(.hero){animation:fadeUp .55s both}
+.hero p.lead{font-size:clamp(16px,2.5vw,19px);max-width:560px}
+.hero{padding:56px 0 48px}
+.pts{max-width:560px;gap:8px}
+.pts b{font-size:14.5px;padding:8px 8px;border-radius:12px;font-weight:500}
+.pts b{font-size:13px;padding:6px 8px;border-radius:10px}
+.pts{gap:6px;max-width:480px}
+.hero h1{font-size:clamp(32px,6.2vw,52px);line-height:1.2}
+.hero p.lead{font-size:clamp(19px,3vw,26px);max-width:760px;line-height:1.55}
+.hero .hl{padding:0 7px}
+.hero .bg video{height:100%}
+.hero{min-height:min(100vh,760px);min-height:min(100svh,760px)}
+@supports (height:100dvh){
+  .hero{min-height:min(100dvh,760px)}
+}
+@media(max-width:360px){
+  .pts{gap:8px}
+}
+@media(orientation:landscape) and (max-height:500px){
+  .hero{min-height:0;padding:40px 0}
+}
+.hero:before{content:"";position:absolute;z-index:1;right:-12%;top:-25%;width:min(820px,100vw);aspect-ratio:1;border-radius:50%;pointer-events:none;background:repeating-radial-gradient(circle,transparent 0 26px,rgba(157,185,242,.24) 27px 28px);-webkit-mask-image:radial-gradient(circle,#000 25%,transparent 68%);mask-image:radial-gradient(circle,#000 25%,transparent 68%)}
+.hero h1{letter-spacing:-.02em}
+.pts b{display:flex;align-items:center;justify-content:center;gap:8px}
+.pts b:before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:#06c755;box-shadow:0 0 0 3px rgba(6,199,85,.3)}
+.hero h1,.hero p.lead{text-wrap:balance}
+.hero p.lead{max-width:760px}
+.hero .pts{display:flex;flex-wrap:wrap;gap:10px;max-width:none;margin-bottom:26px}
+.hero .pts div{flex:0 0 auto}
+.hero .pts b{white-space:nowrap;font-size:14.5px;padding:9px 18px;border-radius:99px}
+@media(max-width:699px){
+  .hero h1{font-size:clamp(26px,8vw,34px)}
+  .hero .lead br{display:none}
+  .hero .pts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .hero .pts b{font-size:13.5px;padding:8px 10px}
+}
+
+/* ปุ่ม "เลื่อนลงดูเพิ่มเติม" กลางขอบล่างของ Hero: วงกลมมีวงแหวนกระเพื่อม + ลูกศรเด้ง */
+.hero{padding-bottom:128px}
+.scroll-cue{position:absolute;left:50%;bottom:18px;z-index:3;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;padding:0;min-height:0;border:0;background:none;color:#fff;font:inherit;cursor:pointer}
+.scroll-cue-label{padding:5px 14px;border-radius:99px;font-size:14px;font-weight:600;letter-spacing:.02em;background:rgba(6,16,38,.45);border:1px solid rgba(255,255,255,.35);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);white-space:nowrap}
+.scroll-cue-circle{position:relative;display:grid;place-items:center;width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,.16);border:2px solid rgba(255,255,255,.8);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:0 10px 26px rgba(0,0,0,.3);transition:transform .2s,background .2s}
+.scroll-cue-circle:before{content:"";position:absolute;inset:-2px;border-radius:50%;border:2px solid rgba(255,255,255,.7);animation:cue-ring 2s ease-out infinite}
+.scroll-cue-circle .ic-svg{font-size:30px;stroke-width:2.6;animation:cue-bounce 1.6s ease-in-out infinite}
+.scroll-cue:hover .scroll-cue-circle{transform:scale(1.08);background:rgba(255,255,255,.28)}
+.scroll-cue:focus-visible{outline:none}
+.scroll-cue:focus-visible .scroll-cue-circle{outline:3px solid #7aa2ee;outline-offset:4px}
+@keyframes cue-bounce{0%,100%{transform:translateY(-3px)}50%{transform:translateY(5px)}}
+@keyframes cue-ring{0%{transform:scale(1);opacity:.9}100%{transform:scale(1.7);opacity:0}}
+@media(max-width:699px){
+  .hero{padding-bottom:104px}
+  .scroll-cue-label{display:none}
+  .scroll-cue-circle{width:52px;height:52px}
+}
+@media(orientation:landscape) and (max-height:500px){
+  .scroll-cue{display:none}
+  .hero{padding-bottom:40px}
+}
+@media(prefers-reduced-motion:reduce){
+  .scroll-cue-circle .ic-svg,.scroll-cue-circle:before{animation:none}
+}
+
+/* Hero สูงพอดีจอแรก (หักความสูงแถบเมนู) → ปุ่มเลื่อนลงที่ขอบล่างของ Hero อยู่ในจอเสมอ ไม่ตกขอบ */
+.hero{min-height:calc(100vh - 64px);min-height:calc(100svh - 64px)}
+@media(max-width:899px){
+  .hero{min-height:calc(100vh - 120px);min-height:calc(100svh - 120px)}
+}
+@media(orientation:landscape) and (max-height:500px){
+  .hero{min-height:0}
+}
+/* มือถือ: ปุ่ม LINE ลอยกินความกว้างล่างจอ → ยกปุ่มเลื่อนลงขึ้นไปอยู่เหนือปุ่ม LINE ไม่ให้ทับกัน */
+@media(max-width:600px){
+  .scroll-cue{bottom:78px}
+  .hero{padding-bottom:156px}
+}
+/* ปุ่มหยุดวิดีโอ: ย้ายไปมุมขวาบนของ Hero (มุมขวาล่างมีปุ่ม LINE ลอยทับอยู่) */
+.vbtn{top:16px;bottom:auto}
+
+/* ปุ่มเลื่อนลงลอยค้างกลางล่างจอ (components/layout/ScrollCue.jsx) ใช้ได้ทุกหน้า */
+.scroll-cue{position:fixed;bottom:max(18px,env(safe-area-inset-bottom));z-index:28;transition:opacity .3s,transform .3s}
+.scroll-cue.is-hidden{opacity:0;pointer-events:none;transform:translate(-50%,16px)}
+.scroll-cue.is-compact{opacity:.88}
+.scroll-cue.is-compact:hover{opacity:1}
+.scroll-cue.is-compact .scroll-cue-label{display:none}
+.scroll-cue.is-compact .scroll-cue-circle{width:48px;height:48px}
+.scroll-cue.is-compact .scroll-cue-circle .ic-svg{font-size:26px}
+@media(prefers-reduced-motion:reduce){
+  .scroll-cue{transition:none}
+}

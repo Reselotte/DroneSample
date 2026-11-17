@@ -1,0 +1,27 @@
+/* หน้าคำถามที่พบบ่อย */
+details{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin-bottom:10px;text-align:left}
+summary{cursor:pointer;font-weight:700}
+details p{margin:8px 0 0;color:var(--mu)}
+summary{font-size:19px}
+details p{font-size:17.5px;color:#3d4452}
+details{padding:16px 18px}
+details{border-radius:16px;box-shadow:0 4px 16px rgba(11,42,91,.05);transition:box-shadow .2s}
+details[open]{box-shadow:0 10px 28px rgba(11,42,91,.12)}
+summary{font-size:17px}
+details p{font-size:16px}
+details{padding:14px 16px}
+details{padding:12px 14px}
+summary{font-size:15.5px}
+details p{font-size:14.5px}
+#faqList{max-width:780px;margin-left:auto;margin-right:auto}
+details{padding:0;overflow:hidden;border:1px solid rgba(11,42,91,.1)}
+summary{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:58px;padding:14px 18px;list-style:none;font-size:16.5px;font-weight:600}
+summary::-webkit-details-marker{display:none}
+summary:after{content:"+";flex:none;width:30px;height:30px;display:grid;place-items:center;border-radius:50%;background:#eaf0fb;color:var(--g);font-size:22px;font-weight:400;line-height:1}
+details[open]{box-shadow:inset 4px 0 0 var(--g),0 10px 28px rgba(11,42,91,.12)}
+details[open] summary:after{content:"\2212";background:var(--g);color:#fff}
+details p{margin:0;padding:0 56px 18px 18px}
+.faqcta{max-width:780px;margin:22px auto 0;padding:18px 20px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;border-radius:22px;text-align:left;color:#fff;background:repeating-radial-gradient(circle at 100% 0,transparent 0 26px,rgba(157,185,242,.16) 27px 28px),linear-gradient(155deg,#0b2a5b,#061630)}
+.faqcta b{display:block;font-size:18px;font-weight:600}
+.faqcta span{color:#cfd9ea;font-size:15px}
+summary:focus-visible{outline:3px solid #7aa2ee;outline-offset:2px}

@@ -1,0 +1,21 @@
+/* ปุ่ม LINE ลอยด้านล่าง และป้ายแจ้งเตือน (toast) */
+.float{position:fixed;left:0;right:0;bottom:0;z-index:30;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.95);border-top:1px solid var(--bd)}
+.float .btn{width:100%;max-width:520px;margin:0 auto;display:flex;font-size:17px}
+.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:var(--tx);color:#fff;padding:8px 16px;border-radius:99px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:40}
+.toast.show{opacity:1}
+.float .btn{font-size:19px}
+.float{background:rgba(255,255,255,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.float .btn{font-size:17px}
+.float{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+.float{background:transparent;border:0;-webkit-backdrop-filter:none;backdrop-filter:none;pointer-events:none}
+.float .btn{pointer-events:auto;width:fit-content;padding-left:40px;padding-right:40px;box-shadow:0 12px 32px rgba(6,199,85,.45)}
+@media(max-width:600px){
+  .float .btn{width:100%}
+}
+
+/* ย้ายปุ่ม LINE ลอยไปไว้มุมขวาล่าง (ไม่บังลูกศรเลื่อนลงกลางจอ) */
+.float{left:auto;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));padding:0}
+.float .btn{width:auto;margin:0;padding:12px 22px;font-size:15.5px}
+@media(max-width:600px){
+  .float .btn{width:auto;padding:11px 18px;font-size:14.5px}
+}

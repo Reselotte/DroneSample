@@ -1,0 +1,27 @@
+/* หน้าแรก: การ์ดประเภทที่ดิน */
+.tile{padding:14px;overflow:hidden;text-align:center}
+.tile .tx{padding:12px}
+.tile .im svg{width:100%;height:100%;display:block}
+.tile .im{height:130px;padding:0}
+.tile h3{font-size:21px}
+.tile .tx{padding:14px 12px}
+.tile:hover{transform:translateY(-6px);box-shadow:0 16px 36px rgba(11,42,91,.16)}
+.tile .im{transition:transform .5s}
+.tile:hover .im{transform:scale(1.05)}
+.tile{overflow:hidden}
+.tile .im{overflow:hidden}
+@media(prefers-reduced-motion:reduce){
+  .tile .im{transition:none}
+  .tile:hover{transform:none}
+}
+.tile h3{font-size:18px}
+.tile h3{font-size:16px;margin-bottom:2px}
+.tile p{font-size:13px}
+.tile .tx{padding:10px 10px 12px}
+@media(hover:none){
+  .tile:hover{transform:none}
+}
+.tile{border:0;box-shadow:0 10px 30px rgba(11,42,91,.10),0 0 0 1px rgba(11,42,91,.07)}
+.tile .im{position:relative;height:150px}
+.tile .im:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(6,22,48,.35))}
+.tile .tx{border-top:3px solid var(--g)}

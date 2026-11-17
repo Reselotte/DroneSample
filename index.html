@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b2a5b">
+<script>
+  // ตั้งธีมก่อนหน้าเว็บแสดงผล (กันจอขาวกะพริบตอนใช้ธีมมืด): ค่าที่ผู้ใช้เลือกไว้ > ค่าของเครื่อง
+  (function () {
+    var t = null;
+    try { t = localStorage.getItem("theme"); } catch (e) {}
+    if (t !== "light" && t !== "dark") t = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    document.documentElement.dataset.theme = t;
+  })();
+</script>
+<title>DroneSample – ดู Contour ที่ดินก่อนซื้อ ฟรีผ่าน LINE OA</title>
+<meta name="description" content="แอดไลน์ฟรี ดูแผนที่ Contour ความสูงต่ำ ความลาดชัน จุดน้ำขัง ของที่ดินที่สนใจ เหมาะกับอสังหา เกษตร และโรงงาน พร้อมบริการบินโดรนสำรวจพื้นที่ และประกาศซื้อขายที่ดิน">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="root"></div>
+<script type="module" src="/src/main.jsx"></script>
+</body>
+</html>

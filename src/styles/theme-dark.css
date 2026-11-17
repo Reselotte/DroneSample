@@ -1,0 +1,224 @@
+/*
+ * ธีมมืด: ทำงานเมื่อ <html data-theme="dark"> (ตั้งโดยปุ่มมุมขวาบน / ค่าของเครื่อง)
+ * ไฟล์นี้ต้อง import ไว้ท้ายสุด เพื่อทับสีของธีมสว่าง
+ *
+ * แนวทาง: พื้นกรมท่าเข้มต่อเนื่องทั้งหน้า + แสงฟุ้งฟ้า/เขียวจาง ๆ, การ์ดแบบกระจก (โปร่ง + เส้นขอบบาง),
+ *          ปุ่มหลักไล่สีฟ้าสด + เรืองแสง, ตัวอักษรสีสว่างนุ่มตา
+ */
+html[data-theme="dark"]{
+  color-scheme:dark;
+  /* สีข้อความ/พื้น */
+  --tx:#e8edf7;--mu:#93a0b8;--bd:rgba(148,180,255,.14);--bg:rgba(255,255,255,.04);--dk:#050913;
+  --g:#8db0ff;--gd:#8db0ff;                     /* สีเน้นสำหรับ "ตัวอักษร" */
+  --base:#070d1a;                               /* พื้นหลังหลัก */
+  --surface:rgba(255,255,255,.045);             /* การ์ด (โปร่ง) */
+  --surface-2:rgba(255,255,255,.07);            /* ช่องกรอก/กล่องย่อย */
+  --solid:#0f1829;                              /* การ์ดทึบ (ป๊อปอัป) */
+  --line:rgba(148,180,255,.16);                 /* เส้นขอบการ์ด */
+  --line-hi:rgba(148,180,255,.34);              /* เส้นขอบตอนชี้ */
+  --accent:#4f7dff;                             /* สีฟ้าสดของปุ่มหลัก */
+  --accent-grad:linear-gradient(135deg,#3461f0 0%,#4f7dff 55%,#7aa0ff 100%);
+  --glass:linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.025));
+  --shadow:0 12px 34px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+/* พื้นหลังทั้งหน้า: กรมท่าเข้ม + แสงฟุ้งฟ้า (บนซ้าย) และเขียว (ล่างขวา) ติดกับจอ ไม่มีรอยต่อระหว่างส่วน */
+html[data-theme="dark"] body{color:var(--tx);background:
+  radial-gradient(900px 600px at 10% -5%,rgba(79,125,255,.16),transparent 60%),
+  radial-gradient(800px 600px at 100% 100%,rgba(6,199,85,.07),transparent 60%),
+  var(--base) fixed}
+html[data-theme="dark"] ::selection{background:rgba(79,125,255,.45);color:#fff}
+
+/* ── ตัวอักษร / หัวข้อ ── */
+html[data-theme="dark"] .alt{background:repeating-radial-gradient(circle at 100% 0,transparent 0 40px,rgba(141,176,255,.035) 41px 42px)}
+html[data-theme="dark"] .sub,
+html[data-theme="dark"] .card p{color:#b4bfd3}
+html[data-theme="dark"] .eyebrow{color:#7fd6a8;letter-spacing:.06em}
+html[data-theme="dark"] h1,html[data-theme="dark"] h2,html[data-theme="dark"] h3{color:#f3f6fc}
+html[data-theme="dark"] h2:after{background:linear-gradient(90deg,#4f7dff,#06c755);box-shadow:0 0 12px rgba(79,125,255,.5)}
+html[data-theme="dark"] .hl{background:rgba(79,125,255,.2);color:#c9d8ff;box-shadow:inset 0 0 0 1px rgba(141,176,255,.25)}
+html[data-theme="dark"] .note{color:var(--mu)}
+/* ส่วนที่เป็นพื้นมืดอยู่แล้ว (Hero, สไลด์ขั้นตอน) คงสีเดิม */
+html[data-theme="dark"] .hero .hl{background:rgba(157,185,242,.32);color:#fff;box-shadow:none}
+html[data-theme="dark"] .sl .hl{background:none;box-shadow:inset 0 -.38em 0 rgba(157,185,242,.28)}
+
+/* ── การ์ดแบบกระจก ── */
+html[data-theme="dark"] .card,
+html[data-theme="dark"] details,
+html[data-theme="dark"] .gal figure,
+html[data-theme="dark"] .ct-card,
+html[data-theme="dark"] .lcard,
+html[data-theme="dark"] .lfilters,
+html[data-theme="dark"] .lands-msg,
+html[data-theme="dark"] .ok{background:var(--glass);border:1px solid var(--line);box-shadow:var(--shadow);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+html[data-theme="dark"] .tile:hover,
+html[data-theme="dark"] .lcard:hover,
+html[data-theme="dark"] .ct-card:hover{border-color:var(--line-hi);box-shadow:0 18px 44px rgba(0,0,0,.5),0 0 24px rgba(79,125,255,.18),inset 0 1px 0 rgba(255,255,255,.08)}
+/* การ์ดที่มีแถบสีด้านบน */
+html[data-theme="dark"] #callbackForm,
+html[data-theme="dark"] .calcbox,
+html[data-theme="dark"] .post-block,
+html[data-theme="dark"] .ld-pricebox{box-shadow:inset 0 3px 0 var(--accent),0 0 0 0 transparent,var(--shadow)}
+html[data-theme="dark"] .tile .tx,
+html[data-theme="dark"] .lcard-tx{border-top-color:var(--accent)}
+
+/* ── ฟอร์ม ── */
+html[data-theme="dark"] label{color:#c6d0e2}
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] .callback input,html[data-theme="dark"] .callback select,html[data-theme="dark"] .callback textarea,
+html[data-theme="dark"] .calcpage input,html[data-theme="dark"] .calcpage select,
+html[data-theme="dark"] .lfilters select{background:rgba(5,10,22,.55);border-color:rgba(148,180,255,.2);color:var(--tx)}
+html[data-theme="dark"] input:hover,
+html[data-theme="dark"] select:hover,
+html[data-theme="dark"] textarea:hover{border-color:rgba(148,180,255,.34)}
+html[data-theme="dark"] input:focus,
+html[data-theme="dark"] select:focus,
+html[data-theme="dark"] textarea:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(79,125,255,.22),0 0 18px rgba(79,125,255,.25)}
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder{color:#5f6c84}
+html[data-theme="dark"] select option{background:#0f1829;color:var(--tx)}
+html[data-theme="dark"] input[type="checkbox"]{accent-color:var(--accent)}
+html[data-theme="dark"] .upz{background:rgba(79,125,255,.06);border-color:rgba(141,176,255,.3)}
+html[data-theme="dark"] .upz:hover,
+html[data-theme="dark"] .upz.drag{background:rgba(79,125,255,.12);border-color:var(--accent)}
+html[data-theme="dark"] .upi{background:var(--surface-2);border-color:var(--line)}
+
+/* ── หัวเว็บ ── */
+html[data-theme="dark"] header{background:rgba(7,13,26,.72);border-bottom:1px solid transparent;
+  border-image:linear-gradient(90deg,transparent,rgba(79,125,255,.45),rgba(6,199,85,.3),transparent) 1}
+html[data-theme="dark"] .brand{background:linear-gradient(90deg,#8db0ff,#7fd6a8);-webkit-background-clip:text;background-clip:text;color:transparent}
+html[data-theme="dark"] #nav a{color:#a9b5cb}
+html[data-theme="dark"] #nav a:hover{background:rgba(255,255,255,.06);color:#fff}
+html[data-theme="dark"] #nav a.on,
+html[data-theme="dark"] #nav .nav-toggle{background:var(--accent-grad);color:#fff}
+html[data-theme="dark"] .pill{background:transparent;color:#fff!important;border:1px solid rgba(141,176,255,.5)}
+html[data-theme="dark"] .pill:hover{background:rgba(79,125,255,.15)}
+html[data-theme="dark"] .theme-toggle{background:rgba(15,24,41,.85);border-color:rgba(255,211,107,.35);color:#ffd36b}
+html[data-theme="dark"] .theme-toggle:hover{background:#17233b}
+html[data-theme="dark"] .toast{background:#e8edf7;color:#070d1a}
+
+/* ── ปุ่ม ── */
+html[data-theme="dark"] .btn-ghost{background:rgba(255,255,255,.04);border:1px solid rgba(141,176,255,.45);color:var(--tx)}
+html[data-theme="dark"] #sendBtn,
+html[data-theme="dark"] .adm-login .btn{background:var(--accent-grad)!important;color:#fff}
+
+/* ── หน้าแรก ── */
+html[data-theme="dark"] .hero:after{background:linear-gradient(90deg,rgba(6,12,26,.9),rgba(6,12,26,.35)),linear-gradient(0deg,var(--base) 0%,rgba(7,13,26,.6) 14%,transparent 40%)}
+html[data-theme="dark"] .sellpot{background:none}
+html[data-theme="dark"] .sellpot-card{border:1px solid rgba(141,176,255,.18);
+  background:repeating-radial-gradient(circle at 100% 0,transparent 0 30px,rgba(157,185,242,.1) 31px 32px),radial-gradient(600px 300px at 0 100%,rgba(6,199,85,.16),transparent 60%),radial-gradient(500px 300px at 100% 0,rgba(79,125,255,.22),transparent 60%),linear-gradient(150deg,#0e1f45,#081227);
+  box-shadow:0 24px 60px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.08)}
+html[data-theme="dark"] .sellpot-card:hover{box-shadow:0 28px 70px rgba(0,0,0,.6),0 0 40px rgba(79,125,255,.2),inset 0 1px 0 rgba(255,255,255,.1)}
+html[data-theme="dark"] .sellpot-chip{color:#111418}
+html[data-theme="dark"] .sellpot-chip .ic-svg{color:#0b2a5b}
+html[data-theme="dark"] .sellpot-chip.c2 .ic-svg{color:#1d4ed8}
+html[data-theme="dark"] .sellpot-chip.c3 .ic-svg{color:#04a947}
+
+/* ── ตัวอย่างผลงาน ── */
+html[data-theme="dark"] .gal figure figcaption{border-top-color:var(--line);color:var(--tx)}
+html[data-theme="dark"] .map{border-color:var(--line)}
+html[data-theme="dark"] .legend{color:var(--mu)}
+html[data-theme="dark"] .tabs{background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px var(--line)}
+html[data-theme="dark"] .tabs button{color:#a9b5cb}
+html[data-theme="dark"] .tabs button.on{background:var(--accent-grad);color:#fff}
+html[data-theme="dark"] .stats div{background:rgba(79,125,255,.08);box-shadow:inset 0 0 0 1px var(--line);color:var(--mu)}
+html[data-theme="dark"] .stats b{color:#a9c2ff}
+html[data-theme="dark"] .logos div{background:var(--glass);border:1px solid var(--line);color:#5f6c84;box-shadow:none}
+
+/* ── สไลด์ขั้นตอน ── */
+html[data-theme="dark"] #show{background:repeating-radial-gradient(circle at 78% 45%,transparent 0 30px,rgba(157,185,242,.07) 31px 32px),radial-gradient(900px 420px at 80% 20%,rgba(79,125,255,.26),transparent 60%),linear-gradient(135deg,#050b18,#0b1f48)}
+html[data-theme="dark"] .dots2 button.on{background:var(--accent-grad);color:#fff}
+
+/* ── คำนวณราคา ── */
+html[data-theme="dark"] .result{border:1px solid rgba(141,176,255,.2);
+  background:repeating-radial-gradient(circle at 105% -10%,transparent 0 26px,rgba(157,185,242,.1) 27px 28px),radial-gradient(400px 260px at 100% 0,rgba(79,125,255,.25),transparent 60%),linear-gradient(155deg,#0e1f45,#081227);
+  box-shadow:0 18px 44px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.08)}
+html[data-theme="dark"] .result .note{background:rgba(225,29,72,.12);color:#ff9aa8;border-color:#e11d48}
+html[data-theme="dark"] #dlg{background:rgba(2,6,14,.7);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+html[data-theme="dark"] #dlg .box{background:var(--solid);color:var(--tx)}
+html[data-theme="dark"] #dlg p{color:var(--tx)}
+html[data-theme="dark"] #dlg p span{color:#ff8a9a!important}
+html[data-theme="dark"] #dlg h3{color:#ff8a9a}
+
+/* ── ลิงก์ข้ามหน้า (ติดต่อกลับ ↔ คำนวณราคา) ── */
+html[data-theme="dark"] .cross-link{background:linear-gradient(90deg,rgba(79,125,255,.12),rgba(6,199,85,.06));border:1px solid var(--line);color:var(--tx)}
+html[data-theme="dark"] .cross-link:hover{border-color:var(--line-hi);background:linear-gradient(90deg,rgba(79,125,255,.2),rgba(6,199,85,.1))}
+
+/* ── คำถามที่พบบ่อย ── */
+html[data-theme="dark"] details p{color:#b4bfd3}
+html[data-theme="dark"] summary:after{background:rgba(79,125,255,.15);color:#a9c2ff}
+html[data-theme="dark"] details[open]{border-color:var(--line-hi);box-shadow:inset 3px 0 0 var(--accent),var(--shadow)}
+html[data-theme="dark"] details[open] summary:after{background:var(--accent-grad);color:#fff}
+html[data-theme="dark"] .faqcta{border:1px solid rgba(141,176,255,.18);
+  background:repeating-radial-gradient(circle at 100% 0,transparent 0 26px,rgba(157,185,242,.1) 27px 28px),linear-gradient(155deg,#0e1f45,#081227)}
+
+/* ── ติดต่อเรา ── */
+html[data-theme="dark"] section.ct,
+html[data-theme="dark"] section[data-page="contact"]{background:none}
+html[data-theme="dark"] .ct-main{border:1px solid rgba(141,176,255,.18);box-shadow:0 24px 60px rgba(0,0,0,.55)}
+html[data-theme="dark"] .ct-card .ic{background:rgba(79,125,255,.15);color:#a9c2ff}
+html[data-theme="dark"] .ct-card a,
+html[data-theme="dark"] .ct-card #replyNote2{color:var(--tx)}
+html[data-theme="dark"] .ct-time #replyNote2{color:#b4bfd3}
+
+/* ── ซื้อขายที่ดิน / ลงประกาศ ── */
+html[data-theme="dark"] .lfilters-reset{background:rgba(79,125,255,.15);color:#a9c2ff}
+html[data-theme="dark"] .lcard-price{color:#a9c2ff}
+html[data-theme="dark"] .lcard-code{color:#5f6c84}
+html[data-theme="dark"] .ld-type,
+html[data-theme="dark"] .adm-code{background:rgba(79,125,255,.15);color:#a9c2ff}
+html[data-theme="dark"] .ld-price{color:#a9c2ff}
+html[data-theme="dark"] .ld-desc{border-top-color:var(--line)}
+html[data-theme="dark"] .ld-sold-note{background:rgba(225,29,72,.12);color:#ff9aa8!important}
+html[data-theme="dark"] .ldg-main,
+html[data-theme="dark"] .ld-map,
+html[data-theme="dark"] .lcard-im{background:rgba(255,255,255,.04)}
+html[data-theme="dark"] .ldg-thumbs button.on{border-color:var(--accent)}
+
+/* ── แอดมิน ── */
+html[data-theme="dark"] .adm-seller{background:rgba(241,207,107,.07);border-color:rgba(241,207,107,.3)}
+html[data-theme="dark"] .adm-seller b{color:#f1cf6b}
+
+/* ── ท้ายเว็บ: โทนเดียวกับหน้า มีเส้นไล่สีคั่นด้านบน ── */
+html[data-theme="dark"] footer{background:linear-gradient(180deg,rgba(7,13,26,0),rgba(4,8,17,.9) 30%),#050a15;border-top:1px solid transparent;
+  border-image:linear-gradient(90deg,transparent,rgba(79,125,255,.4),rgba(6,199,85,.3),transparent) 1}
+html[data-theme="dark"] footer h4{color:#f3f6fc}
+html[data-theme="dark"] footer a{color:#a9b5cb}
+html[data-theme="dark"] footer a:hover{color:#fff}
+html[data-theme="dark"] footer p{color:#a9b5cb!important}
+html[data-theme="dark"] #brand2{background:linear-gradient(90deg,#8db0ff,#7fd6a8);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
+html[data-theme="dark"] .copy{color:#5f6c84}
+
+/* ════ ปุ่มเรืองแสง ════ */
+html[data-theme="dark"] .btn-line{box-shadow:0 0 0 1px rgba(6,199,85,.6),0 0 16px rgba(6,199,85,.5),0 0 40px rgba(6,199,85,.22)}
+html[data-theme="dark"] .btn-line:hover{filter:brightness(1.08);box-shadow:0 0 0 1px rgba(6,199,85,.85),0 0 24px rgba(6,199,85,.7),0 0 56px rgba(6,199,85,.38)}
+html[data-theme="dark"] .btn-w{box-shadow:0 0 0 1px rgba(255,255,255,.7),0 0 18px rgba(141,176,255,.5),0 0 44px rgba(79,125,255,.28)}
+html[data-theme="dark"] .btn-w:hover{box-shadow:0 0 0 1px #fff,0 0 26px rgba(141,176,255,.75),0 0 60px rgba(79,125,255,.42)}
+html[data-theme="dark"] .btn-k,
+html[data-theme="dark"] .btn-ghost{box-shadow:0 0 12px rgba(79,125,255,.22),inset 0 0 10px rgba(141,176,255,.06)}
+html[data-theme="dark"] .btn-k:hover,
+html[data-theme="dark"] .btn-ghost:hover{border-color:#8db0ff;box-shadow:0 0 20px rgba(79,125,255,.45),inset 0 0 12px rgba(141,176,255,.1)}
+html[data-theme="dark"] #sendBtn,
+html[data-theme="dark"] .adm-login .btn,
+html[data-theme="dark"] #nav a.on,
+html[data-theme="dark"] .tabs button.on,
+html[data-theme="dark"] .dots2 button.on,
+html[data-theme="dark"] details[open] summary:after{box-shadow:0 0 0 1px rgba(141,176,255,.45),0 0 16px rgba(79,125,255,.55),0 0 36px rgba(79,125,255,.25)}
+html[data-theme="dark"] .pill{box-shadow:0 0 14px rgba(79,125,255,.3),inset 0 0 8px rgba(141,176,255,.1)}
+html[data-theme="dark"] .pill:hover{box-shadow:0 0 22px rgba(79,125,255,.55),inset 0 0 10px rgba(141,176,255,.15)}
+html[data-theme="dark"] .theme-toggle{box-shadow:0 0 0 1px rgba(255,211,107,.25),0 0 18px rgba(255,211,107,.3)}
+html[data-theme="dark"] .theme-toggle:hover{box-shadow:0 0 0 1px rgba(255,211,107,.55),0 0 26px rgba(255,211,107,.5)}
+/* ปุ่ม LINE ลอยมุมจอ: เรืองแสงเป็นจังหวะหายใจ */
+html[data-theme="dark"] .float .btn{animation:glow-breathe 2.6s ease-in-out infinite}
+@keyframes glow-breathe{
+  0%,100%{box-shadow:0 0 0 1px rgba(6,199,85,.6),0 0 14px rgba(6,199,85,.45),0 0 32px rgba(6,199,85,.2)}
+  50%{box-shadow:0 0 0 1px rgba(6,199,85,.9),0 0 26px rgba(6,199,85,.8),0 0 60px rgba(6,199,85,.4)}
+}
+html[data-theme="dark"] .scroll-cue-circle{box-shadow:0 0 18px rgba(141,176,255,.55),0 0 40px rgba(79,125,255,.3)}
+@media(prefers-reduced-motion:reduce){
+  html[data-theme="dark"] .float .btn{animation:none;box-shadow:0 0 0 1px rgba(6,199,85,.7),0 0 20px rgba(6,199,85,.6)}
+}
+/* ปุ่มเลื่อนลงตอนลอยอยู่ (ทับเนื้อหา): ใช้พื้นฟ้าสดให้เห็นชัดบนทุกพื้นหลัง */
+html[data-theme="dark"] .scroll-cue.is-compact .scroll-cue-circle{background:var(--accent-grad);border-color:rgba(255,255,255,.85)}

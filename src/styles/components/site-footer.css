@@ -1,0 +1,23 @@
+/* ส่วนท้ายเว็บและกล่อง QR */
+footer{background:var(--dk);color:#fff;padding:34px 0;text-align:left;font-size:14px}
+.fg{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(min(170px,100%),1fr))}
+footer h4{margin:0 0 8px;font-size:16px}
+footer a{display:block;color:#cfd3d1;text-decoration:none;padding:3px 0}
+footer a:hover{color:#fff}
+.qr{background:#fff;border-radius:12px;padding:10px;display:inline-block}
+.qr canvas,.qr img{display:block;width:120px;height:120px}
+.copy{text-align:center;color:#9aa;font-size:12.5px;margin-top:22px}
+footer{font-size:16px}
+footer h4{font-size:19px}
+footer a{padding:5px 0}
+footer{background:linear-gradient(180deg,#0b0b0b,#0a1220)}
+footer{font-size:15px}
+footer h4{font-size:17px}
+.qr canvas,.qr img{height:120px}
+@media(max-width:320px){
+  .fg>*{min-width:0;overflow-wrap:anywhere}
+  .fg{grid-template-columns:minmax(0,1fr)}
+  .qr{max-width:100%}
+  .fg{grid-template-columns:1fr}
+}
+footer{margin-top:auto;padding-bottom:calc(34px + 76px + env(safe-area-inset-bottom))}

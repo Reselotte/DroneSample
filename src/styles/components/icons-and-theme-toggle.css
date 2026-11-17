@@ -1,0 +1,36 @@
+/* ไอคอนเส้น (components/common/Icons.jsx) และปุ่มสลับธีมมุมขวาบน */
+/* !important: กันกฎกว้าง ๆ อย่าง ".map svg{width:100%}" มาขยายไอคอนจนเต็มกล่อง */
+.ic-svg{width:1em!important;height:1em!important;max-width:none;flex:none;display:inline-block;vertical-align:-.14em}
+
+/* ไอคอนในข้อความ/ป้าย */
+.sellpot-chip{display:inline-flex;align-items:center;gap:7px}
+.sellpot-chip .ic-svg{color:var(--g);font-size:16px}
+.sellpot-chip.c2 .ic-svg{color:#1d4ed8}
+.sellpot-chip.c3 .ic-svg{color:#04a947}
+.lcard-meta .ic-svg{margin-right:4px;color:var(--g)}
+.lcard-count{display:inline-flex;align-items:center;gap:5px}
+.calcbox h3{display:flex;align-items:center;gap:8px}
+.calcbox h3 .ic-svg{color:var(--g)}
+.lock{display:flex;align-items:center;gap:8px}
+.post-private{display:flex;align-items:center;gap:6px}
+.post-loc .btn{gap:6px}
+.adm-body a .ic-svg,.adm-seller a .ic-svg{margin-right:4px}
+.ico-ok{color:#06c755;font-size:44px;line-height:1}
+#dlg .ic{color:#e11d48;font-size:44px}
+
+/* ── ปุ่มสลับธีม: ลอยค้างมุมขวาบนตลอด (เว้นที่ว่างในแถบเมนูไว้ให้) ── */
+header .pill{margin-left:auto}
+header .wrap{padding-right:calc(max(16px,env(safe-area-inset-right)) + 56px)}
+.theme-toggle{position:fixed;top:10px;right:max(16px,env(safe-area-inset-right));z-index:25;box-shadow:0 6px 18px rgba(11,42,91,.14);
+  flex:none;display:grid;place-items:center;width:44px;height:44px;min-height:44px;padding:0;border:1px solid rgba(11,42,91,.14);border-radius:50%;background:rgba(255,255,255,.7);color:var(--g);font-size:20px;cursor:pointer;transition:transform .2s,background .2s,border-color .2s}
+.theme-toggle:hover{background:#eaf0fb;border-color:rgba(11,42,91,.3)}
+.theme-toggle:active{transform:scale(.92)}
+.theme-toggle:focus-visible{outline:3px solid #7aa2ee;outline-offset:2px}
+.theme-toggle .ic-svg{animation:theme-spin .45s ease-out}
+@keyframes theme-spin{from{transform:rotate(-90deg) scale(.6);opacity:0}to{transform:none;opacity:1}}
+@media(max-width:360px){
+  .theme-toggle{width:40px;height:40px;min-height:40px;font-size:18px}
+}
+@media(prefers-reduced-motion:reduce){
+  .theme-toggle,.theme-toggle .ic-svg{transition:none;animation:none}
+}

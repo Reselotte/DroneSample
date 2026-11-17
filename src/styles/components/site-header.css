@@ -1,0 +1,72 @@
+/* แถบเมนูด้านบน (มือถือ: เมนูพับ / คอมพิวเตอร์: เมนูแถวเดียวที่ขยายตามเมาส์) */
+header{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--bd);z-index:20}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px}
+.brand{font-weight:800;font-size:18px;color:var(--gd);text-decoration:none}
+header .wrap{flex-wrap:wrap}
+#nav{order:3;width:100%;display:flex;gap:4px;overflow-x:auto;padding:0 0 8px;scrollbar-width:none}
+#nav::-webkit-scrollbar{display:none}
+#nav a{white-space:nowrap;text-decoration:none;font-size:15px;padding:7px 14px;border-radius:99px;color:var(--mu)}
+#nav a:hover{background:var(--bg)}
+#nav a.on{background:var(--g);color:#fff;font-weight:700}
+.pill{background:var(--dk);color:#fff!important;border-radius:99px;padding:8px 18px;font-weight:700;font-size:15px;text-decoration:none}
+@media(min-width:900px){
+  #nav{order:0;width:auto;padding:0;flex:1;justify-content:center}
+}
+#nav a{font-size:17px}
+.pill{font-size:17px}
+header .wrap{max-width:none;padding:0 24px}
+header{background:rgba(255,255,255,.78);backdrop-filter:saturate(1.6) blur(14px);-webkit-backdrop-filter:saturate(1.6) blur(14px);border-bottom:1px solid rgba(11,42,91,.08)}
+#nav a{transition:background .2s,color .2s}
+.pill{border-radius:99px;transition:transform .2s,box-shadow .2s,filter .2s}
+.pill:hover{transform:translateY(-1px)}
+#nav a{font-size:15px;padding:6px 13px}
+.pill{font-size:15px;padding:7px 18px}
+.brand{font-size:17px}
+@media (min-width:900px) and (hover:hover) and (pointer:fine){
+  #nav{overflow:visible}
+  #nav a{transition:transform .12s ease-out,background .2s,color .2s}
+  .pill{transform-origin:100% 50%;transition:transform .12s ease-out,box-shadow .2s,filter .2s}
+}
+@media(min-width:900px){
+  #nav a:hover,header .pill:hover{transform:scale(1.3)}
+}
+.pill,#nav a{touch-action:manipulation;min-height:44px}
+header .wrap{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+@media(max-width:360px){
+  .brand{font-size:16px}
+  .pill{padding:8px 14px;font-size:14px}
+}
+@media(orientation:landscape) and (max-height:500px){
+  header{position:static}
+}
+@media(hover:none){
+  #nav a:hover,header .pill:hover{transform:none}
+}
+@media(max-width:899px){
+  #nav{display:flex;flex-direction:column;gap:6px;overflow:visible;padding:0 0 10px;position:relative}
+  #nav a{display:none;align-items:center;justify-content:center;text-align:center;white-space:normal;line-height:1.25;font-size:15px;padding:8px 12px;min-height:42px;background:var(--bg);border-radius:12px}
+  #nav a.on{display:flex;background:var(--g);color:#fff;gap:8px}
+  #nav a.on::after{content:"";width:8px;height:8px;border-right:2.5px solid currentColor;border-bottom:2.5px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .2s;animation:navhint 1.6s ease-in-out 3}
+  #nav.open{display:flex;flex-direction:column;gap:6px}
+  #nav.open a{display:flex}
+  #nav.open a:not(.on){font-size:16px;padding:10px 12px;min-height:46px}
+  #nav.open a.on::after{transform:translateY(2px) rotate(-135deg);animation:none}
+}
+@keyframes navhint{0%,100%{margin-top:0}50%{margin-top:5px}}
+header .wrap{min-height:64px}
+@media(min-width:900px){
+  #nav a:hover,header .pill:hover{transform:scale(1.06)}
+}
+
+/* หน้าติดต่อเรา (ไม่มีเมนูที่ถูกเลือก): บนมือถือแสดงปุ่ม "เมนู" เพื่อกางรายการ */
+#nav .nav-toggle{display:none}
+@media(max-width:899px){
+  #nav .nav-toggle{display:flex;align-items:center;justify-content:center;gap:8px;min-height:42px;border:0;border-radius:12px;background:var(--g);color:#fff;font:inherit;font-size:15px;font-weight:700;cursor:pointer}
+  #nav .nav-toggle::after{content:"";width:8px;height:8px;border-right:2.5px solid currentColor;border-bottom:2.5px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .2s}
+  #nav.open .nav-toggle::after{transform:translateY(2px) rotate(-135deg)}
+}
+
+/* ซ่อนแถบเมนูตอนเลื่อนลง / โผล่กลับตอนเลื่อนขึ้น */
+header{transition:transform .28s ease}
+header.is-hidden{transform:translateY(-100%)}
+@media(prefers-reduced-motion:reduce){header{transition:none}}
