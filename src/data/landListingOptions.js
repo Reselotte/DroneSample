@@ -28,20 +28,44 @@ export const PRICE_RANGES = [
   { value: "10000000-", label: "มากกว่า 10 ล้าน" },
 ];
 
-/** ขนาดขั้นต่ำ (ตารางวา) ในตัวกรอง */
+/**
+ * ขนาดในตัวกรอง: value = "ขั้นต่ำ-สูงสุด" หน่วยไร่ (ว่าง = ไม่จำกัด)
+ * "custom" = ให้ผู้ใช้พิมพ์ขั้นต่ำ/สูงสุดเอง
+ */
+export const AREA_CUSTOM = "custom";
 export const AREA_RANGES = [
   { value: "", label: "ทุกขนาด" },
-  { value: "400", label: "1 ไร่ขึ้นไป" },
-  { value: "2000", label: "5 ไร่ขึ้นไป" },
-  { value: "4000", label: "10 ไร่ขึ้นไป" },
-  { value: "20000", label: "50 ไร่ขึ้นไป" },
+  { value: "0-1", label: "ไม่เกิน 1 ไร่" },
+  { value: "1-5", label: "1–5 ไร่" },
+  { value: "5-10", label: "5–10 ไร่" },
+  { value: "10-50", label: "10–50 ไร่" },
+  { value: "50-", label: "50 ไร่ขึ้นไป" },
+  { value: AREA_CUSTOM, label: "กำหนดเอง…" },
 ];
 
-export const SORT_OPTIONS = [
-  { value: "newest", label: "ล่าสุด" },
-  { value: "price_asc", label: "ราคาต่ำ → สูง" },
-  { value: "price_desc", label: "ราคาสูง → ต่ำ" },
-  { value: "area_desc", label: "ขนาดใหญ่ → เล็ก" },
+/** การเรียงลำดับ แบ่งกลุ่ม: ระยะเวลา / ขนาด / ราคา (value ต้องตรงกับ SORTS ใน lib/listingsApi.js) */
+export const SORT_GROUPS = [
+  {
+    label: "ระยะเวลา",
+    options: [
+      { value: "newest", label: "ลงประกาศล่าสุด" },
+      { value: "oldest", label: "ลงประกาศนานที่สุด" },
+    ],
+  },
+  {
+    label: "ขนาด",
+    options: [
+      { value: "area_desc", label: "ขนาดใหญ่ → เล็ก" },
+      { value: "area_asc", label: "ขนาดเล็ก → ใหญ่" },
+    ],
+  },
+  {
+    label: "ราคา",
+    options: [
+      { value: "price_asc", label: "ราคาต่ำ → สูง" },
+      { value: "price_desc", label: "ราคาสูง → ต่ำ" },
+    ],
+  },
 ];
 
 /** 77 จังหวัด */

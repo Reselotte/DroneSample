@@ -1,0 +1,74 @@
+/* ช่องตำแหน่งที่ดิน (LocationField) + หน้าต่างเลือกตำแหน่งบนแผนที่ (LocationPicker) */
+
+/* ── ปุ่มใต้ช่องตำแหน่ง ── */
+.locf-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.locf-btn{display:inline-flex;align-items:center;gap:6px;min-height:38px;padding:7px 14px;border-radius:99px;border:1px solid rgba(36,83,230,.25);
+  background:#fff;color:#1d44c4;font:inherit;font-size:14px;font-weight:600;text-decoration:none;cursor:pointer;transition:background .2s,border-color .2s,box-shadow .2s}
+.locf-btn:hover{border-color:#3461f0;box-shadow:0 4px 14px rgba(36,83,230,.15)}
+.locf-btn:disabled{opacity:.6;cursor:default}
+.locf-btn.is-primary{background:var(--accent-grad,linear-gradient(135deg,#2453e6,#6b93ff));border-color:transparent;color:#fff;box-shadow:0 6px 16px rgba(36,83,230,.28)}
+.locf-btn.is-link{border-style:dashed}
+.locf-btn:focus-visible{outline:3px solid #7aa2ee;outline-offset:2px}
+
+/* ── หน้าต่างแผนที่ ── */
+.lp{position:fixed;inset:0;z-index:130;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(3,8,18,.7);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);animation:lp-fade .2s ease-out}
+.lp-loading{color:#fff;font-weight:600}
+.lp-box{display:flex;flex-direction:column;width:min(920px,100%);height:min(720px,calc(100dvh - 40px));border-radius:24px;overflow:hidden;background:#fff;color:var(--tx);text-align:left;
+  box-shadow:0 30px 80px rgba(0,0,0,.45);animation:lp-pop .28s cubic-bezier(.2,.8,.2,1)}
+.lp-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 18px 6px}
+.lp-head h3{display:flex;align-items:center;gap:8px;margin:0;font-size:18px}
+.lp-head h3 .ic-svg{color:#e11d48}
+.lp-close{display:grid;place-items:center;width:38px;height:38px;min-height:0;padding:0 0 2px;border:0;border-radius:50%;background:#f0f4ff;color:#0f1a2e;font-size:24px;line-height:1;cursor:pointer}
+.lp-search{display:flex;gap:8px;padding:6px 18px 10px}
+.lp-search input{flex:1;min-width:0}
+.lp-search .btn{min-height:42px;padding:8px 18px;font-size:15px}
+.lp-results{list-style:none;margin:0 18px 10px;padding:4px;max-height:180px;overflow:auto;border-radius:14px;border:1px solid rgba(36,83,230,.15);background:#fff}
+.lp-results button{display:block;width:100%;min-height:0;padding:9px 12px;border:0;border-radius:10px;background:none;color:var(--tx);font:inherit;font-size:14px;text-align:left;cursor:pointer;line-height:1.4}
+.lp-results button:hover{background:#eef2ff}
+.lp-empty{padding:10px 12px;font-size:14px;color:var(--mu)}
+
+.lp-map-wrap{position:relative;flex:1;min-height:0}
+.lp-map{position:absolute;inset:0;background:#dde3ea}
+/* หมุดกลางแผนที่ (ปลายหมุดชี้ตรงจุดกึ่งกลาง) */
+.lp-pin{position:absolute;left:50%;top:50%;z-index:500;transform:translate(-50%,-100%);font-size:44px;color:#e11d48;pointer-events:none;filter:drop-shadow(0 4px 6px rgba(0,0,0,.4))}
+.lp-pin .ic-svg{fill:#fff;stroke-width:2.2}
+.lp-pin:after{content:"";position:absolute;left:50%;bottom:-3px;width:10px;height:4px;border-radius:50%;background:rgba(0,0,0,.35);transform:translateX(-50%)}
+.lp-hint{position:absolute;top:12px;left:50%;z-index:500;transform:translateX(-50%);padding:6px 14px;border-radius:99px;background:rgba(6,16,38,.72);color:#fff;font-size:13px;white-space:nowrap;pointer-events:none}
+.lp-tools{position:absolute;left:12px;bottom:12px;z-index:500;display:flex;flex-wrap:wrap;gap:8px}
+.lp-layers{display:flex;padding:4px;border-radius:99px;background:rgba(255,255,255,.95);box-shadow:0 4px 14px rgba(0,0,0,.2)}
+.lp-layers button{min-height:0;padding:6px 14px;border:0;border-radius:99px;background:none;color:#334;font:inherit;font-size:13.5px;font-weight:600;cursor:pointer}
+.lp-layers button.on{background:var(--accent-grad,linear-gradient(135deg,#2453e6,#6b93ff));color:#fff}
+.lp-gps{display:inline-flex;align-items:center;gap:6px;min-height:0;padding:8px 14px;border:0;border-radius:99px;background:rgba(255,255,255,.95);color:#1d44c4;font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.2)}
+.lp-error{margin:0;padding:8px 18px;background:#fff1f2;color:#c8001a;font-size:14px}
+.lp-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px;padding:12px 18px calc(14px + env(safe-area-inset-bottom));border-top:1px solid rgba(11,42,91,.08)}
+.lp-coords{display:flex;flex-direction:column;line-height:1.3}
+.lp-coords small{font-size:12.5px;color:var(--mu)}
+.lp-coords b{font-size:16px;font-variant-numeric:tabular-nums}
+.lp-actions{display:flex;gap:8px}
+.lp-actions .btn{min-height:44px;padding:10px 20px;font-size:15px}
+.lp-ok{box-shadow:0 8px 22px rgba(6,199,85,.32)}
+/* Leaflet: ให้ตัวหนังสือลิขสิทธิ์แผนที่เล็กและอ่านได้ */
+.lp .leaflet-control-attribution{font-size:10.5px}
+
+@media(max-width:600px){
+  .lp{padding:0;align-items:flex-end}
+  .lp-box{height:94dvh;border-radius:22px 22px 0 0}
+  .lp-actions{width:100%}
+  .lp-actions .btn{flex:1}
+  .lp-hint{font-size:12px}
+}
+@keyframes lp-fade{from{opacity:0}}
+@keyframes lp-pop{from{opacity:0;transform:translateY(14px) scale(.98)}}
+@media(prefers-reduced-motion:reduce){
+  .lp,.lp-box{animation:none}
+}
+
+/* ── ธีมมืด ── */
+html[data-theme="dark"] .locf-btn{background:rgba(255,255,255,.05);border-color:rgba(160,190,255,.4);color:#a9c2ff}
+html[data-theme="dark"] .locf-btn.is-primary{color:#fff;border-color:transparent;box-shadow:0 0 16px rgba(79,125,255,.5)}
+html[data-theme="dark"] .lp-box{background:#0d1526;box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 0 1px var(--line)}
+html[data-theme="dark"] .lp-close{background:rgba(255,255,255,.08);color:#fff}
+html[data-theme="dark"] .lp-results{background:#0f1829;border-color:var(--line)}
+html[data-theme="dark"] .lp-results button:hover{background:rgba(79,125,255,.15)}
+html[data-theme="dark"] .lp-foot{border-top-color:var(--line)}
+html[data-theme="dark"] .lp-error{background:rgba(225,29,72,.12);color:#ff9aa8}

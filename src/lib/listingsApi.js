@@ -19,16 +19,19 @@ export function photoUrl(path) {
   return db().storage.from(PHOTO_BUCKET).getPublicUrl(path).data.publicUrl;
 }
 
+/** การเรียง: [คอลัมน์, น้อยไปมาก?] (ชื่อต้องตรงกับ SORT_GROUPS ใน data/landListingOptions.js) */
 const SORTS = {
   newest: ["created_at", false],
+  oldest: ["created_at", true],
+  area_desc: ["area_wah", false],
+  area_asc: ["area_wah", true],
   price_asc: ["total_price", true],
   price_desc: ["total_price", false],
-  area_desc: ["area_wah", false],
 };
 
 /**
  * รายการประกาศที่เผยแพร่แล้ว
- * filters: { province, landType, minPrice, maxPrice, minAreaWah, sort }   page เริ่มที่ 0
+ * filters: { province, landType, minPrice, maxPrice, minAreaWah, maxAreaWah, sort }   page เริ่มที่ 0
  * คืนค่า { items, total }
  */
 export async function fetchListings(filters = {}, page = 0) {
@@ -38,6 +41,7 @@ export async function fetchListings(filters = {}, page = 0) {
   if (filters.minPrice) q = q.gte("total_price", filters.minPrice);
   if (filters.maxPrice) q = q.lte("total_price", filters.maxPrice);
   if (filters.minAreaWah) q = q.gte("area_wah", filters.minAreaWah);
+  if (filters.maxAreaWah) q = q.lte("area_wah", filters.maxAreaWah);
 
   const [column, ascending] = SORTS[filters.sort] || SORTS.newest;
   q = q.order(column, { ascending }).order("id", { ascending: false });

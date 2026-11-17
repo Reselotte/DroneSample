@@ -98,3 +98,26 @@ textarea:focus{outline:0;border-color:var(--g);box-shadow:0 0 0 4px rgba(11,42,9
 .post-ok p{margin:0;color:var(--mu)}
 .post-ok b{color:var(--g);font-size:20px}
 .post-ok-act{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:10px}
+
+/* ── ลงประกาศ: จอคอม = ข้อมูลที่ดิน (ซ้าย) | ข้อมูลผู้ขาย (ขวา ค้างตอนเลื่อน) / มือถือ = บนลงล่าง ── */
+@media(min-width:1000px){
+  .post .wrap{max-width:1200px}
+  .post-form{max-width:none;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px;align-items:start}
+  .post-form>.post-block:last-child{position:sticky;top:84px}
+}
+
+/* ตัวกรอง: ขนาดกำหนดเอง (แถวเต็มความกว้างใต้ตัวกรอง) */
+.lfilters-custom{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:10px 12px;border-radius:14px;background:#f0f4ff;animation:lfc-in .25s ease-out}
+.lfilters-custom-label{font-size:14px;font-weight:600;color:var(--tx)}
+.lfilters-range{display:flex;align-items:center;gap:8px}
+.lfilters-range input{width:110px;background:#fff}
+.lfilters-unit{font-size:14px;color:var(--mu)}
+.lfilters-warn{font-size:13px;color:#c8001a}
+@keyframes lfc-in{from{opacity:0;transform:translateY(-4px)}}
+@media(max-width:480px){
+  .lfilters-range{flex:1}
+  .lfilters-range input{width:auto;flex:1;min-width:0}
+}
+html[data-theme="dark"] .lfilters-custom{background:rgba(79,125,255,.1)}
+html[data-theme="dark"] .lfilters-range input{background:rgba(5,10,22,.55)}
+html[data-theme="dark"] .lfilters-warn{color:#ff9aa8}

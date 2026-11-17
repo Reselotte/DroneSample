@@ -111,6 +111,7 @@ export default function Term({ id, children }) {
             <div className="term-pop-vis"><ContourMapSvg mode={entry.visual.mode} cover /></div>
           )}
           <b>{entry.title}</b>
+          {entry.tip && <p className="term-pop-tip">{entry.tip}</p>}
           <p>{entry.text}</p>
         </div>,
         document.body

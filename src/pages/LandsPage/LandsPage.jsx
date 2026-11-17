@@ -37,7 +37,10 @@ export default function LandsPage() {
 
   useEffect(() => {
     lastFilters = filters;
-    if (isSupabaseConfigured) load(filters, 0);
+    if (!isSupabaseConfigured) return undefined;
+    // รอผู้ใช้พิมพ์เสร็จก่อนค่อยค้น (ช่องขนาดกำหนดเอง) จะได้ไม่ยิงทุกตัวอักษร
+    const timer = setTimeout(() => load(filters, 0), 350);
+    return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 

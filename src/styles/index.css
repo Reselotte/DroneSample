@@ -24,5 +24,6 @@
 @import "./components/glossary-terms.css";
 @import "./components/text-size.css";
 @import "./components/theme-transition.css";
+@import "./components/location-picker.css";
 @import "./theme-light.css"; /* ธีมต้องอยู่ท้ายสุด */
 @import "./theme-dark.css";

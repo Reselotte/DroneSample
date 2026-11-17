@@ -7,7 +7,8 @@ import { submitListing } from "../../lib/listingsApi";
 import { LAND_TYPES, PRICE_UNITS, PROVINCES } from "../../data/landListingOptions";
 import { isInThailand, listingCode, parseLatLng } from "../../utils/listingFormat";
 import SetupNotice from "../LandsPage/SetupNotice";
-import { CheckCircleIcon, LockIcon, PinIcon } from "../../components/common/Icons";
+import { CheckCircleIcon, LockIcon } from "../../components/common/Icons";
+import LocationField from "../../components/common/LocationField";
 
 const MAX_PHOTOS = 10;
 
@@ -73,7 +74,6 @@ export default function PostListingPage() {
   const [errors, setErrors] = useState({});
   const [sending, setSending] = useState(false);
   const [sentId, setSentId] = useState(null);
-  const [locating, setLocating] = useState(false);
   const photos = useFileAttachments({ maxFiles: MAX_PHOTOS, allowPdf: false });
   const deed = useFileAttachments({ maxFiles: 5, allowPdf: true });
 
@@ -81,26 +81,6 @@ export default function PostListingPage() {
     value: values[field],
     onChange: (e) => setValues((v) => ({ ...v, [field]: e.target.value })),
   });
-
-  const fillCurrentLocation = () => {
-    if (!navigator.geolocation) {
-      setErrors((prev) => ({ ...prev, location: "อุปกรณ์นี้ไม่รองรับการหาตำแหน่ง" }));
-      return;
-    }
-    setLocating(true);
-    navigator.geolocation.getCurrentPosition(
-      ({ coords }) => {
-        setLocating(false);
-        setValues((v) => ({ ...v, location: `${coords.latitude.toFixed(6)}, ${coords.longitude.toFixed(6)}` }));
-        setErrors((prev) => ({ ...prev, location: "" }));
-      },
-      () => {
-        setLocating(false);
-        setErrors((prev) => ({ ...prev, location: "หาตำแหน่งไม่สำเร็จ กรุณาอนุญาตการเข้าถึงตำแหน่ง หรือพิมพ์พิกัดเอง" }));
-      },
-      { enableHighAccuracy: true, timeout: 15000 }
-    );
-  };
 
   const submit = async (e) => {
     e.preventDefault();
@@ -208,16 +188,14 @@ export default function PostListingPage() {
               <div className="err">{errors.price}</div>
             </div>
 
-            <div className="field">
-              <label htmlFor="p_loc">ตำแหน่งที่ดิน <span className="opt">(ไม่บังคับ แต่ช่วยให้ขายง่ายขึ้นมาก)</span></label>
-              <div className="post-loc">
-                <input id="p_loc" placeholder="วางลิงก์ Google Maps หรือพิกัด เช่น 13.7563, 100.5018" {...bind("location")} />
-                <button type="button" className="btn btn-ghost" onClick={fillCurrentLocation} disabled={locating}>
-                  {locating ? "กำลังหา…" : <><PinIcon /> ใช้ตำแหน่งปัจจุบัน</>}
-                </button>
-              </div>
-              <div className="err">{errors.location}</div>
-            </div>
+            <LocationField
+              id="p_loc"
+              label={<>ตำแหน่งที่ดิน <span className="opt">(ไม่บังคับ แต่ช่วยให้ขายง่ายขึ้นมาก)</span></>}
+              value={values.location}
+              onChange={(text) => setValues((v) => ({ ...v, location: text }))}
+              error={errors.location}
+              onError={(msg) => setErrors((prev) => ({ ...prev, location: msg }))}
+            />
 
             <div className="field">
               <label htmlFor="p_desc">รายละเอียดเพิ่มเติม <span className="opt">(ไม่บังคับ)</span></label>

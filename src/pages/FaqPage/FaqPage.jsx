@@ -17,7 +17,6 @@ export default function FaqPage() {
             </details>
           ))}
         </div>
-        <GlossarySection />
         <div className="faqcta">
           <div>
             <b>ยังไม่เจอคำตอบที่ต้องการ?</b>
@@ -25,6 +24,7 @@ export default function FaqPage() {
           </div>
           <LineLink>ถามทีมงานทาง LINE</LineLink>
         </div>
+        <GlossarySection />
       </div>
     </section>
   );

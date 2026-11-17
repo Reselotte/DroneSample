@@ -2,6 +2,7 @@ import { useState } from "react";
 import siteConfig from "../../config/siteConfig";
 import useDeedFiles from "../../hooks/useDeedFiles";
 import DeedUploader from "./DeedUploader";
+import LocationField from "../../components/common/LocationField";
 
 /** ลักษณะงานที่ลูกค้าสนใจ (ช่วยให้ทีมงานเตรียมข้อมูลก่อนโทรกลับ) */
 const PURPOSES = [
@@ -13,11 +14,11 @@ const PURPOSES = [
   "อื่น ๆ / ยังไม่แน่ใจ",
 ];
 
-/** ช่วงเวลาที่สะดวกให้ติดต่อกลับ */
-const CONTACT_TIMES = ["เวลาใดก็ได้ (ในเวลาทำการ)", "ช่วงเช้า 09:00–12:00", "ช่วงบ่าย 13:00–18:00"];
+/** ปุ่มลัดช่วงเวลาที่สะดวกให้ติดต่อกลับ (กดแล้วใส่ในช่อง แก้ต่อเองได้) */
+const CONTACT_TIME_CHIPS = ["ได้ทุกเวลา", "ช่วงเช้า 9–12 น.", "ช่วงบ่าย 13–17 น.", "หลังเลิกงาน 17–20 น.", "เสาร์-อาทิตย์"];
 
 const EMPTY_VALUES = {
-  name: "", phone: "", lineId: "", contactTime: CONTACT_TIMES[0], purpose: "",
+  name: "", phone: "", lineId: "", contactTime: "", purpose: "",
   province: "", location: "", rai: "", ngan: "", wah: "", deed: "", note: "", consent: false,
 };
 
@@ -55,7 +56,7 @@ export default function CallbackForm({ hidden, onSent }) {
       name,
       phone,
       lineId: values.lineId.trim(),
-      contactTime: values.contactTime,
+      contactTime: values.contactTime.trim() || "ไม่ได้ระบุ",
       purpose: values.purpose,
       province: values.province.trim(),
       location: values.location.trim(),
@@ -112,10 +113,26 @@ export default function CallbackForm({ hidden, onSent }) {
       </div>
 
       <div className="field">
-        <label htmlFor="f_time">สะดวกให้ติดต่อกลับช่วงไหน</label>
-        <select id="f_time" {...bind("contactTime")}>
-          {CONTACT_TIMES.map((t) => <option key={t} value={t}>{t}</option>)}
-        </select>
+        <label htmlFor="f_prov">จังหวัด / อำเภอ ของพื้นที่ <span className="opt">(ไม่บังคับ)</span></label>
+        <input id="f_prov" {...bind("province")} />
+      </div>
+
+      <div className="field f-full">
+        <label htmlFor="f_time">สะดวกให้ติดต่อกลับเวลาไหน <span className="opt">(พิมพ์เองหรือกดเลือก)</span></label>
+        <input id="f_time" placeholder="เช่น วันธรรมดาหลัง 17:00, เสาร์เช้า" maxLength={120} {...bind("contactTime")} />
+        <div className="time-chips" role="group" aria-label="ช่วงเวลาที่ใช้บ่อย">
+          {CONTACT_TIME_CHIPS.map((t) => (
+            <button
+              key={t}
+              type="button"
+              className={values.contactTime === t ? "on" : undefined}
+              aria-pressed={values.contactTime === t}
+              onClick={() => setValues((v) => ({ ...v, contactTime: v.contactTime === t ? "" : t }))}
+            >
+              {t}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="field f-full">
@@ -126,15 +143,15 @@ export default function CallbackForm({ hidden, onSent }) {
         </select>
       </div>
 
-      <div className="field">
-        <label htmlFor="f_prov">จังหวัด / อำเภอ ของพื้นที่ <span className="opt">(ไม่บังคับ)</span></label>
-        <input id="f_prov" {...bind("province")} />
-      </div>
-
-      <div className="field">
-        <label htmlFor="f_loc">พิกัด / ลิงก์ Google Maps <span className="opt">(ไม่บังคับ)</span></label>
-        <input id="f_loc" placeholder="เช่น 13.7563, 100.5018" {...bind("location")} />
-      </div>
+      <LocationField
+        id="f_loc"
+        className="f-full"
+        label={<>ตำแหน่งที่ดิน <span className="opt">(ไม่บังคับ)</span></>}
+        value={values.location}
+        onChange={(text) => setValues((v) => ({ ...v, location: text }))}
+        error={errors.location}
+        onError={(msg) => setErrors((prev) => ({ ...prev, location: msg }))}
+      />
 
       <div className="field">
         <label>ขนาดพื้นที่ <span className="opt">(โปรดระบุเท่าที่ทราบ)</span></label>

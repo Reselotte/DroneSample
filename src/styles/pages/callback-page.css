@@ -59,3 +59,12 @@
 @media(prefers-reduced-motion:reduce){
   .side-tab{animation:none;transition:none}
 }
+
+/* ปุ่มลัดช่วงเวลาที่สะดวกให้ติดต่อกลับ */
+.time-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.time-chips button{min-height:36px;padding:6px 14px;border-radius:99px;border:1px solid rgba(36,83,230,.22);background:#fff;color:#334;font:inherit;font-size:13.5px;font-weight:500;cursor:pointer;transition:background .2s,border-color .2s,color .2s}
+.time-chips button:hover{border-color:#3461f0;color:#1d44c4}
+.time-chips button.on{background:var(--accent-grad,linear-gradient(135deg,#2453e6,#6b93ff));border-color:transparent;color:#fff;box-shadow:0 4px 12px rgba(36,83,230,.28)}
+.time-chips button:focus-visible{outline:3px solid #7aa2ee;outline-offset:2px}
+html[data-theme="dark"] .time-chips button{background:rgba(255,255,255,.05);border-color:rgba(160,190,255,.35);color:#c8d1e2}
+html[data-theme="dark"] .time-chips button.on{color:#fff;border-color:transparent;box-shadow:0 0 14px rgba(79,125,255,.5)}
