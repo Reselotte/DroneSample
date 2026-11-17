@@ -124,3 +124,66 @@ html[data-text-size] header .pill{margin-top:10px;margin-bottom:10px}
 @media(max-width:899px){
   header .pill{margin-top:10px;margin-bottom:10px}
 }
+
+/* ── ในปุ่ม: หน้า A (ก + จุด) / หน้า B (ข้อความ "ขนาดตัวอักษร") ──
+ * คอม: แสดงแค่หน้า A (ป้ายยืดออกตอนชี้แทน)
+ * มือถือ: สลับ A ↔ B อัตโนมัติทุก ~2.5 วินาที (เลื่อนขึ้น) ปุ่มกว้าง 56px คงที่ ไม่ทับปุ่ม "ติดต่อเรา" */
+.tst-icon{position:relative;overflow:hidden}
+.tst-face-a{display:flex;flex-direction:column;align-items:center;gap:3px}
+.tst-face-b{display:none}
+@media(hover:none){
+  header .wrap{padding-right:calc(max(16px,env(safe-area-inset-right)) + 120px)}
+  .text-size-toggle{min-width:56px}
+  .tst-icon{width:54px}
+  .tst-face{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .tst-face-a{gap:3px;animation:tst-face-a 5.6s ease-in-out infinite}
+  .tst-face-b{font-size:10.5px;font-weight:700;line-height:1.15;text-align:center;letter-spacing:-.01em;animation:tst-face-b 5.6s ease-in-out infinite}
+  /* แตะแล้วยืดบอกระดับใหม่: หยุดสลับ แสดงตัว ก */
+  .text-size-toggle.is-peek .tst-face{animation:none}
+  .text-size-toggle.is-peek .tst-face-b{opacity:0}
+}
+@keyframes tst-face-a{
+  0%,42%{transform:none;opacity:1}
+  50%{transform:translateY(-100%);opacity:0}
+  50.1%,92%{transform:translateY(100%);opacity:0}
+  100%{transform:none;opacity:1}
+}
+@keyframes tst-face-b{
+  0%,42%{transform:translateY(100%);opacity:0}
+  50%,92%{transform:none;opacity:1}
+  100%{transform:translateY(-100%);opacity:0}
+}
+/* เครื่องที่ตั้งค่าลดการเคลื่อนไหว: ยังสลับ แต่จางเข้า-ออกแทนการเลื่อน */
+@media(hover:none) and (prefers-reduced-motion:reduce){
+  .tst-face-a{animation-name:tst-fade-a}
+  .tst-face-b{animation-name:tst-fade-b}
+}
+@keyframes tst-fade-a{0%,42%{opacity:1}50%,92%{opacity:0}100%{opacity:1}}
+@keyframes tst-fade-b{0%,42%{opacity:0}50%,92%{opacity:1}100%{opacity:0}}
+
+/* ── คอมพิวเตอร์ด้วย: สลับ ก ↔ "ขนาดตัวอักษร" อัตโนมัติเหมือนมือถือ ──
+ * (ทับกฎ @media(hover:none) ด้านบนให้ใช้ทุกอุปกรณ์) ปุ่มกว้าง 56px คงที่ แถบเมนูเว้นที่ 120px */
+header .wrap{padding-right:calc(max(16px,env(safe-area-inset-right)) + 120px)}
+.text-size-toggle{min-width:56px}
+.tst-icon{width:54px}
+.tst-face{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.tst-face-a{gap:3px;animation:tst-face-a 5.6s ease-in-out infinite}
+.tst-face-b{display:flex;font-size:10.5px;font-weight:700;line-height:1.15;text-align:center;letter-spacing:-.01em;animation:tst-face-b 5.6s ease-in-out infinite}
+.text-size-toggle.is-peek .tst-face{animation:none}
+.text-size-toggle.is-peek .tst-face-b{opacity:0}
+/* เอาเมาส์ชี้/โฟกัส: หยุดสลับ แสดงตัว ก แล้วยืดป้ายออก (เฉพาะอุปกรณ์ที่มีเมาส์ กันมือถือค้าง :hover หลังแตะแล้วหยุดสลับ) */
+@media(hover:hover){
+  .text-size-toggle:hover .tst-face{animation:none}
+  .text-size-toggle:hover .tst-face-b{opacity:0}
+}
+.text-size-toggle:focus-visible .tst-face{animation:none}
+.text-size-toggle:focus-visible .tst-face-b{opacity:0}
+@media(prefers-reduced-motion:reduce){
+  .tst-face-a{animation-name:tst-fade-a}
+  .tst-face-b{animation-name:tst-fade-b}
+}
+/* ดันปุ่ม "ติดต่อเรา" ตอนปุ่มยืด: ฐานเปลี่ยนเป็น 120px */
+@media(min-width:1200px){
+  body:has(.text-size-toggle:hover) header .wrap,
+  body:has(.text-size-toggle:focus-visible) header .wrap{padding-right:calc(max(16px,env(safe-area-inset-right)) + 120px + var(--tst-open))}
+}

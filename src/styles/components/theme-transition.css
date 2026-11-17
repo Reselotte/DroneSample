@@ -1,0 +1,13 @@
+/*
+ * แอนิเมชันตอนสลับธีม (View Transitions API → hooks/useTheme.js)
+ * data-theme-anim บน <html> บอกแบบที่ใช้ระหว่างเปลี่ยน:
+ *  reveal = วงกลมแผ่ออกจากปุ่ม (คุมด้วย JS) → ปิดการจางเข้า-ออกเริ่มต้นของเบราว์เซอร์
+ *  fade   = เครื่องที่ตั้งค่าลดการเคลื่อนไหว → จางเข้า-ออกนุ่ม ๆ 0.4 วินาที
+ */
+html[data-theme-anim="reveal"]::view-transition-old(root),
+html[data-theme-anim="reveal"]::view-transition-new(root){animation:none;mix-blend-mode:normal}
+html[data-theme-anim="reveal"]::view-transition-new(root){z-index:2}
+html[data-theme-anim="reveal"]::view-transition-old(root){z-index:1}
+
+html[data-theme-anim="fade"]::view-transition-old(root),
+html[data-theme-anim="fade"]::view-transition-new(root){animation-duration:.4s;animation-timing-function:cubic-bezier(.4,0,.2,1)}

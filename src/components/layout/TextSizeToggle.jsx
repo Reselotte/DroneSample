@@ -7,11 +7,7 @@ const SIZES = [
   { value: "xl", label: "ใหญ่มาก" },
 ];
 const STORAGE_KEY = "textSize";
-const PEEK_KEY = "textSizePeek"; // นับว่าโชว์ป้ายตอนเข้าเว็บไปแล้วกี่ครั้ง (มือถือ)
-const PEEK_TIMES = 2; // โชว์ป้ายตอนเข้าเว็บแค่ 2 ครั้งแรก
-const PEEK_DELAY = 1200; // รอหลังเปิดเว็บก่อนโชว์ (ms)
-const PEEK_INTRO_MS = 3000; // ค้างป้ายตอนเข้าเว็บ (ms)
-const PEEK_TAP_MS = 1600; // ค้างป้ายหลังแตะเปลี่ยนขนาด (ms)
+const PEEK_TAP_MS = 1600; // มือถือ: ค้างป้ายบอกระดับใหม่หลังแตะ (ms)
 
 const isTouch = () => window.matchMedia("(hover: none)").matches;
 
@@ -20,9 +16,9 @@ const isTouch = () => window.matchMedia("(hover: none)").matches;
  * กดวน: ปกติ → ใหญ่ → ใหญ่มาก → ปกติ  และจำค่าไว้ครั้งหน้า
  * (สคริปต์ใน index.html ตั้งค่าแรกไว้ก่อนหน้าเว็บแสดงผล)
  *
- * ป้าย "ขนาดตัวอักษร" ยืดออกมาในปุ่ม:
- * - คอมพิวเตอร์: ตอนเอาเมาส์ชี้ (CSS :hover)
- * - มือถือ (ไม่มีเมาส์): โชว์เองตอนเข้าเว็บ 2 ครั้งแรก และทุกครั้งที่แตะเปลี่ยนขนาด (บอกระดับใหม่)
+ * บอกให้รู้ว่าปุ่มนี้คืออะไร:
+ * - คอมพิวเตอร์: เอาเมาส์ชี้ → ปุ่มยืดออกโชว์ "ขนาดตัวอักษร / ระดับ"
+ * - มือถือ: ในปุ่มสลับ "ก" ↔ "ขนาดตัวอักษร" ให้อัตโนมัติ (CSS) และแตะแล้วยืดบอกระดับใหม่
  */
 export default function TextSizeToggle() {
   const [size, setSize] = useState(() => document.documentElement.dataset.textSize || "normal");
@@ -42,19 +38,6 @@ export default function TextSizeToggle() {
     try { localStorage.setItem(STORAGE_KEY, size); } catch { /* โหมดส่วนตัว: ไม่จำ แต่ยังเปลี่ยนได้ */ }
   }, [size]);
 
-  // มือถือ: โชว์ป้ายตอนเข้าเว็บ (แค่ 2 ครั้งแรก) ให้คนรู้ว่าปุ่ม ก คืออะไร
-  useEffect(() => {
-    if (!isTouch()) return undefined;
-    let shown = 0;
-    try { shown = Number(localStorage.getItem(PEEK_KEY)) || 0; } catch { /* ไม่มี storage */ }
-    if (shown >= PEEK_TIMES) return undefined;
-    const t = setTimeout(() => {
-      showPeek(PEEK_INTRO_MS);
-      try { localStorage.setItem(PEEK_KEY, String(shown + 1)); } catch { /* ไม่มี storage */ }
-    }, PEEK_DELAY);
-    return () => clearTimeout(t);
-  }, [showPeek]);
-
   useEffect(() => () => clearTimeout(peekTimer.current), []);
 
   const index = SIZES.findIndex((s) => s.value === size);
@@ -73,12 +56,17 @@ export default function TextSizeToggle() {
       aria-label={`ขนาดตัวอักษร: ${SIZES[index].label} (กดเพื่อเปลี่ยนเป็น ${next.label})`}
     >
       <span className="tst-icon" aria-hidden="true">
-        <span className="tst-glyph">ก</span>
-        <span className="tst-dots">
-          {SIZES.map((s, i) => <i key={s.value} className={i <= index ? "on" : undefined} />)}
+        {/* หน้า A: ตัว ก + จุดบอกระดับ */}
+        <span className="tst-face tst-face-a">
+          <span className="tst-glyph">ก</span>
+          <span className="tst-dots">
+            {SIZES.map((s, i) => <i key={s.value} className={i <= index ? "on" : undefined} />)}
+          </span>
         </span>
+        {/* หน้า B (เฉพาะมือถือ): ข้อความ สลับกับหน้า A อัตโนมัติ */}
+        <span className="tst-face tst-face-b">ขนาด<br />ตัวอักษร</span>
       </span>
-      {/* ข้อความที่เลื่อนออกมาในปุ่ม (คอม: ตอนชี้ / มือถือ: ตอนเข้าเว็บและหลังแตะ) */}
+      {/* ข้อความที่ยืดออกมาในปุ่ม (คอม: ตอนชี้ / มือถือ: หลังแตะ บอกระดับใหม่) */}
       <span className="tst-label" aria-hidden="true">
         <span className="tst-label-in">
           ขนาดตัวอักษร
