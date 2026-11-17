@@ -2,6 +2,7 @@ import SiteHeader from "./components/layout/SiteHeader";
 import SiteFooter from "./components/layout/SiteFooter";
 import FloatingLineButton from "./components/layout/FloatingLineButton";
 import ThemeToggle from "./components/layout/ThemeToggle";
+import TextSizeToggle from "./components/layout/TextSizeToggle";
 import ScrollCue from "./components/layout/ScrollCue";
 import useHashRoute from "./hooks/useHashRoute";
 import HomePage from "./pages/HomePage/HomePage";
@@ -40,6 +41,7 @@ export default function App() {
       <SiteHeader currentPage={page} />
       {/* อยู่นอก header เพื่อให้ลอยค้างมุมขวาบนตลอด แม้แถบเมนูจะซ่อนตอนเลื่อนลง */}
       <ThemeToggle />
+      <TextSizeToggle />
       {/* key ของแต่ละชิ้นต้องไม่ซ้ำกัน (ถ้าซ้ำ React จะไม่ลบหน้าเก่า หน้าใหม่ไปต่อท้ายหน้าเก่า) */}
       <Page key={`page:${page}/${param}`} param={param} />
       <SiteFooter />

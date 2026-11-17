@@ -1,5 +1,6 @@
 import LineLink from "../../components/common/LineLink";
 import faqItems from "../../data/faqItems";
+import GlossarySection from "./GlossarySection";
 
 /** หน้าคำถามที่พบบ่อย (#/faq) */
 export default function FaqPage() {
@@ -7,7 +8,7 @@ export default function FaqPage() {
     <section className="alt" data-page="faq">
       <div className="wrap">
         <h2>คำถามที่พบบ่อย</h2>
-        <p className="sub">ค่าบริการ ข้อมูลที่ต้องเตรียม การนัดบินสำรวจ และการลงประกาศขายที่ดิน</p>
+        <p className="sub">ค่าบริการ ข้อมูลที่ต้องเตรียม การนัดบินสำรวจ และการลงประกาศขายที่ดิน · <a href="#glossary" onClick={(e) => { e.preventDefault(); document.getElementById("glossary")?.scrollIntoView({ behavior: "smooth" }); }}>ดูศัพท์น่ารู้</a></p>
         <div id="faqList" style={{ marginTop: 18 }}>
           {faqItems.map(([question, answer]) => (
             <details key={question}>
@@ -16,6 +17,7 @@ export default function FaqPage() {
             </details>
           ))}
         </div>
+        <GlossarySection />
         <div className="faqcta">
           <div>
             <b>ยังไม่เจอคำตอบที่ต้องการ?</b>

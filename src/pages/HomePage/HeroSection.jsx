@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import BackgroundVideo from "../../components/common/BackgroundVideo";
 import LineLink from "../../components/common/LineLink";
+import Term from "../../components/common/Term";
 import { HERO_POINTS } from "../../data/heroHighlights";
 
 /** ส่วนบนสุดของหน้าแรก: หัวข้อใหญ่ + วิดีโอพื้นหลัง + ปุ่มแอด LINE */
@@ -37,12 +38,12 @@ export default function HeroSection() {
       <div className="wrap">
         <h1>
           ตรวจสอบที่ดินให้แน่ชัด<br />ก่อนตัดสินใจซื้อ-ขาย<br />
-          <span>ด้วยแผนที่ Contour</span>
+          <span>ด้วยแผนที่ <Term id="contour">Contour</Term></span>
         </h1>
         <p className="lead">
           ทราบสภาพพื้นที่จริงก่อนตัดสินใจลงทุน<br />
           ทั้ง<span className="hl" style={{ whiteSpace: "nowrap" }}>ระดับความสูงต่ำ</span>{" "}
-          <span className="hl" style={{ whiteSpace: "nowrap" }}>ความลาดชัน</span> และ
+          <span className="hl" style={{ whiteSpace: "nowrap" }}><Term id="slope">ความลาดชัน</Term></span> และ
           <span className="hl" style={{ whiteSpace: "nowrap" }}>โอกาสเกิดน้ำท่วมขัง</span>
         </p>
         <div className="pts">

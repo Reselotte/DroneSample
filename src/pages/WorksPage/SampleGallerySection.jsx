@@ -4,31 +4,42 @@ import LineLink from "../../components/common/LineLink";
 import sampleMapTypes from "../../data/sampleMapTypes";
 import landTypeTabs from "../../data/landTypeTabs";
 import { LockIcon } from "../../components/common/Icons";
+import SampleViewer from "./SampleViewer";
+import Term from "../../components/common/Term";
 
-/** "ตัวอย่างภาพสำรวจ" 4 แบบ + แท็บ "Contour สำหรับงานแต่ละประเภท" */
+/** "ตัวอย่างภาพสำรวจ" 4 แบบ (กดดูเต็มจอได้) + แท็บ "Contour สำหรับงานแต่ละประเภท" */
 export default function SampleGallerySection() {
   const [activeTab, setActiveTab] = useState("re");
+  const [viewing, setViewing] = useState(null); // index ของภาพที่เปิดดูอยู่ (null = ปิด)
   const tab = landTypeTabs[activeTab];
 
   return (
     <section className="alt" data-page="works">
       <div className="wrap">
         <p className="eyebrow">ตัวอย่างภาพสำรวจ</p>
-        <h2 style={{ marginBottom: 20 }}>สิ่งที่ท่านจะได้รับเมื่อติดต่อผ่าน LINE</h2>
+        <h2 style={{ marginBottom: 6 }}>สิ่งที่ท่านจะได้รับเมื่อติดต่อผ่าน LINE</h2>
+        <p className="sub" style={{ marginBottom: 20 }}>กดที่ภาพเพื่อดูตัวอย่างแบบเต็ม พร้อมคำอธิบาย</p>
 
         <div className="grid g4 gal" id="gal">
-          {sampleMapTypes.map(({ mode, caption }) => (
+          {sampleMapTypes.map(({ mode, caption }, i) => (
             <figure key={mode}>
-              <div className="map">
-                <ContourMapSvg mode={mode} />
-                <span className="stamp">ตัวอย่าง</span>
-              </div>
-              <figcaption>{caption}</figcaption>
+              <button type="button" className="gal-open" onClick={() => setViewing(i)} aria-label={`ดูตัวอย่าง ${caption}`}>
+                <div className="map">
+                  <ContourMapSvg mode={mode} />
+                  <span className="stamp">ตัวอย่าง</span>
+                  <span className="gal-hint" aria-hidden="true">ดูตัวอย่าง</span>
+                </div>
+                <figcaption>{caption}</figcaption>
+              </button>
             </figure>
           ))}
         </div>
 
-        <h2 style={{ marginTop: 44 }}>Contour สำหรับงานแต่ละประเภท</h2>
+        {viewing !== null && (
+          <SampleViewer items={sampleMapTypes} index={viewing} onChange={setViewing} onClose={() => setViewing(null)} />
+        )}
+
+        <h2 style={{ marginTop: 44 }}><Term id="contour">Contour</Term> สำหรับงานแต่ละประเภท</h2>
 
         <div className="tabs" id="tabs">
           {Object.entries(landTypeTabs).map(([key, { label }]) => (
@@ -62,7 +73,7 @@ export default function SampleGallerySection() {
             <h3 id="tabTitle" style={{ marginBottom: 0 }}>{tab.label}</h3>
             <div className="stats">
               <div><b>5.9 ม.</b>ความต่างระดับ</div>
-              <div><b>3.2%</b>ความลาดชันเฉลี่ย</div>
+              <div><b>3.2%</b><Term id="slope">ความลาดชันเฉลี่ย</Term></div>
               <div><b>~12%</b>สัดส่วนพื้นที่ลุ่มต่ำ</div>
             </div>
             <ul className="ck" id="tabList">

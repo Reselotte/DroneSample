@@ -8,18 +8,18 @@
 html[data-theme="dark"]{
   color-scheme:dark;
   /* สีข้อความ/พื้น */
-  --tx:#e8edf7;--mu:#93a0b8;--bd:rgba(148,180,255,.14);--bg:rgba(255,255,255,.04);--dk:#050913;
+  --tx:#e8edf7;--mu:#93a0b8;--bd:rgba(160,190,255,.3);--bg:rgba(255,255,255,.04);--dk:#050913;
   --g:#8db0ff;--gd:#8db0ff;                     /* สีเน้นสำหรับ "ตัวอักษร" */
   --base:#070d1a;                               /* พื้นหลังหลัก */
   --surface:rgba(255,255,255,.045);             /* การ์ด (โปร่ง) */
   --surface-2:rgba(255,255,255,.07);            /* ช่องกรอก/กล่องย่อย */
   --solid:#0f1829;                              /* การ์ดทึบ (ป๊อปอัป) */
-  --line:rgba(148,180,255,.16);                 /* เส้นขอบการ์ด */
-  --line-hi:rgba(148,180,255,.34);              /* เส้นขอบตอนชี้ */
+  --line:rgba(160,190,255,.3);                  /* เส้นขอบการ์ด (สว่างกว่าพื้นชัด ๆ) */
+  --line-hi:rgba(160,190,255,.6);               /* เส้นขอบตอนชี้ */
   --accent:#4f7dff;                             /* สีฟ้าสดของปุ่มหลัก */
   --accent-grad:linear-gradient(135deg,#3461f0 0%,#4f7dff 55%,#7aa0ff 100%);
-  --glass:linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.025));
-  --shadow:0 12px 34px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.06);
+  --glass:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.03));
+  --shadow:0 12px 34px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.12);
 }
 
 /* พื้นหลังทั้งหน้า: กรมท่าเข้ม + แสงฟุ้งฟ้า (บนซ้าย) และเขียว (ล่างขวา) ติดกับจอ ไม่มีรอยต่อระหว่างส่วน */
@@ -69,10 +69,10 @@ html[data-theme="dark"] select,
 html[data-theme="dark"] textarea,
 html[data-theme="dark"] .callback input,html[data-theme="dark"] .callback select,html[data-theme="dark"] .callback textarea,
 html[data-theme="dark"] .calcpage input,html[data-theme="dark"] .calcpage select,
-html[data-theme="dark"] .lfilters select{background:rgba(5,10,22,.55);border-color:rgba(148,180,255,.2);color:var(--tx)}
+html[data-theme="dark"] .lfilters select{background:rgba(5,10,22,.55);border-color:rgba(160,190,255,.36);color:var(--tx)}
 html[data-theme="dark"] input:hover,
 html[data-theme="dark"] select:hover,
-html[data-theme="dark"] textarea:hover{border-color:rgba(148,180,255,.34)}
+html[data-theme="dark"] textarea:hover{border-color:rgba(160,190,255,.55)}
 html[data-theme="dark"] input:focus,
 html[data-theme="dark"] select:focus,
 html[data-theme="dark"] textarea:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(79,125,255,.22),0 0 18px rgba(79,125,255,.25)}
@@ -80,7 +80,7 @@ html[data-theme="dark"] input::placeholder,
 html[data-theme="dark"] textarea::placeholder{color:#5f6c84}
 html[data-theme="dark"] select option{background:#0f1829;color:var(--tx)}
 html[data-theme="dark"] input[type="checkbox"]{accent-color:var(--accent)}
-html[data-theme="dark"] .upz{background:rgba(79,125,255,.06);border-color:rgba(141,176,255,.3)}
+html[data-theme="dark"] .upz{background:rgba(79,125,255,.06);border-color:rgba(160,190,255,.42)}
 html[data-theme="dark"] .upz:hover,
 html[data-theme="dark"] .upz.drag{background:rgba(79,125,255,.12);border-color:var(--accent)}
 html[data-theme="dark"] .upi{background:var(--surface-2);border-color:var(--line)}
@@ -93,21 +93,21 @@ html[data-theme="dark"] #nav a{color:#a9b5cb}
 html[data-theme="dark"] #nav a:hover{background:rgba(255,255,255,.06);color:#fff}
 html[data-theme="dark"] #nav a.on,
 html[data-theme="dark"] #nav .nav-toggle{background:var(--accent-grad);color:#fff}
-html[data-theme="dark"] .pill{background:transparent;color:#fff!important;border:1px solid rgba(141,176,255,.5)}
+html[data-theme="dark"] .pill{background:transparent;color:#fff!important;border:1px solid rgba(160,190,255,.6)}
 html[data-theme="dark"] .pill:hover{background:rgba(79,125,255,.15)}
 html[data-theme="dark"] .theme-toggle{background:rgba(15,24,41,.85);border-color:rgba(255,211,107,.35);color:#ffd36b}
 html[data-theme="dark"] .theme-toggle:hover{background:#17233b}
 html[data-theme="dark"] .toast{background:#e8edf7;color:#070d1a}
 
 /* ── ปุ่ม ── */
-html[data-theme="dark"] .btn-ghost{background:rgba(255,255,255,.04);border:1px solid rgba(141,176,255,.45);color:var(--tx)}
+html[data-theme="dark"] .btn-ghost{background:rgba(255,255,255,.04);border:1px solid rgba(160,190,255,.6);color:var(--tx)}
 html[data-theme="dark"] #sendBtn,
 html[data-theme="dark"] .adm-login .btn{background:var(--accent-grad)!important;color:#fff}
 
 /* ── หน้าแรก ── */
 html[data-theme="dark"] .hero:after{background:linear-gradient(90deg,rgba(6,12,26,.9),rgba(6,12,26,.35)),linear-gradient(0deg,var(--base) 0%,rgba(7,13,26,.6) 14%,transparent 40%)}
 html[data-theme="dark"] .sellpot{background:none}
-html[data-theme="dark"] .sellpot-card{border:1px solid rgba(141,176,255,.18);
+html[data-theme="dark"] .sellpot-card{border:1px solid rgba(160,190,255,.34);
   background:repeating-radial-gradient(circle at 100% 0,transparent 0 30px,rgba(157,185,242,.1) 31px 32px),radial-gradient(600px 300px at 0 100%,rgba(6,199,85,.16),transparent 60%),radial-gradient(500px 300px at 100% 0,rgba(79,125,255,.22),transparent 60%),linear-gradient(150deg,#0e1f45,#081227);
   box-shadow:0 24px 60px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.08)}
 html[data-theme="dark"] .sellpot-card:hover{box-shadow:0 28px 70px rgba(0,0,0,.6),0 0 40px rgba(79,125,255,.2),inset 0 1px 0 rgba(255,255,255,.1)}
@@ -132,7 +132,7 @@ html[data-theme="dark"] #show{background:repeating-radial-gradient(circle at 78%
 html[data-theme="dark"] .dots2 button.on{background:var(--accent-grad);color:#fff}
 
 /* ── คำนวณราคา ── */
-html[data-theme="dark"] .result{border:1px solid rgba(141,176,255,.2);
+html[data-theme="dark"] .result{border:1px solid rgba(160,190,255,.36);
   background:repeating-radial-gradient(circle at 105% -10%,transparent 0 26px,rgba(157,185,242,.1) 27px 28px),radial-gradient(400px 260px at 100% 0,rgba(79,125,255,.25),transparent 60%),linear-gradient(155deg,#0e1f45,#081227);
   box-shadow:0 18px 44px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.08)}
 html[data-theme="dark"] .result .note{background:rgba(225,29,72,.12);color:#ff9aa8;border-color:#e11d48}
@@ -151,13 +151,13 @@ html[data-theme="dark"] details p{color:#b4bfd3}
 html[data-theme="dark"] summary:after{background:rgba(79,125,255,.15);color:#a9c2ff}
 html[data-theme="dark"] details[open]{border-color:var(--line-hi);box-shadow:inset 3px 0 0 var(--accent),var(--shadow)}
 html[data-theme="dark"] details[open] summary:after{background:var(--accent-grad);color:#fff}
-html[data-theme="dark"] .faqcta{border:1px solid rgba(141,176,255,.18);
+html[data-theme="dark"] .faqcta{border:1px solid rgba(160,190,255,.34);
   background:repeating-radial-gradient(circle at 100% 0,transparent 0 26px,rgba(157,185,242,.1) 27px 28px),linear-gradient(155deg,#0e1f45,#081227)}
 
 /* ── ติดต่อเรา ── */
 html[data-theme="dark"] section.ct,
 html[data-theme="dark"] section[data-page="contact"]{background:none}
-html[data-theme="dark"] .ct-main{border:1px solid rgba(141,176,255,.18);box-shadow:0 24px 60px rgba(0,0,0,.55)}
+html[data-theme="dark"] .ct-main{border:1px solid rgba(160,190,255,.34);box-shadow:0 24px 60px rgba(0,0,0,.55)}
 html[data-theme="dark"] .ct-card .ic{background:rgba(79,125,255,.15);color:#a9c2ff}
 html[data-theme="dark"] .ct-card a,
 html[data-theme="dark"] .ct-card #replyNote2{color:var(--tx)}
@@ -222,3 +222,29 @@ html[data-theme="dark"] .scroll-cue-circle{box-shadow:0 0 18px rgba(141,176,255,
 }
 /* ปุ่มเลื่อนลงตอนลอยอยู่ (ทับเนื้อหา): ใช้พื้นฟ้าสดให้เห็นชัดบนทุกพื้นหลัง */
 html[data-theme="dark"] .scroll-cue.is-compact .scroll-cue-circle{background:var(--accent-grad);border-color:rgba(255,255,255,.85)}
+/* แท็บลอย "คำนวณราคา" หน้าติดต่อกลับ: เรืองฟ้า */
+html[data-theme="dark"] .side-tab{box-shadow:0 0 0 1px rgba(141,176,255,.45),0 0 18px rgba(79,125,255,.55),0 0 40px rgba(79,125,255,.25)}
+html[data-theme="dark"] .side-tab:hover{box-shadow:0 0 0 1px rgba(141,176,255,.7),0 0 26px rgba(79,125,255,.75),0 0 56px rgba(79,125,255,.35)}
+
+/* ── ความคมชัดตัวหนังสือ (อ่านง่ายสำหรับผู้สูงอายุ): ตัวสีเทาสว่างขึ้นทั้งหมด ── */
+html[data-theme="dark"]{--mu:#b2bdd1}
+html[data-theme="dark"] .sub,
+html[data-theme="dark"] .card p,
+html[data-theme="dark"] details p,
+html[data-theme="dark"] .sv-desc,
+html[data-theme="dark"] .term-pop p,
+html[data-theme="dark"] .ct-time #replyNote2{color:#c8d1e2}
+html[data-theme="dark"] #nav a,
+html[data-theme="dark"] .tabs button,
+html[data-theme="dark"] footer a,
+html[data-theme="dark"] footer p{color:#c8d1e2!important}
+html[data-theme="dark"] #nav a.on,
+html[data-theme="dark"] .tabs button.on{color:#fff!important}
+html[data-theme="dark"] .lcard-code,
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .logos div{color:#8f9bb2}
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder{color:#8390a8}
+html[data-theme="dark"] #nav a:hover,
+html[data-theme="dark"] .tabs button:hover,
+html[data-theme="dark"] footer a:hover{color:#fff!important}

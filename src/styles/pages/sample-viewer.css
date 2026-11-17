@@ -1,0 +1,107 @@
+/* หน้าต่างดูตัวอย่างแผนที่เต็มจอ (pages/WorksPage/SampleViewer.jsx) */
+.sv{position:fixed;inset:0;z-index:120;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(3,8,18,.7);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);animation:sv-fade .2s ease-out}
+.sv-box{position:relative;display:grid;width:min(1180px,100%);height:min(680px,calc(100dvh - 48px));border-radius:28px;overflow:hidden;background:#fff;color:var(--tx);
+  box-shadow:0 40px 100px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.06);animation:sv-pop .3s cubic-bezier(.2,.8,.2,1)}
+@media(min-width:900px){
+  .sv-box{grid-template-columns:minmax(0,1.6fr) minmax(340px,1fr)}
+}
+
+/* ── ฝั่งแผนที่: เต็มกรอบ ไม่มีแถบดำ ── */
+.sv-media{position:relative;overflow:hidden;background:#0b1220;touch-action:pan-y;user-select:none}
+.sv-map{position:absolute;inset:0;animation:sv-mapin .35s ease-out}
+.sv-map>svg{display:block;width:100%;height:100%}
+.sv-media:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(4,10,24,.42),transparent 22%,transparent 68%,rgba(4,10,24,.55))}
+.sv-media-top{position:absolute;top:16px;left:16px;z-index:2;display:flex;gap:8px}
+.sv-chip{padding:6px 14px;border-radius:99px;background:rgba(255,255,255,.94);color:#0f1a2e;font-size:13.5px;font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.2)}
+.sv-chip.is-muted{background:rgba(6,16,38,.55);color:#fff;font-weight:500;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.sv-nav{position:absolute;top:50%;z-index:2;transform:translateY(-50%);display:grid;place-items:center;width:48px;height:48px;min-height:0;padding:0 0 4px;
+  border:1px solid rgba(255,255,255,.5);border-radius:50%;background:rgba(6,16,38,.45);color:#fff;font-size:30px;line-height:1;cursor:pointer;
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:background .2s,transform .2s}
+.sv-nav:hover{background:rgba(6,16,38,.72);transform:translateY(-50%) scale(1.08)}
+.sv-nav:focus-visible{outline:3px solid #7aa2ee;outline-offset:2px}
+.sv-nav.prev{left:16px}
+.sv-nav.next{right:16px}
+.sv-media-bottom{position:absolute;left:16px;right:16px;bottom:16px;z-index:2;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px}
+.sv-switches,.sv-legend{border-radius:99px;background:rgba(6,16,38,.62);border:1px solid rgba(255,255,255,.16);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.sv-switches{display:flex;gap:4px;padding:5px}
+.sv-switch{display:inline-flex;align-items:center;gap:8px;margin:0;padding:6px 12px 6px 7px;border-radius:99px;color:#fff;font-size:13.5px;font-weight:500;cursor:pointer;transition:background .2s}
+.sv-switch:hover{background:rgba(255,255,255,.1)}
+.sv-switch input{position:absolute;width:1px;height:1px;opacity:0}
+.sv-track{position:relative;flex:none;width:34px;height:20px;border-radius:99px;background:rgba(255,255,255,.28);transition:background .2s}
+.sv-knob{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .2s}
+.sv-switch input:checked+.sv-track{background:#3d6df5}
+.sv-switch input:checked+.sv-track .sv-knob{transform:translateX(14px)}
+.sv-switch input:focus-visible+.sv-track{outline:2px solid #7aa2ee;outline-offset:2px}
+.sv-switch.is-disabled{opacity:.6;cursor:default}
+.sv-legend{display:flex;align-items:center;gap:8px;padding:8px 14px;color:#fff;font-size:13px}
+.sv-scale{width:110px;height:8px;border-radius:99px;background:linear-gradient(90deg,hsl(250,80%,50%),hsl(190,80%,50%),hsl(125,80%,50%),hsl(60,80%,50%),hsl(0,80%,50%))}
+
+/* ── ฝั่งข้อมูล ── */
+.sv-info{position:relative;display:flex;flex-direction:column;min-height:0;text-align:left}
+.sv-scroll{flex:1;min-height:0;overflow:auto;padding:28px 28px 8px}
+.sv-eyebrow{margin:0 0 6px;font-size:13px;font-weight:700;letter-spacing:.04em;color:#047a3c}
+.sv-info h3{margin:0 0 10px;padding-right:44px;font-size:24px;line-height:1.3}
+.sv-desc{margin:0;font-size:15px;line-height:1.7;color:#3d4452}
+.sv-block{margin-top:20px}
+.sv-block h4{margin:0 0 9px;font-size:13px;font-weight:700;letter-spacing:.05em;color:var(--mu)}
+.sv-points{display:flex;flex-direction:column;gap:9px;margin:0;padding:0;list-style:none}
+.sv-points li{display:flex;align-items:flex-start;gap:10px;font-size:15px;line-height:1.5}
+.sv-points .ic-svg{flex:none;margin-top:3px;font-size:18px;color:#06c755}
+.sv-tags{display:flex;flex-wrap:wrap;gap:6px}
+.sv-tags span{padding:5px 12px;border-radius:99px;background:#eef2ff;color:#1d44c4;font-size:13px;font-weight:600}
+.sv-thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.sv-thumbs button{display:flex;flex-direction:column;gap:6px;min-height:0;padding:0;border:0;background:none;color:var(--mu);font:inherit;font-size:12.5px;font-weight:600;cursor:pointer}
+.sv-thumb-img{display:block;aspect-ratio:4/3;border-radius:10px;overflow:hidden;box-shadow:0 0 0 1px rgba(11,42,91,.1);transition:box-shadow .2s,transform .2s}
+.sv-thumb-img>svg{display:block;width:100%;height:100%}
+.sv-thumbs button:hover .sv-thumb-img{transform:translateY(-2px)}
+.sv-thumbs button:focus-visible .sv-thumb-img{outline:3px solid #7aa2ee;outline-offset:2px}
+.sv-thumbs button.on{color:#1d44c4}
+.sv-thumbs button.on .sv-thumb-img{box-shadow:0 0 0 2px #fff,0 0 0 4px #3461f0}
+.sv-cta{padding:14px 28px 20px;border-top:1px solid rgba(11,42,91,.08);background:#fff}
+.sv-cta .note{margin:8px 0 0;font-size:12.5px;text-align:center}
+.sv-close{position:absolute;top:16px;right:16px;z-index:3;display:grid;place-items:center;width:40px;height:40px;min-height:0;padding:0 0 2px;border:0;border-radius:50%;
+  background:#f0f4ff;color:#0f1a2e;font-size:24px;line-height:1;cursor:pointer;transition:background .2s,transform .25s}
+.sv-close:hover{background:#e2e9ff;transform:rotate(90deg)}
+.sv-close:focus-visible{outline:3px solid #7aa2ee;outline-offset:2px}
+
+/* ── มือถือ: เลื่อนขึ้นมาจากล่างจอ แผนที่บน ข้อมูลล่าง ── */
+@media(max-width:899px){
+  .sv{align-items:flex-end;padding:0}
+  .sv-box{height:auto;max-height:94dvh;grid-template-rows:auto minmax(0,1fr);border-radius:24px 24px 0 0;animation-name:sv-up}
+  .sv-media{aspect-ratio:4/3;max-height:44dvh}
+  .sv-info{position:static}
+  .sv-close{top:12px;right:12px;background:rgba(6,16,38,.55);color:#fff;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+  .sv-close:hover{background:rgba(6,16,38,.75)}
+  .sv-media-top{top:12px;left:12px}
+  .sv-nav{width:40px;height:40px;font-size:26px}
+  .sv-nav.prev{left:10px}
+  .sv-nav.next{right:10px}
+  .sv-media-bottom{left:10px;right:10px;bottom:10px}
+  .sv-legend{display:none}
+  .sv-scroll{padding:20px 20px 8px}
+  .sv-info h3{padding-right:0;font-size:20px}
+  .sv-cta{padding:12px 20px calc(14px + env(safe-area-inset-bottom))}
+}
+
+@keyframes sv-fade{from{opacity:0}}
+@keyframes sv-pop{from{opacity:0;transform:translateY(16px) scale(.97)}}
+@keyframes sv-up{from{transform:translateY(100%)}}
+@keyframes sv-mapin{from{opacity:0;transform:scale(1.03)}}
+@media(prefers-reduced-motion:reduce){
+  .sv,.sv-box,.sv-map{animation:none}
+  .sv-close,.sv-nav,.sv-thumb-img,.sv-knob,.sv-track{transition:none}
+}
+
+/* ── ธีมมืด ── */
+html[data-theme="dark"] .sv-box{background:#0d1526;box-shadow:0 40px 100px rgba(0,0,0,.6),0 0 0 1px var(--line),0 0 40px rgba(79,125,255,.12)}
+html[data-theme="dark"] .sv-eyebrow{color:#7fd6a8}
+html[data-theme="dark"] .sv-desc{color:#c8d1e2}
+html[data-theme="dark"] .sv-tags span{background:rgba(79,125,255,.16);color:#a9c2ff}
+html[data-theme="dark"] .sv-thumb-img{box-shadow:0 0 0 1px var(--line)}
+html[data-theme="dark"] .sv-thumbs button.on{color:#a9c2ff}
+html[data-theme="dark"] .sv-thumbs button.on .sv-thumb-img{box-shadow:0 0 0 2px #0d1526,0 0 0 4px #4f7dff,0 0 18px rgba(79,125,255,.5)}
+html[data-theme="dark"] .sv-cta{background:#0d1526;border-top-color:var(--line)}
+@media(min-width:900px){
+  html[data-theme="dark"] .sv-close{background:rgba(255,255,255,.08);color:#fff}
+  html[data-theme="dark"] .sv-close:hover{background:rgba(255,255,255,.15)}
+}

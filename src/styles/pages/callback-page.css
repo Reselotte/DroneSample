@@ -32,3 +32,30 @@
   .callback{padding-top:clamp(24px,3.4vh,48px);padding-bottom:clamp(20px,3.4vh,48px)}
   .callback .field{margin-bottom:clamp(10px,1.6vh,18px)}
 }
+
+/* แท็บลอยขอบขวากลางจอ → หน้าคำนวณราคา (เปิดหน้ามาจะสไลด์เข้ามาจากขอบจอ) */
+.side-tab{position:fixed;right:0;top:50%;z-index:27;transform:translateY(-50%);display:flex;align-items:center;gap:12px;padding:14px 18px 14px 14px;border-radius:18px 0 0 18px;
+  background:var(--accent-grad,linear-gradient(135deg,#2453e6,#6b93ff));color:#fff;text-decoration:none;
+  box-shadow:0 12px 30px rgba(36,83,230,.35);animation:side-tab-in .6s .35s both;transition:padding .25s,box-shadow .25s}
+.side-tab:hover{padding-right:26px;box-shadow:0 16px 38px rgba(36,83,230,.45)}
+.side-tab:focus-visible{outline:3px solid #7aa2ee;outline-offset:3px}
+.side-tab-ic{flex:none;display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,.18);font-size:22px}
+.side-tab-tx{display:flex;flex-direction:column;line-height:1.3}
+.side-tab-tx small{font-size:12.5px;opacity:.88}
+.side-tab-tx b{font-size:16px;font-weight:600;white-space:nowrap}
+.side-tab-tx i{font-style:normal;display:inline-block;transition:transform .25s}
+.side-tab:hover .side-tab-tx i{transform:translateX(4px)}
+.side-tab-short{display:none}
+@keyframes side-tab-in{from{transform:translate(110%,-50%)}to{transform:translateY(-50%)}}
+
+/* จอที่ข้างฟอร์มไม่มีที่ว่างพอ: ย่อเหลือไอคอน + "คำนวณราคา" แนวตั้งแคบ ๆ */
+@media(max-width:1439px){
+  .side-tab{flex-direction:column;gap:5px;padding:10px 8px;border-radius:14px 0 0 14px}
+  .side-tab:hover{padding-right:12px}
+  .side-tab-tx{display:none}
+  .side-tab-short{display:block;font-size:11.5px;font-weight:600;line-height:1.25;text-align:center}
+  .side-tab-ic{width:36px;height:36px;font-size:19px;border-radius:10px}
+}
+@media(prefers-reduced-motion:reduce){
+  .side-tab{animation:none;transition:none}
+}

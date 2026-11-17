@@ -22,6 +22,7 @@ export default function useNavMagnify(navRef, headerRef, pillRef) {
     let my = 0;
     let raf = 0;
     let active = false;
+    let overSideButtons = false; // เมาส์อยู่บนปุ่มขนาดตัวอักษร/ปุ่มธีม
 
     const clearLinks = () => links.forEach((a) => { a.style.transform = ""; });
     const clearPill = () => { if (pill) pill.style.transform = ""; };
@@ -40,7 +41,8 @@ export default function useNavMagnify(navRef, headerRef, pillRef) {
 
     const frame = () => {
       raf = 0;
-      if (!desktopQuery.matches) { reset(); return; }
+      // จอเล็ก หรือเปิดโหมดตัวอักษรใหญ่ (เมนูถูก zoom/ขึ้นหลายบรรทัด) → ไม่ใช้เอฟเฟกต์ขยาย
+      if (!desktopQuery.matches || document.documentElement.dataset.textSize) { reset(); return; }
       const h = header.getBoundingClientRect();
       if (my > h.bottom + REACH || my < 0) { reset(); return; }
       let any = false;
@@ -72,7 +74,10 @@ export default function useNavMagnify(navRef, headerRef, pillRef) {
       }
 
       // ปุ่ม "ติดต่อเรา" ขยายจากขอบขวา ไม่ให้หลุดจอ
-      if (pill) {
+      // (ยกเว้นตอนเมาส์อยู่บนปุ่มขนาดตัวอักษร/ปุ่มธีมข้าง ๆ: ปุ่มขนาดตัวอักษรยืดออกมาทับ ถ้าขยายด้วยจะดูซ้อนกันรก)
+      if (pill && overSideButtons) {
+        clearPill();
+      } else if (pill) {
         const pcx = h.left + pill.offsetLeft + pill.offsetWidth / 2;
         const pcy = h.top + pill.offsetTop + pill.offsetHeight / 2;
         const ps = 1 + (PILL_MAX - 1) * closeness(pcx, pcy, SIGMA * 0.8);
@@ -85,6 +90,7 @@ export default function useNavMagnify(navRef, headerRef, pillRef) {
     const onMove = (e) => {
       mx = e.clientX;
       my = e.clientY;
+      overSideButtons = Boolean(e.target.closest?.(".text-size-toggle, .theme-toggle"));
       if (!raf) raf = requestAnimationFrame(frame);
     };
     const forceReset = () => { active = true; reset(); };

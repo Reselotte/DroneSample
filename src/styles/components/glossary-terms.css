@@ -1,0 +1,46 @@
+/* คำศัพท์ที่ชี้/แตะแล้วขึ้นคำอธิบาย (components/common/Term.jsx) + หัวข้อ "ศัพท์น่ารู้" ในหน้า FAQ */
+
+/* ── คำศัพท์: เส้นประใต้คำ + เครื่องหมาย ? เล็ก ๆ ── */
+.term{display:inline;margin:0;padding:0;min-height:0;border:0;background:none;color:inherit;font:inherit;letter-spacing:inherit;text-align:inherit;cursor:help;
+  text-decoration:underline dotted;text-decoration-thickness:.07em;text-underline-offset:.2em}
+.term:focus-visible{outline:3px solid #7aa2ee;outline-offset:3px;border-radius:4px}
+.term-q{display:inline-grid;place-items:center;width:1.25em;height:1.25em;margin-left:.2em;border-radius:50%;
+  font-size:.45em;font-weight:700;line-height:1;vertical-align:.9em;text-decoration:none;
+  background:color-mix(in srgb,currentColor 16%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,currentColor 45%,transparent);transition:transform .2s}
+.term:hover .term-q,.term.is-open .term-q{transform:scale(1.2)}
+/* ในข้อความปกติ ไม่ต้องลอยสูงเท่าในหัวข้อใหญ่ */
+p .term-q,.stats .term-q{font-size:.7em;vertical-align:.35em}
+
+/* ── กล่องอธิบาย ── */
+.term-pop{position:fixed;z-index:140;width:min(320px,calc(100vw - 24px));padding:12px;border-radius:16px;
+  background:#fff;color:#111418;border:1px solid rgba(36,83,230,.16);box-shadow:0 18px 44px rgba(16,32,72,.22);
+  text-align:left;font-size:14px;font-weight:400;line-height:1.6;letter-spacing:normal;text-shadow:none;animation:term-in .16s ease-out}
+.term-pop.is-above{animation-name:term-in-up}
+.term-pop b{display:block;margin-bottom:4px;font-size:15px;font-weight:600;color:#0f1a2e}
+.term-pop p{margin:0;color:#3d4452}
+.term-pop-vis{aspect-ratio:16/9;margin-bottom:10px;border-radius:10px;overflow:hidden}
+.term-pop-vis>svg{display:block;width:100%;height:100%}
+@keyframes term-in{from{opacity:0;transform:translateY(4px)}}
+@keyframes term-in-up{from{opacity:0;transform:translateY(-4px)}}
+@media(prefers-reduced-motion:reduce){
+  .term-pop{animation:none}
+  .term-q{transition:none}
+}
+
+/* ── ศัพท์น่ารู้ (หน้า FAQ) ── */
+.gloss{max-width:980px;margin:36px auto 0;text-align:left}
+.gloss-title{margin:0;font-size:22px;text-align:center}
+.gloss-sub{margin:4px 0 16px;color:var(--mu);text-align:center}
+.gloss-grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr))}
+.gloss-item{display:flex;flex-direction:column;padding:0!important;overflow:hidden}
+.gloss-vis{aspect-ratio:16/7;overflow:hidden}
+.gloss-vis>svg{display:block;width:100%;height:100%}
+.gloss-tx{padding:14px 16px 16px}
+.gloss-tx h4{margin:0 0 6px;font-size:16px}
+.gloss-item .gloss-tx p{margin:0;font-size:14px;line-height:1.6}
+
+/* ── ธีมมืด ── */
+html[data-theme="dark"] .term-pop{background:#0f1829;color:var(--tx);border-color:var(--line);box-shadow:0 18px 44px rgba(0,0,0,.55),0 0 24px rgba(79,125,255,.18)}
+html[data-theme="dark"] .term-pop b{color:#f3f6fc}
+html[data-theme="dark"] .term-pop p{color:#b4bfd3}
+.gloss-ic{display:grid;place-items:center;width:48px;height:48px;margin-bottom:12px;border-radius:14px;font-size:24px;color:#fff;background:var(--accent-grad,linear-gradient(135deg,#2453e6,#6b93ff));box-shadow:0 8px 20px rgba(36,83,230,.3)}

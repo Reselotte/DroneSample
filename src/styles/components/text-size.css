@@ -1,0 +1,126 @@
+/*
+ * ขนาดตัวอักษร (ปุ่ม ก / ก+ / ก++ มุมขวาบน → components/layout/TextSizeToggle.jsx)
+ * <html data-text-size="lg|xl"> → ขยายเนื้อหาทั้งหมดด้วย zoom (ตัวหนังสือ ช่องกรอก ปุ่ม รูป ขยายตามกันหมด layout ไม่เพี้ยน)
+ * ไม่ขยาย: แถบเมนูบน และปุ่มลอยต่าง ๆ (ขนาดพอดีจออยู่แล้ว ถ้าขยายจะล้นจอ)
+ */
+html[data-text-size="lg"]{--ts:1.15}
+html[data-text-size="xl"]{--ts:1.3}
+
+html[data-text-size] #root>section:not(.hero),
+html[data-text-size] #root>footer,
+html[data-text-size] .hero>.wrap,
+html[data-text-size] .sv-info,
+html[data-text-size] #dlg .box{zoom:var(--ts)}
+
+/* กล่องอธิบายศัพท์ (วางตำแหน่งด้วย JS จึงขยายเฉพาะตัวหนังสือ ไม่ใช้ zoom) */
+html[data-text-size] .term-pop{width:min(calc(320px * var(--ts)),calc(100vw - 24px));font-size:calc(14px * var(--ts))}
+html[data-text-size] .term-pop b{font-size:calc(15px * var(--ts))}
+/* ปุ่ม LINE ลอย */
+html[data-text-size] .float .btn{font-size:calc(15.5px * var(--ts))}
+
+/* ── แถบเมนูด้านบน (toolbar) ขยายตามด้วย ──
+ * จอคอม: เมนูย้ายลงไปเป็นแถวที่ 2 ใต้โลโก้ และขึ้นบรรทัดใหม่ได้ถ้ายาว (ไม่ล้นจอ)
+ * ปุ่มธีม/ขนาดตัวอักษรที่ลอยมุมขวาบนก็ขยายตาม (zoom ขยายตำแหน่งด้วย จึงยังตรงกับแถบเมนู) */
+/* จอคอม: ขยายทั้งแถบ (เมนูลงไปแถวที่ 2 ด้านล่าง) */
+@media(min-width:900px){
+  html[data-text-size] header,
+  html[data-text-size] .theme-toggle,
+  html[data-text-size] .text-size-toggle{zoom:var(--ts)}
+}
+/* มือถือ: แถวบนจอแคบ ขยายทั้งแถบแล้วปุ่ม "ติดต่อเรา" จะตกลงแถว 2 → ขยายเฉพาะตัวหนังสือเมนูที่กางลงมาแทน */
+@media(max-width:899px){
+  html[data-text-size] #nav a,
+  html[data-text-size] #nav .nav-toggle{font-size:calc(15px * var(--ts));min-height:calc(42px * var(--ts))}
+}
+@media(min-width:900px){
+  html[data-text-size] #nav{order:3;flex:none;width:100%;flex-wrap:wrap;justify-content:center;gap:4px 2px;padding:0 0 8px}
+  html[data-text-size] #nav a{padding:6px 12px;font-size:15px}
+}
+
+/* ── ตัวหนังสือที่เล็กเกินไป: ขั้นต่ำ 13px (ทุกคนได้ ไม่ต้องกดปุ่ม) ── */
+.callback .note,.calcpage .note,.legend,.lcard-code,.stats div,.opt,.lfilters label{font-size:13px}
+.copy{font-size:13.5px}
+.side-tab-short{font-size:12.5px}
+
+/* ── ปุ่มปรับขนาด (ข้างปุ่มธีม) ── */
+header .wrap{padding-right:calc(max(16px,env(safe-area-inset-right)) + 108px)}
+.text-size-toggle{position:fixed;top:10px;right:calc(max(16px,env(safe-area-inset-right)) + 52px);z-index:25;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:44px;height:44px;min-height:44px;padding:0;
+  border-radius:50%;border:1px solid rgba(36,83,230,.18);background:#fff;color:#2453e6;cursor:pointer;
+  box-shadow:0 4px 14px rgba(36,83,230,.14);transition:transform .2s,background .2s}
+.text-size-toggle:hover{background:#f0f4ff}
+.text-size-toggle:active{transform:scale(.92)}
+.text-size-toggle:focus-visible{outline:3px solid #7aa2ee;outline-offset:2px}
+.tst-glyph{font-size:17px;font-weight:700;line-height:1;transition:font-size .2s}
+.text-size-toggle.is-lg .tst-glyph{font-size:20px}
+.text-size-toggle.is-xl .tst-glyph{font-size:23px}
+.tst-dots{display:flex;gap:3px}
+.tst-dots i{width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.25}
+.tst-dots i.on{opacity:1}
+@media(max-width:360px){
+  .text-size-toggle{width:40px;height:40px;min-height:40px;right:calc(max(16px,env(safe-area-inset-right)) + 46px)}
+}
+html[data-theme="dark"] .text-size-toggle{background:rgba(15,24,41,.85);border-color:rgba(160,190,255,.4);color:#a9c2ff;
+  box-shadow:0 0 0 1px rgba(141,176,255,.2),0 0 16px rgba(79,125,255,.3)}
+html[data-theme="dark"] .text-size-toggle:hover{background:#17233b}
+
+/* ── ป้าย "ขนาดตัวอักษร": ปุ่มยืดออกไปทางซ้ายตอนเอาเมาส์ชี้/โฟกัส ──
+ * - ปกติเป็นวงกลม ก กว้างคงที่
+ * - ชี้แล้ว: ปุ่มยืดออก 112px (ข้อความกว้างคงที่ 100px + ระยะ 12px) ข้อความเลื่อนเข้า+จางขึ้นตามหลังเล็กน้อย ตัว ก เด้งเบา ๆ
+ * - แถบเมนูเว้นที่ด้านขวาเพิ่ม 112px พร้อมกัน → ดันปุ่ม "ติดต่อเรา" ออกไปทางซ้าย ไม่ถูกบัง
+ *   (ใช้ :has เพราะปุ่มอยู่นอก <header>; จอ < 1200px เมนูแน่นเกินจะดัน จึงยื่นทับชั่วคราวแทน)
+ * ตัว ก อยู่ที่เดิมตลอด (row-reverse + ยึดขอบขวา) */
+:root{--tst-open:112px;--tst-ease:cubic-bezier(.4,0,.2,1)}
+.text-size-toggle{flex-direction:row-reverse;justify-content:flex-start;gap:0;width:auto;min-width:44px;padding:0;border-radius:99px;
+  transition:box-shadow .3s,background .2s}
+.tst-icon{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:42px;height:42px}
+.tst-label{display:block;max-width:0;padding-left:0;overflow:hidden;
+  transition:max-width .5s var(--tst-ease),padding .5s var(--tst-ease)}
+.tst-label-in{display:flex;flex-direction:column;align-items:flex-start;gap:1px;width:100px;
+  font-size:13.5px;font-weight:600;line-height:1.15;white-space:nowrap;
+  opacity:0;transform:translateX(14px);transition:opacity .2s,transform .3s var(--tst-ease)}
+.tst-label-in small{font-size:11.5px;font-weight:500;opacity:.75}
+.text-size-toggle:hover,
+.text-size-toggle:focus-visible{z-index:26;box-shadow:0 8px 24px rgba(36,83,230,.22)}
+.text-size-toggle:hover .tst-label,
+.text-size-toggle:focus-visible .tst-label{max-width:112px;padding-left:12px}
+.text-size-toggle:hover .tst-label-in,
+.text-size-toggle:focus-visible .tst-label-in{opacity:1;transform:none;transition:opacity .3s .12s,transform .45s .08s var(--tst-ease)}
+.text-size-toggle:hover .tst-glyph,
+.text-size-toggle:focus-visible .tst-glyph{animation:tst-pop .45s var(--tst-ease)}
+@keyframes tst-pop{0%{transform:scale(1)}40%{transform:scale(1.22) rotate(-6deg)}100%{transform:none}}
+
+/* ดันปุ่ม "ติดต่อเรา": แถบเมนูเว้นที่เพิ่มตามที่ปุ่มยืด (เลื่อนพร้อมกันด้วยจังหวะเดียวกัน) */
+header .wrap{transition:padding-right .5s var(--tst-ease)}
+@media(min-width:1200px){
+  body:has(.text-size-toggle:hover) header .wrap,
+  body:has(.text-size-toggle:focus-visible) header .wrap{padding-right:calc(max(16px,env(safe-area-inset-right)) + 108px + var(--tst-open))}
+}
+
+@media(hover:none){
+  .text-size-toggle:hover .tst-label{max-width:0;padding-left:0}
+  .text-size-toggle:hover .tst-label-in{opacity:0}
+  .text-size-toggle:hover .tst-glyph{animation:none}
+}
+html[data-theme="dark"] .text-size-toggle:hover,
+html[data-theme="dark"] .text-size-toggle:focus-visible{box-shadow:0 0 0 1px rgba(141,176,255,.4),0 0 22px rgba(79,125,255,.45)}
+@media(prefers-reduced-motion:reduce){
+  /* การยืดของปุ่ม + เลื่อนปุ่ม "ติดต่อเรา" เป็นการเคลื่อนไหวเล็กน้อย จึงคงไว้แม้ตั้งค่าลดการเคลื่อนไหว (ปิดเฉพาะตัว ก เด้ง) */
+  .text-size-toggle:hover .tst-glyph{animation:none}
+}
+
+/* มือถือ (ไม่มีเมาส์): ปุ่มยืดเอง (is-peek) ตอนเข้าเว็บ 2 ครั้งแรก และหลังแตะเปลี่ยนขนาด
+ * วางหลังกฎ hover:none เพื่อทับ (มือถือบางรุ่นค้างสถานะ :hover หลังแตะ) */
+.text-size-toggle.is-peek{z-index:26;box-shadow:0 8px 24px rgba(36,83,230,.25)}
+.text-size-toggle.is-peek .tst-label{max-width:112px;padding-left:12px}
+.text-size-toggle.is-peek .tst-label-in{opacity:1;transform:none;transition:opacity .3s .12s,transform .45s .08s var(--tst-ease)}
+html[data-theme="dark"] .text-size-toggle.is-peek{box-shadow:0 0 0 1px rgba(141,176,255,.4),0 0 22px rgba(79,125,255,.45)}
+
+/* ตัวอักษรใหญ่: เมนูลงไปแถวที่ 2 ทำให้แถวแรกเตี้ยลง → ล็อกแถวแรกให้สูง 64px เท่าเดิม
+ * ปุ่ม "ติดต่อเรา" จะอยู่กึ่งกลางแนวเดียวกับปุ่ม ก / ปุ่มธีม (ที่ลอยอยู่ top:10px สูง 44px) */
+html[data-text-size] header .pill{margin-top:10px;margin-bottom:10px}
+
+/* มือถือ: ล็อกแถวบนสูง 64px → ปุ่ม "ติดต่อเรา" และโลโก้อยู่กึ่งกลางแนวเดียวกับปุ่ม ก / ปุ่มธีม (top:10px สูง 44px) */
+@media(max-width:899px){
+  header .pill{margin-top:10px;margin-bottom:10px}
+}

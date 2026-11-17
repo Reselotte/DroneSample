@@ -235,3 +235,12 @@ html[data-theme="light"] footer{background:linear-gradient(180deg,rgba(255,255,2
   border-image:linear-gradient(90deg,transparent,rgba(61,109,245,.35),rgba(6,199,85,.25),transparent) 1}
 html[data-theme="light"] footer a:hover{color:#1d44c4}
 html[data-theme="light"] .qr{box-shadow:var(--card-shadow)}
+
+/* ── ความคมชัดตัวหนังสือ (อ่านง่ายสำหรับผู้สูงอายุ): ตัวสีเทาเข้มขึ้นทั้งหมด ── */
+html[data-theme="light"]{--mu:#454d5c}
+html[data-theme="light"] #nav a{color:#333b4a}
+html[data-theme="light"] .eyebrow{color:#047a3c}
+html[data-theme="light"] .lcard-code{color:#5f6878}
+html[data-theme="light"] .logos div{color:#6b7383}
+html[data-theme="light"] input::placeholder,
+html[data-theme="light"] textarea::placeholder{color:#6b7385}

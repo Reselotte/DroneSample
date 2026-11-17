@@ -1,4 +1,5 @@
 import PriceCalculator from "./PriceCalculator";
+import { DroneIcon } from "../../components/common/Icons";
 
 /** หน้าคำนวณราคาที่ดิน (#/calc): กรอกขนาด + ราคาต่อหน่วย → ได้ราคารวมทันที */
 export default function CalcPage() {
@@ -12,9 +13,14 @@ export default function CalcPage() {
           <PriceCalculator />
         </div>
 
-        <a className="cross-link" href="#/callback">
-          <b>อยากรู้สภาพที่ดินจริง ระดับความสูง ทางน้ำ ก่อนตั้งราคา?</b>
-          <span>ให้ทีมงานติดต่อกลับ →</span>
+        {/* แถบชวนไปหน้าติดต่อกลับ: ขอบแสงวิ่งรอบ + เรืองเป็นจังหวะ + แสงกวาด ให้สะดุดตา */}
+        <a className="cross-link glow-cta" href="#/callback">
+          <span className="glow-cta-ic"><DroneIcon /></span>
+          <span className="glow-cta-tx">
+            <b>อยากรู้สภาพที่ดินจริง ระดับความสูง ทางน้ำ ก่อนตั้งราคา?</b>
+            <small>ให้ทีมงานบินโดรนสำรวจ ปรึกษาฟรี ไม่มีค่าใช้จ่าย</small>
+          </span>
+          <span className="glow-cta-btn">ให้ทีมงานติดต่อกลับ <i aria-hidden="true">→</i></span>
         </a>
       </div>
     </section>

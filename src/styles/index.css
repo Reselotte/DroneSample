@@ -11,6 +11,7 @@
 @import "./pages/home-sell-potential.css";
 @import "./pages/home-service-types.css";
 @import "./pages/works-page.css";
+@import "./pages/sample-viewer.css";
 @import "./pages/steps-page.css";
 @import "./components/file-drop-zone.css";
 @import "./pages/callback-page.css";
@@ -20,5 +21,7 @@
 @import "./pages/lands-page.css";
 @import "./pages/admin-page.css";
 @import "./components/icons-and-theme-toggle.css";
+@import "./components/glossary-terms.css";
+@import "./components/text-size.css";
 @import "./theme-light.css"; /* ธีมต้องอยู่ท้ายสุด */
 @import "./theme-dark.css";

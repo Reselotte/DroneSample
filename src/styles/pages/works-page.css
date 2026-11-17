@@ -57,3 +57,17 @@ ul.ck li{font-size:14.5px;padding:5px 0 5px 24px}
 .stats div{background:#eef3fb}
 .logos div{background:#fff;border:1px solid rgba(11,42,91,.08);color:#a3acbb;font-weight:500;box-shadow:0 4px 14px rgba(11,42,91,.05)}
 .tabs button:focus-visible{outline:3px solid #7aa2ee;outline-offset:2px}
+
+/* ── การ์ดตัวอย่างกดดูได้ ── */
+.gal figure{transition:transform .25s,box-shadow .25s}
+.gal figure:hover{transform:translateY(-4px)}
+.gal-open{display:block;width:100%;min-height:0;padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:zoom-in}
+.gal-open:focus-visible{outline:3px solid #7aa2ee;outline-offset:4px;border-radius:14px}
+.gal-open .map>svg{transition:transform .5s}
+.gal-open:hover .map>svg{transform:scale(1.06)}
+.gal-hint{position:absolute;left:50%;top:50%;transform:translate(-50%,-30%);opacity:0;padding:8px 18px;border-radius:99px;background:rgba(6,22,48,.78);color:#fff;font-size:14px;font-weight:600;white-space:nowrap;pointer-events:none;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);transition:opacity .25s,transform .25s}
+.gal-open:hover .gal-hint,.gal-open:focus-visible .gal-hint{opacity:1;transform:translate(-50%,-50%)}
+@media(hover:none){
+  .gal-hint{opacity:1;left:auto;top:auto;right:8px;bottom:8px;transform:none;padding:4px 12px;font-size:12.5px}
+  .gal figure:hover{transform:none}
+}
