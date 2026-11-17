@@ -134,8 +134,71 @@ export default function PostListingPage() {
         <p className="sub">กรอกข้อมูลที่ดิน <span className="hl">ทีมงานตรวจสอบก่อนเผยแพร่</span> ผู้ซื้อติดต่อผ่านทีมงาน ข้อมูลติดต่อของท่านไม่แสดงบนเว็บ</p>
 
         <form className="post-form" noValidate onSubmit={submit}>
-          <div className="card post-block">
-            <h3>1. ข้อมูลที่ดิน</h3>
+          {/* คอม: ซ้าย = ผู้ขาย + ปุ่มส่ง (ค้างตอนเลื่อน) / ขวา = ข้อมูลที่ดิน · มือถือ: ผู้ขาย → ที่ดิน → ปุ่มส่ง (จัดลำดับด้วย CSS) */}
+          <div className="post-side">
+            <div className="card post-block post-seller">
+              <h3>1. ข้อมูลผู้ขาย</h3>
+              <p className="post-private"><LockIcon /> ข้อมูลส่วนนี้ทีมงานเห็นเท่านั้น ไม่แสดงบนเว็บ</p>
+
+              <div className="row2">
+                <div className="field">
+                  <label htmlFor="p_name">ชื่อ <span className="req">*</span></label>
+                  <input id="p_name" autoComplete="name" maxLength={100} {...bind("sellerName")} />
+                  <div className="err">{errors.sellerName}</div>
+                </div>
+                <div className="field">
+                  <label htmlFor="p_phone">หมายเลขโทรศัพท์ <span className="req">*</span></label>
+                  <input id="p_phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="08x-xxx-xxxx" {...bind("phone")} />
+                  <div className="err">{errors.phone}</div>
+                </div>
+              </div>
+
+              <div className="row2">
+                <div className="field">
+                  <label htmlFor="p_line">LINE ID <span className="opt">(ไม่บังคับ)</span></label>
+                  <input id="p_line" maxLength={50} {...bind("lineId")} />
+                </div>
+                <div className="field">
+                  <label htmlFor="p_deed">เลขโฉนด <span className="opt">(ไม่บังคับ)</span></label>
+                  <input id="p_deed" maxLength={50} {...bind("deedNo")} />
+                </div>
+              </div>
+
+              <FileDropZone
+                attachments={deed}
+                id="p_deedfiles"
+                label={<>สำเนาโฉนด <span className="opt">(ไม่บังคับ ช่วยให้ตรวจสอบได้เร็วขึ้น)</span></>}
+                hint="รองรับรูปภาพและ PDF สูงสุด 5 ไฟล์ (PDF ไม่เกิน 4 MB ต่อไฟล์)"
+                note="แนะนำให้ปิดบังเลขบัตรประชาชนก่อนแนบ"
+              >
+                <b>เลือกไฟล์ หรือถ่ายภาพสำเนาโฉนด</b>
+              </FileDropZone>
+            </div>
+            <div className="card post-block post-final">
+              <div className="field">
+                <label style={{ display: "flex", gap: 8, alignItems: "flex-start", color: "var(--tx)" }}>
+                  <input
+                    type="checkbox"
+                    style={{ width: "auto", marginTop: 5 }}
+                    checked={values.consent}
+                    onChange={(e) => setValues((v) => ({ ...v, consent: e.target.checked }))}
+                  />
+                  <span>
+                    ข้าพเจ้าเป็นเจ้าของที่ดินหรือได้รับมอบอำนาจให้ขาย และยินยอมให้ทีมงานใช้ข้อมูลนี้เพื่อตรวจสอบและติดต่อกลับ <span className="req">*</span>
+                  </span>
+                </label>
+                <div className="err">{errors.consent}</div>
+              </div>
+
+              <button className="btn btn-line" type="submit" disabled={sending} style={{ width: "100%" }}>
+                {sending ? "กำลังส่งประกาศ…" : "ส่งประกาศให้ทีมงานตรวจสอบ"}
+              </button>
+              <div className="err">{errors.send}</div>
+            </div>
+          </div>
+
+          <div className="card post-block post-land">
+            <h3>2. ข้อมูลที่ดิน</h3>
 
             <div className="field">
               <label htmlFor="p_title">หัวข้อประกาศ <span className="req">*</span></label>
@@ -218,65 +281,6 @@ export default function PostListingPage() {
               <b>เลือกรูป หรือถ่ายภาพที่ดิน</b>
             </FileDropZone>
             <div className="err">{errors.photos}</div>
-          </div>
-
-          <div className="card post-block">
-            <h3>2. ข้อมูลผู้ขาย</h3>
-            <p className="post-private"><LockIcon /> ข้อมูลส่วนนี้ทีมงานเห็นเท่านั้น ไม่แสดงบนเว็บ</p>
-
-            <div className="row2">
-              <div className="field">
-                <label htmlFor="p_name">ชื่อ <span className="req">*</span></label>
-                <input id="p_name" autoComplete="name" maxLength={100} {...bind("sellerName")} />
-                <div className="err">{errors.sellerName}</div>
-              </div>
-              <div className="field">
-                <label htmlFor="p_phone">หมายเลขโทรศัพท์ <span className="req">*</span></label>
-                <input id="p_phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="08x-xxx-xxxx" {...bind("phone")} />
-                <div className="err">{errors.phone}</div>
-              </div>
-            </div>
-
-            <div className="row2">
-              <div className="field">
-                <label htmlFor="p_line">LINE ID <span className="opt">(ไม่บังคับ)</span></label>
-                <input id="p_line" maxLength={50} {...bind("lineId")} />
-              </div>
-              <div className="field">
-                <label htmlFor="p_deed">เลขโฉนด <span className="opt">(ไม่บังคับ)</span></label>
-                <input id="p_deed" maxLength={50} {...bind("deedNo")} />
-              </div>
-            </div>
-
-            <FileDropZone
-              attachments={deed}
-              id="p_deedfiles"
-              label={<>สำเนาโฉนด <span className="opt">(ไม่บังคับ ช่วยให้ตรวจสอบได้เร็วขึ้น)</span></>}
-              hint="รองรับรูปภาพและ PDF สูงสุด 5 ไฟล์ (PDF ไม่เกิน 4 MB ต่อไฟล์)"
-              note="แนะนำให้ปิดบังเลขบัตรประชาชนก่อนแนบ"
-            >
-              <b>เลือกไฟล์ หรือถ่ายภาพสำเนาโฉนด</b>
-            </FileDropZone>
-
-            <div className="field">
-              <label style={{ display: "flex", gap: 8, alignItems: "flex-start", color: "var(--tx)" }}>
-                <input
-                  type="checkbox"
-                  style={{ width: "auto", marginTop: 5 }}
-                  checked={values.consent}
-                  onChange={(e) => setValues((v) => ({ ...v, consent: e.target.checked }))}
-                />
-                <span>
-                  ข้าพเจ้าเป็นเจ้าของที่ดินหรือได้รับมอบอำนาจให้ขาย และยินยอมให้ทีมงานใช้ข้อมูลนี้เพื่อตรวจสอบและติดต่อกลับ <span className="req">*</span>
-                </span>
-              </label>
-              <div className="err">{errors.consent}</div>
-            </div>
-
-            <button className="btn btn-line" type="submit" disabled={sending} style={{ width: "100%" }}>
-              {sending ? "กำลังส่งประกาศ…" : "ส่งประกาศให้ทีมงานตรวจสอบ"}
-            </button>
-            <div className="err">{errors.send}</div>
           </div>
         </form>
       </div>

@@ -211,14 +211,12 @@ html[data-theme="dark"] .pill:hover{box-shadow:0 0 22px rgba(79,125,255,.55),ins
 html[data-theme="dark"] .theme-toggle{box-shadow:0 0 0 1px rgba(255,211,107,.25),0 0 18px rgba(255,211,107,.3)}
 html[data-theme="dark"] .theme-toggle:hover{box-shadow:0 0 0 1px rgba(255,211,107,.55),0 0 26px rgba(255,211,107,.5)}
 /* ปุ่ม LINE ลอยมุมจอ: เรืองแสงเป็นจังหวะหายใจ */
-html[data-theme="dark"] .float .btn{animation:glow-breathe 2.6s ease-in-out infinite}
 @keyframes glow-breathe{
   0%,100%{box-shadow:0 0 0 1px rgba(6,199,85,.6),0 0 14px rgba(6,199,85,.45),0 0 32px rgba(6,199,85,.2)}
   50%{box-shadow:0 0 0 1px rgba(6,199,85,.9),0 0 26px rgba(6,199,85,.8),0 0 60px rgba(6,199,85,.4)}
 }
 html[data-theme="dark"] .scroll-cue-circle{box-shadow:0 0 18px rgba(141,176,255,.55),0 0 40px rgba(79,125,255,.3)}
 @media(prefers-reduced-motion:reduce){
-  html[data-theme="dark"] .float .btn{animation:none;box-shadow:0 0 0 1px rgba(6,199,85,.7),0 0 20px rgba(6,199,85,.6)}
 }
 /* ปุ่มเลื่อนลงตอนลอยอยู่ (ทับเนื้อหา): ใช้พื้นฟ้าสดให้เห็นชัดบนทุกพื้นหลัง */
 html[data-theme="dark"] .scroll-cue.is-compact .scroll-cue-circle{background:var(--accent-grad);border-color:rgba(255,255,255,.85)}

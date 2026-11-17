@@ -20,8 +20,8 @@ export default function ListingCard({ listing }) {
         {listing.photos?.length > 1 && <span className="lcard-count"><CameraIcon /> {listing.photos.length}</span>}
       </div>
       <div className="lcard-tx">
-        <div className="lcard-price">฿ {formatPriceShort(listing.total_price)}</div>
         <h3>{listing.title}</h3>
+        <div className="lcard-price">฿ {formatPriceShort(listing.total_price)}</div>
         <div className="lcard-meta">
           <span><AreaIcon /> {formatArea(listing.rai, listing.ngan, listing.wah)}</span>
           <span><PinIcon /> {listing.district ? `${listing.district}, ` : ""}{listing.province}</span>

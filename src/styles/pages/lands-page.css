@@ -103,7 +103,7 @@ textarea:focus{outline:0;border-color:var(--g);box-shadow:0 0 0 4px rgba(11,42,9
 @media(min-width:1000px){
   .post .wrap{max-width:1200px}
   .post-form{max-width:none;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px;align-items:start}
-  .post-form>.post-block:last-child{position:sticky;top:84px}
+
 }
 
 /* ตัวกรอง: ขนาดกำหนดเอง (แถวเต็มความกว้างใต้ตัวกรอง) */
@@ -121,3 +121,25 @@ textarea:focus{outline:0;border-color:var(--g);box-shadow:0 0 0 4px rgba(11,42,9
 html[data-theme="dark"] .lfilters-custom{background:rgba(79,125,255,.1)}
 html[data-theme="dark"] .lfilters-range input{background:rgba(5,10,22,.55)}
 html[data-theme="dark"] .lfilters-warn{color:#ff9aa8}
+
+/* การ์ดประกาศ: ชื่อประกาศขึ้นก่อนและเด่นสุด ตามด้วยราคา */
+.lcard h3{font-size:17px;font-weight:600;color:var(--tx)}
+.lcard-price{margin-top:2px;font-size:19px}
+
+/* ── ลงประกาศ: ข้อมูลผู้ขายขึ้นก่อน ──
+ * มือถือ: ผู้ขาย → ที่ดิน → ยินยอม+ปุ่มส่ง (post-side ใช้ display:contents ให้ลูกเรียงตาม order)
+ * คอม: ซ้าย = ผู้ขาย + ปุ่มส่ง / ขวา = ข้อมูลที่ดิน */
+.post-side{display:contents}
+.post-seller{order:1}
+.post-land{order:2}
+.post-final{order:3}
+.post-final .field{margin-bottom:12px}
+@media(min-width:1000px){
+  .post-form{grid-template-columns:minmax(0,1fr) minmax(0,1.35fr)}
+  .post-side{display:flex;flex-direction:column;gap:16px;order:1}
+  .post-land{order:2}
+}
+/* จอสูงพอ: ค้างฝั่งผู้ขาย+ปุ่มส่งไว้ตอนเลื่อน (จอเตี้ยไม่ค้าง กันปุ่มส่งตกขอบจอ) */
+@media(min-width:1000px) and (min-height:900px){
+  .post-side{position:sticky;top:84px}
+}

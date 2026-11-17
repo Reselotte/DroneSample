@@ -20,7 +20,6 @@ html[data-theme="light"] .hero .hl{background:#dbe6fb;color:#0b2a5b}
 html[data-theme="light"] .hero .pts b{background:rgba(255,255,255,.8);border-color:rgba(11,42,91,.14);color:var(--tx);box-shadow:0 4px 14px rgba(11,42,91,.06)}
 html[data-theme="light"] .hero .btn-w{background:#0b2a5b;color:#fff;box-shadow:0 8px 22px rgba(11,42,91,.3)}
 html[data-theme="light"] .hero .btn-k{background:rgba(255,255,255,.75);color:var(--tx);border-color:rgba(11,42,91,.22)}
-html[data-theme="light"] .vbtn{background:rgba(255,255,255,.85);color:#0b2a5b;border-color:rgba(11,42,91,.22)}
 html[data-theme="light"] .scroll-cue{color:#0b2a5b}
 
 /* ── แบนเนอร์ "อยากรู้ไหมว่าที่ดินของคุณขายได้ดีแค่ไหน?" ── */
@@ -202,7 +201,6 @@ html[data-theme="light"] .btn-ghost:hover,
 html[data-theme="light"] .hero .btn-k:hover{border-color:var(--accent);box-shadow:0 6px 18px rgba(36,83,230,.16)}
 html[data-theme="light"] .btn-line{box-shadow:0 8px 22px rgba(6,199,85,.32)}
 html[data-theme="light"] .btn-line:hover{box-shadow:0 12px 28px rgba(6,199,85,.42)}
-html[data-theme="light"] .float .btn{box-shadow:0 10px 28px rgba(6,199,85,.45),0 0 0 4px rgba(6,199,85,.12)}
 
 /* ── แท็บ / สไลด์ / FAQ ── */
 html[data-theme="light"] .tabs{background:#fff;box-shadow:inset 0 0 0 1px var(--line),var(--card-shadow)}

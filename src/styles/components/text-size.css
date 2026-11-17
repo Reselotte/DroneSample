@@ -16,7 +16,6 @@ html[data-text-size] #dlg .box{zoom:var(--ts)}
 html[data-text-size] .term-pop{width:min(calc(320px * var(--ts)),calc(100vw - 24px));font-size:calc(14px * var(--ts))}
 html[data-text-size] .term-pop b{font-size:calc(15px * var(--ts))}
 /* ปุ่ม LINE ลอย */
-html[data-text-size] .float .btn{font-size:calc(15.5px * var(--ts))}
 
 /* ── แถบเมนูด้านบน (toolbar) ขยายตามด้วย ──
  * จอคอม: เมนูย้ายลงไปเป็นแถวที่ 2 ใต้โลโก้ และขึ้นบรรทัดใหม่ได้ถ้ายาว (ไม่ล้นจอ)
@@ -186,4 +185,14 @@ header .wrap{padding-right:calc(max(16px,env(safe-area-inset-right)) + 120px)}
 @media(min-width:1200px){
   body:has(.text-size-toggle:hover) header .wrap,
   body:has(.text-size-toggle:focus-visible) header .wrap{padding-right:calc(max(16px,env(safe-area-inset-right)) + 120px + var(--tst-open))}
+}
+
+/* มือถือ: เว้นที่ให้ปุ่ม ก/ปุ่มธีม (ลอยมุมขวาบน) เฉพาะแถวบน ด้วย margin ขวาของปุ่ม "ติดต่อเรา"
+ * แทน padding ของทั้งแถบ → แถวเมนู (ปุ่ม "เมนู" / รายการที่กางลงมา) เต็มความกว้างและอยู่กลางจอ */
+@media(max-width:899px){
+  header .wrap{padding-right:max(16px,env(safe-area-inset-right))}
+  header .pill{margin-right:120px}
+}
+@media(max-width:360px){
+  header .pill{margin-right:114px}
 }

@@ -1,21 +1,83 @@
-/* ปุ่ม LINE ลอยด้านล่าง และป้ายแจ้งเตือน (toast) */
-.float{position:fixed;left:0;right:0;bottom:0;z-index:30;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.95);border-top:1px solid var(--bd)}
-.float .btn{width:100%;max-width:520px;margin:0 auto;display:flex;font-size:17px}
+/* แท็บแอด LINE ลอยขอบขวากลางจอ (components/layout/FloatingLineButton.jsx) และป้ายแจ้งเตือน (toast) */
+
 .toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:var(--tx);color:#fff;padding:8px 16px;border-radius:99px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:40}
 .toast.show{opacity:1}
-.float .btn{font-size:19px}
-.float{background:rgba(255,255,255,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
-.float .btn{font-size:17px}
-.float{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
-.float{background:transparent;border:0;-webkit-backdrop-filter:none;backdrop-filter:none;pointer-events:none}
-.float .btn{pointer-events:auto;width:fit-content;padding-left:40px;padding-right:40px;box-shadow:0 12px 32px rgba(6,199,85,.45)}
+
+/* ── แท็บ LINE ──
+ * ส่วนที่เห็นตลอด (ไอคอน + "Contour ฟรี") อยู่ชิดขอบขวา
+ * ข้อความเต็มยืดออกไปทางซ้ายตอนชี้/โฟกัส หรือ is-peek (โชว์เองตอนเข้าเว็บ) */
+.line-tab{position:fixed;right:0;top:50%;z-index:30;transform:translateY(-50%);display:flex;align-items:center;
+  padding:10px 4px 10px 8px;border-radius:20px 0 0 20px;color:#fff;text-decoration:none;
+  background:linear-gradient(160deg,#0bd665 0%,#06c755 45%,#04a947 100%);
+  box-shadow:0 10px 28px rgba(6,199,85,.42),inset 0 1px 0 rgba(255,255,255,.3);
+  animation:lt-in .6s .3s cubic-bezier(.2,.8,.2,1) both;transition:box-shadow .3s,filter .2s}
+.line-tab:hover{box-shadow:0 14px 36px rgba(6,199,85,.55),inset 0 1px 0 rgba(255,255,255,.3);filter:brightness(1.04)}
+.line-tab:focus-visible{outline:3px solid #7aa2ee;outline-offset:3px}
+
+.lt-main{flex:none;display:flex;flex-direction:column;align-items:center;gap:6px;width:56px}
+.lt-ic{position:relative;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.22);font-size:22px}
+/* วงแสงกระเพื่อมจากไอคอนเป็นระยะ */
+.lt-ic:after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid rgba(255,255,255,.75);animation:lt-ring 2.8s ease-out 1.2s infinite;opacity:0}
+.lt-short{font-size:11.5px;font-weight:700;line-height:1.15;text-align:center;letter-spacing:.01em}
+
+.lt-full{display:block;max-width:0;overflow:hidden;transition:max-width .45s cubic-bezier(.4,0,.2,1)}
+.lt-full-in{display:flex;flex-direction:column;gap:1px;width:176px;padding:0 6px 0 10px;white-space:nowrap;
+  opacity:0;transform:translateX(12px);transition:opacity .2s,transform .3s cubic-bezier(.4,0,.2,1)}
+.lt-full-in small{font-size:12.5px;font-weight:600;opacity:.92}
+.lt-full-in b{font-size:15.5px;font-weight:700}
+
+.line-tab:hover .lt-full,
+.line-tab:focus-visible .lt-full{max-width:180px}
+.line-tab:hover .lt-full-in,
+.line-tab:focus-visible .lt-full-in{opacity:1;transform:none;transition:opacity .3s .12s,transform .45s .08s cubic-bezier(.4,0,.2,1)}
+/* มือถือ: ไม่ยืดตอนแตะ (กันค้างสถานะ :hover) — แตะแล้วไป LINE เลย */
+@media(hover:none){
+  .line-tab:hover .lt-full{max-width:0}
+  .line-tab:hover .lt-full-in{opacity:0}
+}
+/* โชว์ข้อความเต็มเองตอนเข้าเว็บ (วางหลังกฎ hover:none เพื่อให้ทำงานบนมือถือด้วย) */
+.line-tab.is-peek .lt-full{max-width:180px}
+.line-tab.is-peek .lt-full-in{opacity:1;transform:none;transition:opacity .3s .12s,transform .45s .08s cubic-bezier(.4,0,.2,1)}
+
+@keyframes lt-in{from{transform:translate(110%,-50%)}}
+@keyframes lt-ring{0%{transform:scale(1);opacity:.9}70%,100%{transform:scale(1.65);opacity:0}}
+
 @media(max-width:600px){
-  .float .btn{width:100%}
+  .line-tab{padding:8px 3px 8px 6px;border-radius:16px 0 0 16px}
+  .lt-main{width:50px;gap:4px}
+  .lt-ic{width:34px;height:34px;font-size:19px}
+  .lt-short{font-size:10.5px}
+}
+@media(prefers-reduced-motion:reduce){
+  .line-tab{animation:none}
+  .lt-ic:after{animation:none}
 }
 
-/* ย้ายปุ่ม LINE ลอยไปไว้มุมขวาล่าง (ไม่บังลูกศรเลื่อนลงกลางจอ) */
-.float{left:auto;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));padding:0}
-.float .btn{width:auto;margin:0;padding:12px 22px;font-size:15.5px}
+/* ธีมมืด: เรืองแสงเขียวเป็นจังหวะหายใจ */
+html[data-theme="dark"] .line-tab{animation:lt-in .6s .3s cubic-bezier(.2,.8,.2,1) both,glow-breathe 2.6s 1s ease-in-out infinite}
+@media(prefers-reduced-motion:reduce){
+  html[data-theme="dark"] .line-tab{animation:none;box-shadow:0 0 0 1px rgba(6,199,85,.7),0 0 20px rgba(6,199,85,.6)}
+}
+
+/* หน้าติดต่อกลับมีแท็บ "คำนวณราคา" ขวากลางด้วย → เลื่อนลงไปใต้แท็บ LINE */
+body .side-tab{top:calc(50% + 110px)}
 @media(max-width:600px){
-  .float .btn{width:auto;padding:11px 18px;font-size:14.5px}
+  body .side-tab{top:calc(50% + 108px)}
+}
+
+/* ── หน้า A / หน้า B ในแท็บ LINE ──
+ * คอม: แสดงแค่หน้า A (ชี้แล้วยืดข้อความเต็มแทน)
+ * มือถือ: สลับ A ↔ B อัตโนมัติ (ใช้ keyframes เดียวกับปุ่มขนาดตัวอักษร ใน text-size.css) */
+.lt-face-a{display:flex;flex-direction:column;align-items:center;gap:6px}
+.lt-face-b{display:none}
+@media(hover:none){
+  .lt-main{position:relative;height:72px;overflow:hidden}
+  .lt-face{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .lt-face-a{gap:4px;animation:tst-face-a 6s ease-in-out infinite}
+  .lt-face-b{font-size:14px;font-weight:800;line-height:1.12;text-align:center;animation:tst-face-b 6s ease-in-out infinite}
+  .lt-face-b small{margin-top:3px;padding:1px 7px;border-radius:99px;background:rgba(255,255,255,.25);font-size:10.5px;font-weight:700}
+}
+@media(hover:none) and (prefers-reduced-motion:reduce){
+  .lt-face-a{animation-name:tst-fade-a}
+  .lt-face-b{animation-name:tst-fade-b}
 }
