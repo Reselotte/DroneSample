@@ -1,4 +1,5 @@
 import { supabase } from "./supabaseClient";
+import { normalizeThaiPhone } from "../utils/thaiPhone";
 
 /** ทุกอย่างที่คุยกับ Supabase เรื่องประกาศขายที่ดิน (โครงสร้างตารางดูที่ supabase/schema.sql) */
 
@@ -235,7 +236,7 @@ export async function fetchPhoneCounts(phones) {
  */
 export async function searchAdminListings(query) {
   const q = query.trim();
-  const compact = q.replace(/[\s-]/g, "");
+  const compact = /^\+?66/.test(q.replace(/[\s-]/g, "")) ? normalizeThaiPhone(q) : q.replace(/[\s-]/g, "");
   const base = (join) => db()
     .from("listings").select(adminSelect(join)).order("created_at", { ascending: false }).limit(ADMIN_LIMIT);
   const INNER = "listing_private!inner(*)";

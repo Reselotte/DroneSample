@@ -3,6 +3,7 @@ import siteConfig from "../../config/siteConfig";
 import useDeedFiles from "../../hooks/useDeedFiles";
 import DeedUploader from "./DeedUploader";
 import LocationField from "../../components/common/LocationField";
+import { PHONE_ERROR, PHONE_PLACEHOLDER, formatThaiPhone, isIntlFormat, isThaiPhone, normalizeThaiPhone } from "../../utils/thaiPhone";
 
 /** ลักษณะงานที่ลูกค้าสนใจ (ช่วยให้ทีมงานเตรียมข้อมูลก่อนโทรกลับ) */
 const PURPOSES = [
@@ -40,11 +41,11 @@ export default function CallbackForm({ hidden, onSent }) {
   const submit = async (e) => {
     e.preventDefault();
     const name = values.name.trim();
-    const phone = values.phone.trim().replace(/[\s-]/g, "");
+    const phone = normalizeThaiPhone(values.phone);
 
     const nextErrors = {
       name: name ? "" : "กรุณาระบุชื่อ",
-      phone: /^0\d{8,9}$/.test(phone) ? "" : "หมายเลขโทรศัพท์ไม่ถูกต้อง กรุณากรอกใหม่ เช่น 0812345678",
+      phone: isThaiPhone(phone) ? "" : PHONE_ERROR,
       consent: values.consent ? "" : "กรุณาให้ความยินยอมก่อนส่งข้อมูล",
       send: "",
     };
@@ -102,7 +103,9 @@ export default function CallbackForm({ hidden, onSent }) {
         </div>
         <div className="field">
           <label htmlFor="f_phone">หมายเลขโทรศัพท์ <span className="req">*</span></label>
-          <input id="f_phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="08x-xxx-xxxx" {...bind("phone")} />
+          <input id="f_phone" type="tel" inputMode="tel" autoComplete="tel" maxLength={20} placeholder={PHONE_PLACEHOLDER} {...bind("phone")} />
+          {isIntlFormat(values.phone) && isThaiPhone(values.phone) && <small className="phone-hint">✓ บันทึกเป็น {formatThaiPhone(values.phone)}</small>}
+
           <div className="err" id="e_phone">{errors.phone}</div>
         </div>
       </div>

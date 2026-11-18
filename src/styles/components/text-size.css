@@ -37,7 +37,7 @@ html[data-text-size] .term-pop b{font-size:calc(15px * var(--ts))}
 }
 
 /* ── ตัวหนังสือที่เล็กเกินไป: ขั้นต่ำ 13px (ทุกคนได้ ไม่ต้องกดปุ่ม) ── */
-.callback .note,.calcpage .note,.legend,.lcard-code,.stats div,.opt,.lfilters label{font-size:13px}
+.callback .note,.legend,.lcard-code,.stats div,.opt,.lfilters label{font-size:13px}
 .copy{font-size:13.5px}
 .side-tab-short{font-size:12.5px}
 

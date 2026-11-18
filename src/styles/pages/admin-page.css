@@ -3,60 +3,159 @@
 .adm h2:after{margin-left:0}
 .adm-login{max-width:400px;margin:20px auto 0;padding:22px!important}
 .adm-login h3{font-size:19px;margin-bottom:14px}
-.adm-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin:18px 0}
-.adm-tabs{margin:0!important;flex-wrap:wrap!important}
-.adm-user{display:flex;align-items:center;gap:10px;color:var(--mu);font-size:14px}
-.adm-user .btn{min-height:38px;padding:6px 14px;font-size:14px}
-.adm-list{display:flex;flex-direction:column;gap:14px}
-.adm-item{display:grid;gap:14px;padding:16px!important}
-@media(min-width:800px){
-  .adm-item{grid-template-columns:260px minmax(0,1fr)}
-}
-.adm-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;align-content:start}
-.adm-photos a:first-child{grid-column:1/-1}
-.adm-photos img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;display:block}
-.adm-body{display:flex;flex-direction:column;gap:6px;min-width:0}
-.adm-body h3{font-size:18px;margin:0}
-.adm-body a{color:var(--g);font-weight:600}
-.adm-top{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:13.5px;color:var(--mu)}
-.adm-code{padding:2px 10px;border-radius:99px;background:var(--c-x-blue-95);color:var(--g);font-weight:700}
-.adm-line{margin:0!important;color:var(--mu)!important;font-size:14.5px!important}
-.adm-price{margin:0!important;font-size:20px!important;font-weight:700;color:var(--g)!important}
-.adm-desc{margin:0!important;white-space:pre-line;font-size:14px!important;max-height:9em;overflow:auto}
-.adm-seller{display:flex;flex-direction:column;gap:2px;margin-top:6px;padding:12px 14px;border-radius:14px;background:var(--c-warn-tint);border:1px solid var(--c-x-gold-81-2);font-size:14.5px}
-.adm-seller b{font-weight:600;color:var(--c-warn-ink)}
-.adm-deeds{display:flex;flex-wrap:wrap;gap:4px 10px}
-.adm-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-.adm-actions .btn{min-height:40px;padding:8px 16px;font-size:14.5px}
+/* ── หลังบ้านแบบ dashboard: เมนูซ้าย + เนื้อหาขวา ── */
+.adm-app{display:grid;grid-template-columns:232px minmax(0,1fr);gap:0;padding:0!important;text-align:left;background:var(--c-l-page);border-top:1px solid var(--line)}
+.adm-side{position:sticky;top:64px;align-self:start;display:flex;flex-direction:column;gap:18px;height:calc(100vh - 64px);padding:20px 14px;background:var(--c-l-card);border-right:1px solid var(--line)}
+.adm-brand{display:flex;flex-direction:column;padding:0 8px}
+.adm-brand b{font-size:17px;color:var(--g)}
+.adm-brand span{font-size:12.5px;color:var(--mu)}
+.adm-nav{display:flex;flex-direction:column;gap:2px}
+.adm-nav a{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;color:var(--tx);font-size:14.5px;font-weight:500;text-decoration:none;transition:background .15s}
+.adm-nav a:hover{background:var(--c-x-gray-96-4)}
+.adm-nav a.on{background:var(--c-navy);color:var(--c-white)}
+.adm-nav svg,.adm-side-foot svg,.adm-search svg,.adm-add svg{flex:none;width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.adm-nav em{margin-left:auto;min-width:20px;padding:0 6px;border-radius:99px;background:var(--c-red);color:var(--c-white);font-style:normal;font-size:12px;font-weight:700;line-height:20px;text-align:center}
+.adm-side-foot{margin-top:auto;display:flex;flex-direction:column;gap:6px;padding-top:12px;border-top:1px solid var(--line);font-size:13px;color:var(--mu)}
+.adm-side-foot span{padding:0 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.adm-side-foot button{display:flex;align-items:center;gap:10px;min-height:0;padding:9px 10px;border:0;border-radius:10px;background:none;color:var(--tx);font:inherit;font-size:14.5px;cursor:pointer}
+.adm-side-foot button:hover{background:var(--c-x-gray-96-4)}
+.adm-main{min-width:0;padding:22px 26px 40px}
+.adm-head{margin-bottom:16px}
+.adm-head h1{margin:0;font-size:22px;line-height:1.3}
+.adm-head h1:after{display:none}
+.adm-head p{margin:2px 0 0!important;color:var(--mu);font-size:14px}
 
-/* ── ตัวเลขบนแท็บสถานะ ── */
-.adm-count{display:inline-block;min-width:22px;margin-left:6px;padding:0 7px;border-radius:99px;background:rgba(var(--c-navy-rgb),.1);font-size:12.5px;font-weight:700;line-height:20px;text-align:center}
-.adm-tabs button.on .adm-count{background:rgba(var(--c-white-rgb),.25);color:var(--c-white)}
-.adm-count.is-alert,.adm-tabs button.on .adm-count.is-alert{background:var(--c-red);color:var(--c-white)}
-
-/* ── ช่องค้นหา ── */
-.adm-search{display:flex;gap:8px;margin:0 0 14px}
-.adm-search input{flex:1;min-width:0}
-.adm-search .btn{flex:none;min-height:42px;padding:8px 18px;font-size:14.5px}
-.adm-search-info{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin:-4px 0 14px;font-size:14.5px;color:var(--mu)}
+/* แถบค้นหา + ปุ่มลงประกาศ */
+.adm-tools-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:14px}
+.adm-search{flex:1 1 320px;display:flex;align-items:center;gap:8px;max-width:520px;padding:0 12px;border:1px solid var(--line);border-radius:12px;background:var(--c-l-card);color:var(--mu)}
+.adm-search input{flex:1;min-width:0;border:0!important;background:transparent!important;box-shadow:none!important;padding:10px 0!important;font-size:14.5px}
+.adm-search:focus-within{border-color:var(--c-sky);box-shadow:0 0 0 3px rgba(var(--c-sky-rgb),.25)}
+.adm-add{display:inline-flex;align-items:center;gap:8px;margin-left:auto;min-height:42px;padding:8px 18px;border-radius:12px;background:var(--c-navy);color:var(--c-white)!important;font-size:14.5px;text-decoration:none}
+.adm-search-info{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin:0 0 12px;font-size:14px;color:var(--mu)}
 .adm-search-info b{color:var(--tx)}
 .adm-link{padding:0;min-height:0;border:0;background:none;color:var(--g);font:inherit;font-weight:600;text-decoration:underline;cursor:pointer}
+.adm-muted{color:var(--mu)}
 
-/* ── ป้ายสถานะ (ในผลค้นหาที่รวมทุกสถานะ) ── */
-.adm-status{padding:2px 10px;border-radius:99px;font-weight:600;font-size:12.5px;background:var(--c-x-gray-95-2);color:var(--c-x-blue-35-2)}
+/* การ์ดสรุปจำนวนแต่ละสถานะ */
+.adm-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.adm-stat{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:0;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--c-l-card);color:var(--tx);font:inherit;text-align:left;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.adm-stat:hover{border-color:var(--c-sky)}
+.adm-stat.on{border-color:var(--c-navy);box-shadow:inset 0 0 0 1px var(--c-navy)}
+.adm-stat-label{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:600}
+.adm-stat-label i,.adm-status i{width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
+.adm-stat.is-pending .adm-stat-label i{color:var(--c-x-gold-27)}
+.adm-stat.is-approved .adm-stat-label i{color:var(--c-x-green-26)}
+.adm-stat.is-sold .adm-stat-label i{color:var(--c-x-blue-45-2)}
+.adm-stat.is-rejected .adm-stat-label i{color:var(--c-x-red-39)}
+.adm-stat b{font-size:28px;line-height:1.2;font-weight:700}
+.adm-stat small{font-size:12.5px;color:var(--mu)}
+.adm-stat.is-alert b{color:var(--c-red-ink)}
+
+/* ตาราง */
+.adm-table-card{border:1px solid var(--line);border-radius:14px;background:var(--c-l-card);overflow:hidden}
+.adm-table-wrap{overflow-x:auto}
+.adm-table{width:100%;min-width:900px;border-collapse:collapse;font-size:14px}
+.adm-table th{padding:10px 12px;background:var(--c-x-gray-97-7);color:var(--mu);font-size:13px;font-weight:600;text-align:left;white-space:nowrap;border-bottom:1px solid var(--line)}
+.adm-table td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+.adm-sort{display:inline-flex;align-items:center;gap:4px;min-height:0;padding:0;border:0;background:none;color:inherit;font:inherit;cursor:pointer}
+.adm-sort svg{width:8px;height:11px;fill:currentColor}
+.adm-sort svg path{opacity:.35}
+.adm-sort svg.is-asc .up,.adm-sort svg.is-desc .down{opacity:1}
+.adm-row{cursor:pointer;transition:background .12s}
+.adm-row:hover{background:var(--c-x-gray-98-3)}
+.adm-row.is-open{background:var(--c-x-blue-97)}
+.adm-row.is-busy{opacity:.55}
+.adm-table .c-title{width:30%;min-width:240px}
+.adm-table .c-menu{width:44px;text-align:right}
+.adm-prod{display:flex;align-items:center;gap:10px;min-width:0}
+.adm-prod img,.adm-noimg{flex:none;width:40px;height:40px;border-radius:10px;object-fit:cover;background:var(--c-x-gray-95)}
+.adm-prod div{display:flex;flex-direction:column;min-width:0}
+.adm-prod b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.adm-prod small,.adm-sellercell small{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mu)}
+.adm-sellercell{display:flex;flex-direction:column}
+.adm-mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+.adm-num{font-weight:600;white-space:nowrap}
+.adm-table td:nth-child(4),.adm-table td:nth-child(6){white-space:nowrap}
+
+/* ป้ายสถานะ */
+.adm-status{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:8px;border:1px solid currentColor;font-size:12.5px;font-weight:600;white-space:nowrap;background:var(--c-x-gray-95-2);color:var(--c-x-blue-35-2)}
 .adm-status.is-pending{background:var(--c-x-gold-92);color:var(--c-x-gold-27)}
 .adm-status.is-approved{background:var(--c-x-green-93);color:var(--c-x-green-26)}
 .adm-status.is-sold{background:var(--c-x-blue-95-3);color:var(--c-x-blue-45-2)}
 .adm-status.is-rejected{background:var(--c-red-tint);color:var(--c-x-red-39)}
 
-/* ── เตือนเบอร์ซ้ำ ── */
-.adm-phone{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px}
-.adm-dup{min-height:0;padding:2px 10px;border:1px solid var(--c-x-red-80);border-radius:99px;background:var(--c-red-tint);color:var(--c-x-red-39);font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+/* เบอร์ซ้ำ */
+.adm-dup{min-height:0;padding:0 8px;white-space:nowrap;border:1px solid var(--c-x-red-80);border-radius:99px;background:var(--c-red-tint);color:var(--c-x-red-39);font:inherit;font-size:12px;font-weight:600;line-height:18px;cursor:pointer}
 .adm-dup:hover{background:var(--c-x-red-91)}
 
-/* ── ปุ่มลบ ── */
-.adm-actions .adm-del{margin-left:auto;background:transparent;border:1px solid var(--c-x-red-80);color:var(--c-red-ink)}
-.adm-actions .adm-del:hover{background:var(--c-red-tint)}
+/* เมนู ⋮ */
+.adm-dots{display:grid;place-items:center;width:32px;height:32px;min-height:0;padding:0;border:0;border-radius:8px;background:none;color:var(--tx);cursor:pointer}
+.adm-dots:hover,.adm-dots[aria-expanded="true"]{background:var(--c-x-gray-95)}
+.adm-dots svg{width:18px;height:18px;fill:currentColor}
+.adm-menu{position:fixed;z-index:200;display:flex;flex-direction:column;min-width:200px;padding:6px;border:1px solid var(--line);border-radius:12px;background:var(--c-l-card);box-shadow:0 12px 32px rgba(var(--c-navy-rgb),.18)}
+.adm-menu button,.adm-menu a{display:block;min-height:0;padding:9px 12px;border:0;border-radius:8px;background:none;color:var(--tx);font:inherit;font-size:14px;text-align:left;text-decoration:none;cursor:pointer}
+.adm-menu button:hover,.adm-menu a:hover{background:var(--c-x-gray-96-4)}
+.adm-menu button:disabled{opacity:.5;cursor:default}
+.adm-menu .is-ok{color:var(--c-x-green-26);font-weight:600}
+.adm-menu .is-danger{color:var(--c-red-ink);border-top:1px solid var(--line);border-radius:0 0 8px 8px;margin-top:4px}
+
+/* แถวรายละเอียด / แก้ไข */
+.adm-row-more>td{padding:14px 16px;background:var(--c-x-gray-98-3)}
+.adm-row-more .adm-edit{margin:0}
+.adm-details{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr) minmax(0,260px);gap:16px;align-items:start}
+.adm-details-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.adm-details-photos a:first-child{grid-column:1/-1}
+.adm-details-photos img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;display:block}
+.adm-details-main{display:flex;flex-direction:column;gap:6px;min-width:0}
+.adm-desc{margin:0!important;white-space:pre-line;font-size:13.5px!important;max-height:8em;overflow:auto}
+.adm-links{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13.5px}
+.adm-links a,.adm-seller a{color:var(--g);font-weight:600}
+.adm-seller{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:12px;background:var(--c-warn-tint);border:1px solid var(--c-x-gold-81-2);font-size:13.5px}
+.adm-seller b{font-weight:600;color:var(--c-warn-ink)}
+.adm-deeds{display:flex;flex-wrap:wrap;gap:4px 10px}
+.adm-code{padding:2px 10px;border-radius:99px;background:var(--c-x-blue-95);color:var(--g);font-weight:700}
+
+/* แบ่งหน้า */
+.adm-pager{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;font-size:13.5px;color:var(--mu)}
+.adm-pager b{color:var(--tx)}
+.adm-pager-btns{display:flex;flex-wrap:wrap;gap:6px}
+.adm-pager-btns button{min-width:36px;min-height:36px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:var(--c-l-card);color:var(--tx);font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.adm-pager-btns button:hover:not(:disabled){border-color:var(--c-sky)}
+.adm-pager-btns button.on{background:var(--c-navy);border-color:var(--c-navy);color:var(--c-white)}
+.adm-pager-btns button:disabled{opacity:.45;cursor:default}
+.adm-pager-gap{display:grid;place-items:center;min-width:24px}
+
+/* จอเล็ก: เมนูซ้ายกลายเป็นแถบบน */
+@media (max-width:900px){
+  .adm-app{grid-template-columns:minmax(0,1fr)}
+  .adm-side{position:static;min-width:0;height:auto;flex-direction:row;flex-wrap:nowrap;align-items:center;gap:8px;padding:10px 12px;border-right:0;border-bottom:1px solid var(--line)}
+  .adm-brand{display:none}
+  .adm-nav{flex:1;min-width:0;flex-direction:row;overflow-x:auto}
+  .adm-nav a{white-space:nowrap}
+  .adm-side-foot{margin:0 0 0 auto;flex-direction:row;align-items:center;padding:0;border:0}
+  .adm-side-foot span{display:none}
+  .adm-side-foot button{font-size:0;gap:0;padding:9px}
+  .adm-side-foot button svg{width:20px;height:20px}
+  .adm-add{margin-left:0}
+  .adm-main{padding:16px 14px 32px}
+  .adm-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .adm-details{grid-template-columns:1fr}
+}
+
+html[data-theme="dark"] .adm-app{background:transparent}
+html[data-theme="dark"] .adm-side,html[data-theme="dark"] .adm-search,html[data-theme="dark"] .adm-stat,html[data-theme="dark"] .adm-table-card,html[data-theme="dark"] .adm-pager-btns button{background:rgba(var(--c-white-rgb),.03);border-color:var(--c-d-border)}
+html[data-theme="dark"] .adm-nav a:hover,html[data-theme="dark"] .adm-side-foot button:hover,html[data-theme="dark"] .adm-menu button:hover,html[data-theme="dark"] .adm-menu a:hover,html[data-theme="dark"] .adm-dots:hover,html[data-theme="dark"] .adm-dots[aria-expanded="true"]{background:rgba(var(--c-white-rgb),.07)}
+html[data-theme="dark"] .adm-nav a.on,html[data-theme="dark"] .adm-pager-btns button.on,html[data-theme="dark"] .adm-add{background:var(--c-d-accent);border-color:var(--c-d-accent);color:var(--c-white)}
+html[data-theme="dark"] .adm-stat.on{border-color:var(--c-d-ink);box-shadow:inset 0 0 0 1px var(--c-d-ink)}
+html[data-theme="dark"] .adm-stat.is-alert b{color:var(--c-red-soft)}
+html[data-theme="dark"] .adm-table th{background:rgba(var(--c-white-rgb),.05);border-color:var(--c-d-border)}
+html[data-theme="dark"] .adm-table td{border-color:var(--c-d-border)}
+html[data-theme="dark"] .adm-row:hover{background:rgba(var(--c-white-rgb),.04)}
+html[data-theme="dark"] .adm-row.is-open,html[data-theme="dark"] .adm-row-more>td{background:rgba(var(--c-d-accent-rgb),.08)}
+html[data-theme="dark"] .adm-menu{background:var(--c-d-card);border-color:var(--c-d-border);box-shadow:0 12px 32px rgba(var(--c-black-rgb),.5)}
+html[data-theme="dark"] .adm-menu .is-ok{color:var(--c-x-green-67)}
+html[data-theme="dark"] .adm-menu .is-danger{color:var(--c-red-soft);border-color:var(--c-d-border)}
+html[data-theme="dark"] .adm-prod img,html[data-theme="dark"] .adm-noimg{background:rgba(var(--c-white-rgb),.08)}
 
 /* ── ฟอร์มแก้ไข ── */
 .adm-edit{box-shadow:inset 0 0 0 2px var(--g),0 10px 30px rgba(var(--c-navy-rgb),.12)!important}
@@ -75,12 +174,6 @@
 .adm-edit-seller .field{margin-bottom:4px}
 
 /* ── แถบเครื่องมือแอดมิน (สลับเมนู) ── */
-.adm-toolbar{display:flex;gap:4px;width:fit-content;max-width:100%;margin:0 0 18px;padding:4px;border-radius:14px;background:var(--c-x-blue-94-2);overflow-x:auto}
-.adm-toolbar a{padding:8px 16px;border-radius:10px;color:var(--mu);font-weight:600;font-size:15px;text-decoration:none;white-space:nowrap;transition:background .2s,color .2s}
-.adm-toolbar a:hover{color:var(--tx)}
-.adm-toolbar a.on{background:var(--c-l-card);color:var(--g);box-shadow:0 2px 8px rgba(var(--c-navy-rgb),.12)}
-html[data-theme="dark"] .adm-toolbar{background:rgba(var(--c-white-rgb),.05);box-shadow:inset 0 0 0 1px var(--line)}
-html[data-theme="dark"] .adm-toolbar a.on{background:rgba(var(--c-d-accent-rgb),.2);color:var(--c-white);box-shadow:inset 0 0 0 1px rgba(var(--c-d-ink-rgb),.45)}
 
 /* ── คู่มือสีเว็บ ── */
 .cg{display:flex;flex-direction:column;gap:22px;text-align:left}
@@ -253,7 +346,9 @@ html[data-theme="dark"] .ckl-sum-group.is-private b{color:var(--c-x-gold-68-2)}
 
 @media print{
   @page{size:A4;margin:0}
-  header,footer,.adm-toolbar,.adm .wrap>h2,.line-tab,.theme-toggle,.text-size-toggle,.scroll-cue{display:none!important}
+  header,footer,.adm-side,.adm-head,.adm .wrap>h2,.line-tab,.theme-toggle,.text-size-toggle,.scroll-cue{display:none!important}
+  .adm-app{display:block!important;border:0!important;background:#fff!important}
+  .adm-main{padding:0!important}
   html,body,html[data-theme] .adm.alt,.adm.alt{background:var(--c-white) none!important}
   .adm,.adm .wrap{padding:0!important;margin:0!important;max-width:none!important;width:auto!important}
   .ckl-sheet>:not(.ckl-print-doc){display:none!important}
@@ -351,3 +446,30 @@ html[data-theme="dark"] .ckl-sum-group.is-private b{color:var(--c-x-gold-68-2)}
   .is-private .pd-sum thead th{background:var(--c-warn-ink)}
   .is-private .pd-s-label b{color:var(--c-warn-ink)}
 }
+.adm-add:disabled{opacity:.5;cursor:default}
+
+/* ใบสรุปผลประกาศ (พิมพ์ A4 แนวนอน) */
+@page landscape{size:A4 landscape;margin:0}
+@media print{
+  .adm-listings>:not(.adm-report){display:none!important}
+  .adm-report{page:landscape}
+  .rp-stats{margin-bottom:10px}
+  .rp-stats td{text-align:center!important;font-size:14pt;font-weight:700;height:auto!important;padding:4px!important}
+  .rp-table{font-size:9pt}
+  .rp-table td{height:auto!important;padding:3px 5px!important;vertical-align:top!important}
+  .rp-table td b{display:block;font-weight:600}
+  .rp-table td small{display:block;font-size:8pt;color:#5b6475!important}
+  .rp-table .rp-no{width:10mm;text-align:center!important}
+  .rp-table .rp-code{width:18mm}
+  .rp-table .rp-area{width:26mm}
+  .rp-table .rp-loc{width:36mm}
+  .rp-table .rp-seller{width:38mm}
+  .rp-table .rp-price{width:28mm;text-align:right!important}
+  .rp-table .rp-date{width:24mm}
+  .rp-table .rp-status{width:22mm}
+  .rp-table thead{display:table-header-group}
+  .rp-empty{text-align:center!important;padding:10px!important}
+  .rp-foot{margin:8px 0 0!important;font-size:8.5pt;color:#5b6475!important}
+  .adm-report .pd-sec{break-inside:auto!important;page-break-inside:auto!important}
+}
+.adm-table .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}

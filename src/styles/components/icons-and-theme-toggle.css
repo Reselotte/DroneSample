@@ -9,8 +9,8 @@
 .sellpot-chip.c3 .ic-svg{color:var(--c-line-deep)}
 .lcard-meta .ic-svg{margin-right:4px;color:var(--g)}
 .lcard-count{display:inline-flex;align-items:center;gap:5px}
-.calcbox h3{display:flex;align-items:center;gap:8px}
-.calcbox h3 .ic-svg{color:var(--g)}
+.post-calc-card h3{display:flex;align-items:center;gap:8px}
+.post-calc-card h3 .ic-svg{color:var(--g)}
 .lock{display:flex;align-items:center;gap:8px}
 .post-private{display:flex;align-items:center;gap:6px}
 .post-loc .btn{gap:6px}

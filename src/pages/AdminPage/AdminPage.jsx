@@ -5,33 +5,33 @@ import {
   searchAdminListings, setListingStatus, signIn, signOut,
 } from "../../lib/listingsApi";
 import { useToast } from "../../hooks/useToast";
-import { LISTING_STATUSES, landTypeLabel } from "../../data/landListingOptions";
-import { formatArea, formatBaht, formatThaiDate, listingCode } from "../../utils/listingFormat";
+import { LISTING_STATUSES } from "../../data/landListingOptions";
+import { listingCode } from "../../utils/listingFormat";
 import SetupNotice from "../LandsPage/SetupNotice";
-import { PhoneIcon, PinIcon } from "../../components/common/Icons";
-import AdminListingEditor from "./AdminListingEditor";
 import AdminColorGuide from "./AdminColorGuide";
 import AdminSalesChecklist from "./AdminSalesChecklist";
-import ListingHighlights from "../LandsPage/ListingHighlights";
-import { highlightList } from "../../data/landChecklist";
+import AdminListingsTable, { StatCards, statusLabel } from "./AdminListingsTable";
+import ListingsReport from "./ListingsReport";
 
-/** แถบเครื่องมือแอดมิน: แต่ละเมนูมีที่อยู่ของตัวเอง (#/admin, #/admin/colors) */
+/** ไอคอนเมนู (เส้น ใช้สีตามตัวอักษร) */
+const icon = (d) => <svg viewBox="0 0 24 24" aria-hidden="true"><path d={d} /></svg>;
+const ICONS = {
+  listings: icon("M4 5h16M4 12h16M4 19h10"),
+  checklist: icon("M10 6h10M10 12h10M10 18h10M3.5 6l1.5 1.5L7.5 5M3.5 12l1.5 1.5 2.5-2.5M3.5 18l1.5 1.5 2.5-2.5"),
+  colors: icon("M12 3a9 9 0 1 0 0 18c1.1 0 1.6-.9 1.2-1.7-.5-1 .2-2.3 1.5-2.3H17a4 4 0 0 0 4-4c0-5.5-4-10-9-10zM7.5 12h.01M9.5 7.5h.01M14.5 7.5h.01"),
+  print: icon("M7 9V3h10v6M7 17H4v-7h16v7h-3M7 14h10v7H7z"),
+  logout: icon("M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 16l-4-4 4-4M6 12h10"),
+  search: icon("M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4"),
+};
+
+/** เมนูแอดมิน: แต่ละเมนูมีที่อยู่ของตัวเอง (#/admin, #/admin/colors) */
 const ADMIN_SECTIONS = [
-  { key: "listings", href: "#/admin", label: "จัดการประกาศ", title: "จัดการประกาศขายที่ดิน" },
-  { key: "checklist", href: "#/admin/checklist", label: "เช็กลิสต์ฝ่ายขาย", title: "เช็กลิสต์ถามเจ้าของที่ดิน" },
-  { key: "colors", href: "#/admin/colors", label: "คู่มือสีเว็บ", title: "คู่มือสีเว็บ" },
+  { key: "listings", href: "#/admin", label: "จัดการประกาศ", title: "จัดการประกาศ", sub: "ตรวจ อนุมัติ และแก้ไขประกาศขายที่ดิน" },
+  { key: "checklist", href: "#/admin/checklist", label: "เช็กลิสต์ฝ่ายขาย", title: "เช็กลิสต์ฝ่ายขาย", sub: "ถามเจ้าของที่ดินทีละหัวข้อ สรุปและพิมพ์ได้" },
+  { key: "colors", href: "#/admin/colors", label: "คู่มือสีเว็บ", title: "คู่มือสีเว็บ", sub: "ชุดสีทั้งหมดของเว็บ ดาวน์โหลดไปใช้ต่อได้" },
 ];
 
 const STATUS_VALUES = LISTING_STATUSES.map((s) => s.value);
-const statusLabel = (value) => LISTING_STATUSES.find((s) => s.value === value)?.label || value;
-
-/** ปุ่มเปลี่ยนสถานะที่แสดงตามสถานะปัจจุบัน */
-const ACTIONS = {
-  pending: [["approved", "อนุมัติ เผยแพร่"], ["rejected", "ไม่อนุมัติ"]],
-  approved: [["sold", "ขายแล้ว"], ["rejected", "ซ่อนประกาศ"]],
-  sold: [["approved", "เปิดขายอีกครั้ง"]],
-  rejected: [["approved", "อนุมัติ เผยแพร่"]],
-};
 
 function LoginForm() {
   const [email, setEmail] = useState("");
@@ -67,109 +67,6 @@ function LoginForm() {
       </button>
       <div className="err">{error}</div>
     </form>
-  );
-}
-
-function AdminListing({ listing, busy, showStatus, phoneCount, onChangeStatus, onSaved, onDelete, onSearchPhone }) {
-  const [editing, setEditing] = useState(false);
-  const seller = listing.listing_private || {};
-  const published = listing.status === "approved" || listing.status === "sold";
-
-  if (editing) {
-    return (
-      <AdminListingEditor
-        listing={listing}
-        onCancel={() => setEditing(false)}
-        onSaved={(updated) => { setEditing(false); onSaved(updated); }}
-      />
-    );
-  }
-
-  return (
-    <article className="card adm-item">
-      <div className="adm-photos">
-        {(listing.photos || []).map((path) => (
-          <a key={path} href={photoUrl(path)} target="_blank" rel="noopener noreferrer">
-            <img src={photoUrl(path)} alt="" loading="lazy" />
-          </a>
-        ))}
-      </div>
-
-      <div className="adm-body">
-        <div className="adm-top">
-          <span className="adm-code">{listingCode(listing.id)}</span>
-          {showStatus && <span className={`adm-status is-${listing.status}`}>{statusLabel(listing.status)}</span>}
-          <span>{formatThaiDate(listing.created_at)}</span>
-          {published && <a href={`#/lands/${listing.id}`}>ดูหน้าประกาศ ↗</a>}
-        </div>
-        <h3>{listing.title}</h3>
-        <p className="adm-line">
-          {landTypeLabel(listing.land_type)} · {formatArea(listing.rai, listing.ngan, listing.wah)} ·{" "}
-          {listing.district ? `${listing.district}, ` : ""}{listing.province}
-        </p>
-        <p className="adm-price">{formatBaht(listing.total_price)}</p>
-        {listing.description && <p className="adm-desc">{listing.description}</p>}
-        <ListingHighlights highlights={listing.highlights} compact max={6} />
-        {listing.lat != null && (
-          <a
-            href={`https://www.google.com/maps/search/?api=1&query=${listing.lat},${listing.lng}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <PinIcon /> ดูตำแหน่งใน Google Maps
-          </a>
-        )}
-
-        <div className="adm-seller">
-          <b>ผู้ขาย (ไม่แสดงบนเว็บ)</b>
-          <span>{seller.seller_name || "—"}</span>
-          {seller.phone && (
-            <span className="adm-phone">
-              <a href={`tel:${seller.phone}`}><PhoneIcon /> {seller.phone}</a>
-              {/* เบอร์เดียวกันลงหลายประกาศ = อาจเป็นสแปมหรือประกาศซ้ำ กดเพื่อดูทั้งหมด */}
-              {phoneCount > 1 && (
-                <button type="button" className="adm-dup" onClick={() => onSearchPhone(seller.phone)}>
-                  เบอร์นี้มี {phoneCount} ประกาศ · ดูทั้งหมด
-                </button>
-              )}
-            </span>
-          )}
-          {seller.line_id && <span>LINE: {seller.line_id}</span>}
-          {seller.deed_no && <span>เลขโฉนด: {seller.deed_no}</span>}
-          {highlightList(seller.checklist).map((h) => (
-            <span key={h.key}>{h.label}{h.note ? `: ${h.note}` : ""}</span>
-          ))}
-          {listing.deedLinks.length > 0 && (
-            <span className="adm-deeds">
-              สำเนาโฉนด:{" "}
-              {listing.deedLinks.map((d, i) =>
-                d.url ? (
-                  <a key={d.path} href={d.url} target="_blank" rel="noopener noreferrer">ไฟล์ {i + 1}</a>
-                ) : (
-                  <span key={d.path}>ไฟล์ {i + 1} (เปิดไม่ได้)</span>
-                )
-              )}
-            </span>
-          )}
-        </div>
-
-        <div className="adm-actions">
-          {ACTIONS[listing.status].map(([next, label]) => (
-            <button
-              key={next}
-              type="button"
-              className={`btn ${next === "approved" ? "btn-line" : "btn-ghost"}`}
-              disabled={busy}
-              onClick={() => onChangeStatus(listing, next)}
-            >
-              {label}
-            </button>
-          ))}
-          <button type="button" className="btn btn-ghost" disabled={busy} onClick={() => setEditing(true)}>แก้ไข</button>
-          <button type="button" className="btn adm-del" disabled={busy} onClick={() => onDelete(listing)}>ลบถาวร</button>
-        </div>
-      </div>
-    </article>
   );
 }
 
@@ -221,8 +118,8 @@ export default function AdminPage({ param }) {
   }, [isAdmin, onListings, load]);
 
   useEffect(() => {
-    if (isAdmin && onListings) refreshCounts();
-  }, [isAdmin, onListings, refreshCounts]);
+    if (isAdmin) refreshCounts(); // ตัวเลขรอตรวจบนเมนูข้าง แสดงทุกหน้า
+  }, [isAdmin, refreshCounts]);
 
   // เช็กเบอร์ซ้ำของประกาศที่แสดงอยู่
   useEffect(() => {
@@ -274,57 +171,60 @@ export default function AdminPage({ param }) {
     setBusyId(null);
   };
 
-  let body;
-  if (!isSupabaseConfigured) body = <SetupNotice />;
-  else if (session === undefined || (session && isAdmin === null)) body = <div className="lands-msg">กำลังตรวจสอบสิทธิ์…</div>;
-  else if (!session) body = <LoginForm />;
-  else if (!isAdmin) {
-    body = (
-      <div className="lands-msg">
-        <b>บัญชีนี้ไม่มีสิทธิ์แอดมิน</b>
-        <span>{session.user.email}</span>
-        <button type="button" className="btn btn-ghost" onClick={signOut}>ออกจากระบบ</button>
-      </div>
+  // ยังไม่ได้เข้าระบบ / ไม่มีสิทธิ์ → หน้าธรรมดากลางจอ
+  if (!isAdmin) {
+    let gate;
+    if (!isSupabaseConfigured) gate = <SetupNotice />;
+    else if (session === undefined || (session && isAdmin === null)) gate = <div className="lands-msg">กำลังตรวจสอบสิทธิ์…</div>;
+    else if (!session) gate = <LoginForm />;
+    else {
+      gate = (
+        <div className="lands-msg">
+          <b>บัญชีนี้ไม่มีสิทธิ์แอดมิน</b>
+          <span>{session.user.email}</span>
+          <button type="button" className="btn btn-ghost" onClick={signOut}>ออกจากระบบ</button>
+        </div>
+      );
+    }
+    return (
+      <section className="alt adm" data-page="admin">
+        <div className="wrap">
+          <h2>จัดการประกาศขายที่ดิน</h2>
+          {gate}
+        </div>
+      </section>
     );
-  } else if (section.key === "checklist") {
-    body = <AdminSalesChecklist />;
-  } else if (!onListings) {
-    body = <AdminColorGuide />;
-  } else {
+  }
+
+  let body;
+  if (section.key === "checklist") body = <AdminSalesChecklist />;
+  else if (section.key === "colors") body = <AdminColorGuide />;
+  else {
     body = (
-      <>
-        <div className="adm-bar">
-          <div className="tabs adm-tabs">
-            {LISTING_STATUSES.map((s) => (
-              <button
-                key={s.value}
-                type="button"
-                className={!search && s.value === tab ? "on" : undefined}
-                onClick={() => pickTab(s.value)}
-              >
-                {s.label}
-                <span className={`adm-count${s.value === "pending" && counts.pending ? " is-alert" : ""}`}>
-                  {counts[s.value] ?? "…"}
-                </span>
-              </button>
-            ))}
-          </div>
-          <div className="adm-user">
-            <span>{session.user.email}</span>
-            <button type="button" className="btn btn-ghost" onClick={signOut}>ออกจากระบบ</button>
-          </div>
+      <div className="adm-listings">
+        <div className="adm-tools-bar">
+          <form className="adm-search" role="search" onSubmit={(e) => { e.preventDefault(); runSearch(searchInput); }}>
+            {ICONS.search}
+            <input
+              type="search"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              placeholder="ค้นหา รหัส (L00012) เบอร์โทร ชื่อผู้ขาย หรือหัวข้อ แล้วกด Enter"
+              aria-label="ค้นหาประกาศ"
+            />
+          </form>
+          <button
+            type="button"
+            className="btn adm-add"
+            disabled={loadState !== "ready"}
+            onClick={() => window.print()}
+            title="พิมพ์รายการที่กำลังดูอยู่ทั้งหมด (A4 แนวนอน)"
+          >
+            {ICONS.print} พิมพ์ใบสรุปผล
+          </button>
         </div>
 
-        <form className="adm-search" onSubmit={(e) => { e.preventDefault(); runSearch(searchInput); }}>
-          <input
-            type="search"
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            placeholder="ค้นหา: รหัสประกาศ (L00012) เบอร์โทร ชื่อผู้ขาย หรือหัวข้อ"
-            aria-label="ค้นหาประกาศ"
-          />
-          <button type="submit" className="btn btn-ghost">ค้นหา</button>
-        </form>
+        <StatCards counts={counts} active={search ? null : tab} onPick={pickTab} />
 
         {search && loadState !== "loading" && (
           <div className="adm-search-info">
@@ -343,41 +243,59 @@ export default function AdminPage({ param }) {
           </div>
         )}
         {loadState === "ready" && (items.length === 0 ? (
-          <div className="lands-msg"><span>{search ? "ไม่พบประกาศที่ตรงกับคำค้น" : "ไม่มีประกาศในสถานะนี้"}</span></div>
+          <div className="lands-msg"><span>{search ? "ไม่พบประกาศที่ตรงกับคำค้น" : `ไม่มีประกาศสถานะ "${statusLabel(tab)}"`}</span></div>
         ) : (
-          <div className="adm-list">
-            {items.map((listing) => (
-              <AdminListing
-                key={listing.id}
-                listing={listing}
-                busy={busyId === listing.id}
-                showStatus={Boolean(search)}
-                phoneCount={phoneCounts[listing.listing_private?.phone] || 0}
-                onChangeStatus={changeStatus}
-                onSaved={saved}
-                onDelete={remove}
-                onSearchPhone={runSearch}
-              />
-            ))}
-          </div>
+          <AdminListingsTable
+            key={search || tab}
+            items={items}
+            busyId={busyId}
+            phoneCounts={phoneCounts}
+            onChangeStatus={changeStatus}
+            onSaved={saved}
+            onDelete={remove}
+            onSearchPhone={runSearch}
+          />
         ))}
-      </>
+
+        {loadState === "ready" && (
+          <ListingsReport
+            items={items}
+            counts={counts}
+            scope={search ? `ผลค้นหา "${search}" (ทุกสถานะ)` : `สถานะ "${statusLabel(tab)}"`}
+            email={session.user.email}
+          />
+        )}
+      </div>
     );
   }
 
   return (
-    <section className="alt adm" data-page="admin">
-      <div className="wrap">
-        {isAdmin && (
-          <nav className="adm-toolbar" aria-label="เมนูแอดมิน">
-            {ADMIN_SECTIONS.map((s) => (
-              <a key={s.key} href={s.href} className={s.key === section.key ? "on" : undefined} aria-current={s.key === section.key ? "page" : undefined}>
-                {s.label}
-              </a>
-            ))}
-          </nav>
-        )}
-        <h2>{isAdmin ? section.title : "จัดการประกาศขายที่ดิน"}</h2>
+    <section className="adm adm-app" data-page="admin">
+      <aside className="adm-side">
+        <div className="adm-brand">
+          <b>DroneSample</b>
+          <span>หลังบ้าน</span>
+        </div>
+        <nav className="adm-nav" aria-label="เมนูแอดมิน">
+          {ADMIN_SECTIONS.map((s) => (
+            <a key={s.key} href={s.href} className={s.key === section.key ? "on" : undefined} aria-current={s.key === section.key ? "page" : undefined}>
+              {ICONS[s.key]}
+              <span>{s.label}</span>
+              {s.key === "listings" && counts.pending > 0 && <em title="ประกาศรอตรวจ">{counts.pending}</em>}
+            </a>
+          ))}
+        </nav>
+        <div className="adm-side-foot">
+          <span title={session.user.email}>{session.user.email}</span>
+          <button type="button" onClick={signOut}>{ICONS.logout} ออกจากระบบ</button>
+        </div>
+      </aside>
+
+      <div className="adm-main">
+        <div className="adm-head">
+          <h1>{section.title}</h1>
+          <p>{section.sub}</p>
+        </div>
         {body}
       </div>
     </section>

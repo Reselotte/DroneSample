@@ -30,16 +30,16 @@ export default function CallbackPage() {
       </section>
 
       {/*
-        แท็บลอยขอบขวากลางจอ พาไปหน้าคำนวณราคา (เห็นตลอดไม่ต้องเลื่อนหา)
+        แท็บลอยขอบขวากลางจอ พาไปหน้าลงประกาศขาย (มีคำนวณราคาในตัว)
         วางไว้นอก <section> เพราะ section มีแอนิเมชัน transform ที่ทำให้ position:fixed เพี้ยน
       */}
-      <a className="side-tab" href="#/calc" aria-label="อยากรู้ราคาที่ดินคร่าว ๆ? ไปหน้าคำนวณราคา">
+      <a className="side-tab" href="#/post" aria-label="ขายที่ดิน? ลงประกาศฟรี พร้อมคำนวณราคา">
         <span className="side-tab-ic"><CalculatorIcon /></span>
         <span className="side-tab-tx">
-          <small>อยากรู้ราคาที่ดินคร่าว ๆ?</small>
-          <b>คำนวณราคา <i aria-hidden="true">→</i></b>
+          <small>ขายที่ดิน? คำนวณราคาให้ด้วย</small>
+          <b>ลงประกาศฟรี <i aria-hidden="true">→</i></b>
         </span>
-        <span className="side-tab-short" aria-hidden="true">คำนวณ<br />ราคา</span>
+        <span className="side-tab-short" aria-hidden="true">ลง<br />ประกาศ</span>
       </a>
     </>
   );

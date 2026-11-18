@@ -61,7 +61,7 @@ textarea:focus{outline:0;border-color:var(--g);box-shadow:0 0 0 4px rgba(var(--c
 .ld-photo-wrap{position:relative}
 .ld-sold{position:absolute;top:14px;left:14px;padding:6px 16px;border-radius:99px;background:var(--c-red);color:var(--c-white);font-weight:700;box-shadow:0 6px 16px rgba(var(--c-red-rgb),.35)}
 .ldg{display:flex;flex-direction:column;gap:8px}
-.ldg-main{aspect-ratio:4/3;border-radius:20px;overflow:hidden;background:var(--c-x-gray-93);box-shadow:0 10px 30px rgba(var(--c-navy-rgb),.12)}
+.ldg-main{position:relative;aspect-ratio:4/3;border-radius:20px;overflow:hidden;background:var(--c-x-gray-93);box-shadow:0 10px 30px rgba(var(--c-navy-rgb),.12)}
 .ldg-main>img,.ldg-main>svg{width:100%;height:100%;object-fit:cover;display:block}
 .ldg-thumbs{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
 .ldg-thumbs button{flex:none;width:76px;height:58px;min-height:0;padding:0;border:2px solid transparent;border-radius:10px;overflow:hidden;background:none;cursor:pointer;opacity:.7}
@@ -99,13 +99,6 @@ textarea:focus{outline:0;border-color:var(--g);box-shadow:0 0 0 4px rgba(var(--c
 .post-ok b{color:var(--g);font-size:20px}
 .post-ok-act{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:10px}
 
-/* ── ลงประกาศ: จอคอม = ข้อมูลที่ดิน (ซ้าย) | ข้อมูลผู้ขาย (ขวา ค้างตอนเลื่อน) / มือถือ = บนลงล่าง ── */
-@media(min-width:1000px){
-  .post .wrap{max-width:1200px}
-  .post-form{max-width:none;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px;align-items:start}
-
-}
-
 /* ตัวกรอง: ขนาดกำหนดเอง (แถวเต็มความกว้างใต้ตัวกรอง) */
 .lfilters-custom{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:10px 12px;border-radius:14px;background:var(--c-x-blue-97);animation:lfc-in .25s ease-out}
 .lfilters-custom-label{font-size:14px;font-weight:600;color:var(--tx)}
@@ -126,22 +119,99 @@ html[data-theme="dark"] .lfilters-warn{color:var(--c-red-soft)}
 .lcard h3{font-size:17px;font-weight:600;color:var(--tx)}
 .lcard-price{margin-top:2px;font-size:19px}
 
-/* ── ลงประกาศ: ข้อมูลผู้ขายขึ้นก่อน ──
- * มือถือ: ผู้ขาย → ที่ดิน → ยินยอม+ปุ่มส่ง (post-side ใช้ display:contents ให้ลูกเรียงตาม order)
- * คอม: ซ้าย = ผู้ขาย + ปุ่มส่ง / ขวา = ข้อมูลที่ดิน */
-.post-side{display:contents}
-.post-seller{order:1}
-.post-land{order:2}
-.post-final{order:3}
-.post-final .field{margin-bottom:12px}
-@media(min-width:1000px){
-  .post-form{grid-template-columns:minmax(0,1fr) minmax(0,1.35fr)}
-  .post-side{display:flex;flex-direction:column;gap:16px;order:1}
-  .post-land{order:2}
+/* ── ลงประกาศแบบทีละขั้น: กล่องเล็ก (ซ้าย) | ขั้นที่กำลังกรอก (กลาง) | คำนวณราคา (ขวา) ── */
+.post-steps{display:grid;gap:14px;max-width:none;grid-template-columns:minmax(0,1fr)}
+.post-rail{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0;padding:0;list-style:none}
+.post-rail li{min-width:0}
+.post-mini{display:flex;align-items:center;gap:10px;width:100%;min-height:0;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:var(--c-l-card);color:var(--tx);font:inherit;text-align:left;cursor:pointer;transition:border-color .2s,box-shadow .2s,background .2s,opacity .2s}
+.post-mini:disabled{cursor:default;opacity:.55}
+.post-mini:not(:disabled):not(.is-current):hover{border-color:var(--c-sky);box-shadow:0 6px 18px rgba(var(--c-navy-rgb),.08)}
+.post-mini.is-current{border-color:var(--c-blue);box-shadow:inset 0 0 0 1px var(--c-blue)}
+.post-mini-no{flex:none;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--c-l-tint);color:var(--c-blue-ink);font-size:14px;font-weight:700}
+.post-mini.is-current .post-mini-no{background:var(--c-blue);color:var(--c-white)}
+.post-mini.is-done .post-mini-no{background:var(--c-line);color:var(--c-white)}
+.post-mini-tx{display:flex;flex-direction:column;min-width:0;flex:1}
+.post-mini-tx b{font-size:14.5px;font-weight:600;line-height:1.3}
+.post-mini-tx small{font-size:12.5px;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.post-mini-edit{flex:none;font-size:12.5px;font-weight:600;color:var(--g);text-decoration:underline}
+/* กล่องที่เพิ่งเสร็จ: เด้งรับตอนการ์ดย่อตัวลอยมาถึง */
+.post-mini.is-new{animation:post-mini-in .55s .38s cubic-bezier(.2,.8,.2,1) both}
+@keyframes post-mini-in{0%{transform:none}40%{transform:scale(1.06);box-shadow:0 0 0 4px rgba(var(--c-line-rgb),.35)}100%{transform:none}}
+
+.post-stage{min-width:0;overflow:hidden;padding:4px;margin:-4px}
+.post-step.is-fwd{animation:post-in-r .42s cubic-bezier(.2,.8,.2,1)}
+.post-step.is-back{animation:post-in-l .42s cubic-bezier(.2,.8,.2,1)}
+.post-step.is-fwd{animation-delay:.08s;animation-fill-mode:both}
+@keyframes post-in-r{from{opacity:0;transform:translateX(60px)}}
+@keyframes post-in-l{from{opacity:0;transform:translateX(-60px)}}
+.post-step-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.post-step-head h3{margin:0!important}
+.post-step-count{margin-left:auto;font-size:13px;color:var(--mu);white-space:nowrap}
+.post-back{flex:none;display:grid;place-items:center;width:34px;height:34px;min-height:0;padding:0;border:1px solid var(--line);border-radius:50%;background:var(--c-l-card);color:var(--g);font-size:20px;line-height:1;cursor:pointer}
+.post-back:hover{border-color:var(--c-sky)}
+.post-nav{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:10px;margin-top:16px;padding-top:14px;border-top:1px dashed var(--line)}
+.post-nav .btn{min-height:46px}
+.post-next:not(.btn-line){background:var(--accent-grad,var(--c-grad-primary-l));color:var(--c-white);border:0}
+.post-consent{margin-top:14px}
+.post-consent label{display:flex;gap:8px;align-items:flex-start;color:var(--tx)}
+.post-consent input{width:auto;margin-top:5px}
+
+/* กล่องคำนวณราคา */
+.post-calc{min-width:0}
+.post-calc-card{padding:18px!important}
+.post-calc-card h3{margin:0 0 12px;font-size:17px}
+.post-calc-total{display:flex;flex-direction:column;padding:12px 14px;border-radius:14px;background:var(--c-l-tint)}
+.post-calc-total span{font-size:13.5px;color:var(--mu)}
+.post-calc-total b{font-size:clamp(22px,2.4vw,28px);line-height:1.25;color:var(--c-blue-ink);word-break:break-word}
+.post-calc-dl{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;margin:12px 0 0;font-size:14px}
+.post-calc-dl dt{color:var(--mu)}
+.post-calc-dl dd{margin:0;font-weight:600;text-align:right}
+.post-calc-hint{margin:12px 0 0!important;padding:10px 12px;border-radius:12px;background:var(--c-x-gray-97-7);font-size:13.5px!important;color:var(--mu)!important}
+.post-calc-link{min-height:0;padding:0;border:0;background:none;color:var(--g);font:inherit;font-weight:600;text-decoration:underline;cursor:pointer}
+/* เตือน "ไม่ใช่ราคาซื้อขายจริง": สีแดงเรืองแสงแบบหน้าคำนวณราคาเดิม */
+.post-calc-note{margin:12px 0 0!important;padding:10px 12px;border-radius:12px;font-size:14.5px!important;font-weight:700;line-height:1.45;color:var(--c-red-ink)!important;background:var(--c-x-red-97);border:1.5px solid var(--c-x-red-59);text-align:left;animation:redglow 1.8s ease-in-out infinite}
+.post-calc-note::before{content:"!";display:inline-grid;place-items:center;width:1.25em;height:1.25em;margin-right:6px;border-radius:50%;background:var(--c-red);color:var(--c-white);font-size:.85em;font-weight:800;vertical-align:.05em}
+@keyframes redglow{0%,100%{box-shadow:0 0 6px 1px rgba(var(--c-x-red-59-rgb),.45),0 0 0 0 rgba(var(--c-x-red-59-rgb),0);text-shadow:0 0 2px rgba(var(--c-x-red-59-rgb),.25)}50%{box-shadow:0 0 18px 4px rgba(var(--c-x-red-59-rgb),.75),0 0 30px 6px rgba(var(--c-x-red-59-rgb),.3);text-shadow:0 0 8px rgba(var(--c-x-red-59-rgb),.55)}}
+@media(prefers-reduced-motion:reduce){
+  .post-calc-note{animation:none;box-shadow:0 0 12px 2px rgba(var(--c-x-red-59-rgb),.6)}
 }
-/* จอสูงพอ: ค้างฝั่งผู้ขาย+ปุ่มส่งไว้ตอนเลื่อน (จอเตี้ยไม่ค้าง กันปุ่มส่งตกขอบจอ) */
-@media(min-width:1000px) and (min-height:900px){
-  .post-side{position:sticky;top:84px}
+html[data-theme="dark"] .post-calc-note{background:rgba(var(--c-red-rgb),.12);color:var(--c-red-soft)!important;border-color:var(--c-red)}
+.post-calc-line{width:100%;margin-top:12px}
+
+/* แท็บเล็ต: กล่องเล็กเรียงบน · ฟอร์ม | คำนวณ */
+@media(min-width:760px){
+  .post .wrap{max-width:1240px}
+  .post-steps{grid-template-columns:minmax(0,1fr) 300px;align-items:start}
+  .post-rail{grid-column:1/-1}
+  .post-calc{position:sticky;top:84px}
+  /* กล่องคำนวณมีปุ่ม LINE ของตัวเองแล้ว → ซ่อนแท็บ LINE ลอย ไม่ให้ทับกล่อง */
+  body:has(.post-steps) .line-tab{display:none}
+}
+/* คอม: กล่องเล็ก (ซ้าย) | ฟอร์ม | คำนวณ (ขวา) */
+@media(min-width:1100px){
+  .post-steps{grid-template-columns:220px minmax(0,1fr) 300px;gap:18px}
+  .post-rail{grid-column:auto;grid-template-columns:minmax(0,1fr);position:sticky;top:84px}
+  .post-mini{flex-wrap:wrap;padding:12px}
+  .post-mini-edit{margin-left:38px;flex-basis:100%}
+}
+/* มือถือ: กล่องเล็กเหลือแค่เลข + ชื่อขั้น */
+@media(max-width:560px){
+  .post-mini{flex-direction:column;align-items:flex-start;gap:4px;padding:8px 10px}
+  .post-mini-tx small,.post-mini-edit{display:none}
+  .post-mini-tx b{font-size:13px}
+  .post-step-count{display:none}
+  .post-nav .btn{flex:1}
+}
+
+html[data-theme="dark"] .post-mini,html[data-theme="dark"] .post-back{background:rgba(var(--c-white-rgb),.04);border-color:var(--c-d-border)}
+html[data-theme="dark"] .post-mini.is-current{border-color:var(--c-d-accent);box-shadow:inset 0 0 0 1px var(--c-d-accent)}
+html[data-theme="dark"] .post-mini-no{background:rgba(var(--c-d-accent-rgb),.18);color:var(--c-d-ink)}
+html[data-theme="dark"] .post-mini.is-current .post-mini-no{background:var(--c-d-accent);color:var(--c-white)}
+html[data-theme="dark"] .post-calc-total{background:rgba(var(--c-d-accent-rgb),.12)}
+html[data-theme="dark"] .post-calc-total b{color:var(--c-d-ink)}
+html[data-theme="dark"] .post-calc-hint{background:rgba(var(--c-white-rgb),.05)}
+@media (prefers-reduced-motion:reduce){
+  .post-step.is-fwd,.post-step.is-back,.post-mini.is-new{animation:none}
 }
 
 /* ลงประกาศ: ช่องดักบอท (ย้ายออกนอกจอ ไม่ใช้ display:none) */
@@ -159,3 +229,52 @@ html[data-theme="dark"] .lfilters-warn{color:var(--c-red-soft)}
 html[data-theme="dark"] .hl-chips li{background:rgba(var(--c-d-accent-rgb),.16);color:var(--c-d-ink)}
 html[data-theme="dark"] .hl-chips .hl-more{background:transparent;box-shadow:inset 0 0 0 1px var(--c-d-border);color:var(--c-d-muted)}
 html[data-theme="dark"] .hl-list svg{background:rgba(var(--c-d-accent-rgb),.18);stroke:var(--c-d-ink)}
+
+/* ── รายการที่ดิน: ปุ่มสลับมุมมอง (รูปภาพ / รายการ) ── */
+.lands-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 14px;margin:18px 0 10px}
+.lands-bar .lands-count{margin:0}
+.lview{display:flex;gap:2px;padding:3px;border-radius:12px;background:var(--c-x-gray-95)}
+.lview button{display:inline-flex;align-items:center;gap:6px;min-height:0;padding:7px 14px;border:0;border-radius:9px;background:none;color:var(--mu);font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.lview button.on{background:var(--c-white);color:var(--g);box-shadow:0 1px 4px rgba(var(--c-navy-rgb),.15)}
+.lview svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.lview button:first-child svg{fill:currentColor;stroke:none}
+
+/* มุมมองแบบรายการ: แถวละประกาศ คอลัมน์ ประกาศ | ที่ตั้ง | ขนาด | ราคารวม | ราคา/ไร่ | วันที่ */
+.llist{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:16px;background:var(--c-white);overflow:hidden;text-align:left}
+.llist-row{display:grid;grid-template-columns:minmax(0,2.6fr) minmax(0,1.3fr) minmax(0,1fr) minmax(0,.9fr) minmax(0,.9fr) minmax(0,.85fr);align-items:center;gap:12px;padding:10px 16px;border-top:1px solid var(--line);color:var(--tx);text-decoration:none;font-size:14.5px;transition:background .15s}
+.llist-row:first-child{border-top:0}
+a.llist-row:hover{background:var(--c-x-blue-97)}
+a.llist-row:focus-visible{outline:3px solid var(--c-sky);outline-offset:-3px}
+.llist-head{padding-top:9px;padding-bottom:9px;background:var(--c-x-gray-97-7);color:var(--mu);font-size:13px;font-weight:600}
+.llist .c-num{text-align:right}
+.llist .c-name{display:flex;align-items:center;gap:12px;min-width:0}
+.llist-thumb{position:relative;flex:none;width:72px;height:54px;border-radius:10px;overflow:hidden;background:var(--c-x-gray-93)}
+.llist-thumb img,.llist-thumb svg{width:100%;height:100%;object-fit:cover;display:block}
+.llist-title{display:flex;flex-direction:column;min-width:0}
+.llist-title b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.llist-title small,.llist .c-date,.llist .c-perrai{font-size:13px;color:var(--mu)}
+.llist .c-price{font-weight:700;color:var(--g);white-space:nowrap}
+.llist .c-loc,.llist .c-area{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* จอแคบ: ซ่อนหัวตาราง เหลือ รูป+ชื่อ / ราคา และข้อมูลย่อยบรรทัดล่าง */
+@media(max-width:800px){
+  .llist-head{display:none}
+  .llist-row{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"name price" "name meta";gap:2px 10px;padding:10px 12px}
+  .llist .c-name{grid-area:name}
+  .llist .c-price{grid-area:price;align-self:end}
+  .llist .c-loc{grid-area:meta;align-self:start;text-align:right;font-size:12.5px;color:var(--mu)}
+  .llist .c-area,.llist .c-perrai,.llist .c-date{display:none}
+  .llist-thumb{width:64px;height:48px}
+}
+html[data-theme="dark"] .lview{background:rgba(var(--c-white-rgb),.06)}
+html[data-theme="dark"] .lview button.on{background:rgba(var(--c-d-accent-rgb),.25);color:var(--c-white);box-shadow:none}
+html[data-theme="dark"] .llist{background:rgba(var(--c-white-rgb),.03);border-color:var(--c-d-border)}
+html[data-theme="dark"] .llist-row{border-color:var(--c-d-border)}
+html[data-theme="dark"] .llist-head{background:rgba(var(--c-white-rgb),.05)}
+html[data-theme="dark"] a.llist-row:hover{background:rgba(var(--c-d-accent-rgb),.1)}
+html[data-theme="dark"] .llist .c-price{color:var(--c-x-blue-83-2)}
+html[data-theme="dark"] .llist-thumb{background:rgba(var(--c-white-rgb),.06)}
+
+/* รูปเต็มทั้งรูปในกรอบ (FitImage): รูปจริงไม่ครอป + พื้นหลังเป็นรูปเดียวกันแบบเบลอ */
+.fit-img{position:absolute;inset:0;display:block;overflow:hidden}
+.fit-img-bg{position:absolute;inset:-24px;background:var(--c-x-gray-93) center/cover no-repeat;filter:blur(18px) saturate(1.1) brightness(.9);transform:scale(1.08)}
+.fit-img img{position:relative;display:block;width:100%;height:100%;object-fit:contain}

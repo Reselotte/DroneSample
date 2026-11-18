@@ -3,8 +3,17 @@ import { isSupabaseConfigured } from "../../lib/supabaseClient";
 import { fetchListings, PAGE_SIZE } from "../../lib/listingsApi";
 import { formatNumber } from "../../utils/formatNumber";
 import ListingCard from "./ListingCard";
+import ListingList from "./ListingList";
 import ListingFilters, { EMPTY_FILTERS, toQuery } from "./ListingFilters";
 import SetupNotice from "./SetupNotice";
+
+// มุมมอง: grid = เน้นรูป ข้อมูลใต้รูป / list = เรียงเป็นแถว มีคอลัมน์ (จำไว้ในเครื่อง)
+const VIEW_KEY = "lands-view";
+const readView = () => { try { return localStorage.getItem(VIEW_KEY) === "list" ? "list" : "grid"; } catch { return "grid"; } };
+const VIEWS = [
+  { key: "grid", label: "รูปภาพ", icon: "M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" },
+  { key: "list", label: "รายการ", icon: "M4 5h3M10 5h10M4 12h3M10 12h10M4 19h3M10 19h10" },
+];
 
 // จำตัวกรองล่าสุดไว้ เวลากดเข้าไปดูประกาศแล้วกดกลับมา จะไม่ต้องเลือกใหม่
 let lastFilters = EMPTY_FILTERS;
@@ -17,6 +26,11 @@ export default function LandsPage() {
   const [page, setPage] = useState(0);
   const [status, setStatus] = useState("loading"); // loading | ready | error | more
   const requestId = useRef(0);
+  const [view, setView] = useState(readView);
+  const pickView = (v) => {
+    setView(v);
+    try { localStorage.setItem(VIEW_KEY, v); } catch { /* เก็บไม่ได้ก็ไม่เป็นไร */ }
+  };
 
   const load = async (nextFilters, nextPage) => {
     const id = ++requestId.current;
@@ -82,10 +96,31 @@ export default function LandsPage() {
                 </div>
               ) : (
                 <>
-                  <p className="lands-count">พบ {formatNumber(total)} ประกาศ</p>
-                  <div className="lgrid">
-                    {items.map((listing) => <ListingCard key={listing.id} listing={listing} />)}
+                  <div className="lands-bar">
+                    <p className="lands-count">พบ {formatNumber(total)} ประกาศ</p>
+                    <div className="lview" role="radiogroup" aria-label="มุมมอง">
+                      {VIEWS.map((v) => (
+                        <button
+                          key={v.key}
+                          type="button"
+                          role="radio"
+                          aria-checked={view === v.key}
+                          className={view === v.key ? "on" : undefined}
+                          onClick={() => pickView(v.key)}
+                        >
+                          <svg viewBox="0 0 24 24" aria-hidden="true"><path d={v.icon} /></svg>
+                          {v.label}
+                        </button>
+                      ))}
+                    </div>
                   </div>
+                  {view === "list" ? (
+                    <ListingList items={items} />
+                  ) : (
+                    <div className="lgrid">
+                      {items.map((listing) => <ListingCard key={listing.id} listing={listing} />)}
+                    </div>
+                  )}
                   {hasMore && (
                     <div className="lands-more">
                       <button

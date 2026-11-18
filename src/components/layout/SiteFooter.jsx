@@ -19,7 +19,7 @@ export default function SiteFooter() {
             <a href="#/home">โรงงานและอุตสาหกรรม</a>
             <a href="#/home">อสังหา / จัดสรร</a>
             <a href="#/callback">นัดบินสำรวจพื้นที่</a>
-            <a href="#/calc">คำนวณราคาที่ดิน</a>
+            <a href="#/post">ลงประกาศขาย + คำนวณราคา</a>
             <a href="#/lands">ประกาศซื้อขายที่ดิน</a>
           </div>
           <div>

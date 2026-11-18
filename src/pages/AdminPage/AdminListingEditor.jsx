@@ -4,6 +4,7 @@ import { PRIVATE_GROUPS, PUBLIC_GROUPS } from "../../data/landChecklist";
 import ChecklistFields, { cleanChecklist } from "./ChecklistFields";
 import { LAND_TYPES, PRICE_UNITS, PROVINCES } from "../../data/landListingOptions";
 import { isInThailand, listingCode, parseLatLng } from "../../utils/listingFormat";
+import { isThaiPhone, normalizeThaiPhone } from "../../utils/thaiPhone";
 
 /** ค่าเริ่มต้นของฟอร์มจากประกาศเดิม */
 function toForm(listing) {
@@ -39,7 +40,7 @@ function validate(f) {
   const ngan = num(f.ngan);
   const wah = num(f.wah);
   const price = Number(f.price);
-  const phone = f.phone.replace(/[\s-]/g, "");
+  const phone = normalizeThaiPhone(f.phone);
   const title = f.title.trim();
   let coords = null;
 
@@ -56,7 +57,7 @@ function validate(f) {
   }
   if (f.photos.length < 1) errors.photos = "ต้องเหลือรูปอย่างน้อย 1 รูป";
   if (!f.seller_name.trim()) errors.seller_name = "กรุณาระบุชื่อ";
-  if (!/^0\d{8,9}$/.test(phone)) errors.phone = "เบอร์ไม่ถูกต้อง เช่น 0812345678";
+  if (!isThaiPhone(phone)) errors.phone = "เบอร์ไม่ถูกต้อง เช่น 0812345678 หรือ +66 81 234 5678";
 
   const fields = {
     title,
@@ -221,7 +222,7 @@ export default function AdminListingEditor({ listing, onCancel, onSaved }) {
             </div>
             <div className="field">
               <label htmlFor="e_phone">เบอร์โทร</label>
-              <input id="e_phone" inputMode="tel" maxLength={15} {...bind("phone")} />
+              <input id="e_phone" inputMode="tel" maxLength={20} {...bind("phone")} />
               <div className="err">{errors.phone}</div>
             </div>
           </div>

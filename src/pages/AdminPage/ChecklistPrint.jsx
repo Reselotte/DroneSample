@@ -4,9 +4,9 @@ import { AREA_FIELDS, CHECKLIST_GROUPS, DEED_FIELDS, OWNER_FIELDS, REQUIRED_ITEM
  * กรอบเอกสาร: ตั้งขอบกระดาษเป็น 0 (เบราว์เซอร์จะไม่พิมพ์วันที่/ชื่อเว็บ/URL ที่หัว-ท้ายกระดาษ)
  * แล้วใช้ thead/tfoot ว่าง ๆ ที่พิมพ์ซ้ำทุกหน้า ทำหน้าที่เป็นขอบบน-ล่างแทน
  */
-function PrintDoc({ children }) {
+export function PrintDoc({ children, className }) {
   return (
-    <table className="ckl-print-doc">
+    <table className={`ckl-print-doc${className ? ` ${className}` : ""}`}>
       <thead><tr><td className="pd-gap-top" /></tr></thead>
       <tfoot><tr><td className="pd-gap-bottom" /></tr></tfoot>
       <tbody><tr><td className="pd-body">{children}</td></tr></tbody>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import ContourMapSvg from "../../components/common/ContourMapSvg";
+import FitImage from "../../components/common/FitImage";
 import { isSupabaseConfigured } from "../../lib/supabaseClient";
 import { fetchListing, photoUrl } from "../../lib/listingsApi";
 import { useToast } from "../../hooks/useToast";
@@ -22,7 +23,7 @@ function PhotoGallery({ photos, title }) {
   return (
     <div className="ldg">
       <div className="ldg-main">
-        <img src={photoUrl(photos[index])} alt={`${title} รูปที่ ${index + 1}`} />
+        <FitImage key={photos[index]} src={photoUrl(photos[index])} alt={`${title} รูปที่ ${index + 1}`} eager />
       </div>
       {photos.length > 1 && (
         <div className="ldg-thumbs">

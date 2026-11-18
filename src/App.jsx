@@ -12,7 +12,6 @@ import PostListingPage from "./pages/PostListingPage/PostListingPage";
 import WorksPage from "./pages/WorksPage/WorksPage";
 import StepsPage from "./pages/StepsPage/StepsPage";
 import CallbackPage from "./pages/CallbackPage/CallbackPage";
-import CalcPage from "./pages/CalcPage/CalcPage";
 import FaqPage from "./pages/FaqPage/FaqPage";
 import ContactPage from "./pages/ContactPage/ContactPage";
 import AdminPage from "./pages/AdminPage/AdminPage";
@@ -25,7 +24,6 @@ const PAGE_COMPONENTS = {
   works: WorksPage,
   steps: StepsPage,
   callback: CallbackPage,
-  calc: CalcPage,
   faq: FaqPage,
   contact: ContactPage,
   admin: AdminPage,

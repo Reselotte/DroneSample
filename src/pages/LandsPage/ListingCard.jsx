@@ -1,4 +1,5 @@
 import ContourMapSvg from "../../components/common/ContourMapSvg";
+import FitImage from "../../components/common/FitImage";
 import { AreaIcon, CameraIcon, PinIcon } from "../../components/common/Icons";
 import { photoUrl } from "../../lib/listingsApi";
 import ListingHighlights from "./ListingHighlights";
@@ -13,7 +14,7 @@ export default function ListingCard({ listing }) {
     <a className="lcard" href={`#/lands/${listing.id}`}>
       <div className="lcard-im">
         {cover ? (
-          <img src={photoUrl(cover)} alt={listing.title} loading="lazy" />
+          <FitImage src={photoUrl(cover)} alt={listing.title} />
         ) : (
           <ContourMapSvg mode="ortho" cover />
         )}

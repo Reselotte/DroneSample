@@ -24,3 +24,15 @@ input,select{font-size:16px;padding:10px 12px}
 label{font-size:14px}
 input,select{font-size:15px;padding:9px 11px}
 .opt{font-size:12px}
+
+/* ช่องที่ยังไม่กรอก/กรอกผิด (มีข้อความเตือนใต้ช่อง) → กรอบแดง · แก้แล้วข้อความหาย กรอบกลับปกติเอง */
+.field:has(.err:not(:empty)) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),select,textarea){border-color:var(--c-red)!important;background:var(--c-x-red-97)!important;box-shadow:0 0 0 3px rgba(var(--c-red-rgb),.14)!important}
+.field:has(+ .err:not(:empty)) .upz{border-color:var(--c-red)!important;background:var(--c-x-red-97)!important}
+.post-consent:has(.err:not(:empty)) label{padding:8px 10px;margin:-8px -10px 0;border:1.5px solid var(--c-red);border-radius:12px;background:var(--c-x-red-97)}
+html[data-theme="dark"] .field:has(.err:not(:empty)) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),select,textarea),
+html[data-theme="dark"] .field:has(+ .err:not(:empty)) .upz,
+html[data-theme="dark"] .post-consent:has(.err:not(:empty)) label{background:rgba(var(--c-red-rgb),.1)!important}
+
+/* เบอร์แบบ +66: บอกว่าจะบันทึกเป็นแบบ 0 */
+.phone-hint{display:block;margin-top:4px;font-size:13px;color:var(--c-x-green-26)}
+html[data-theme="dark"] .phone-hint{color:var(--c-x-green-67)}
