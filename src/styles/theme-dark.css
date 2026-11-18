@@ -8,39 +8,39 @@
 html[data-theme="dark"]{
   color-scheme:dark;
   /* สีข้อความ/พื้น */
-  --tx:#e8edf7;--mu:#93a0b8;--bd:rgba(160,190,255,.3);--bg:rgba(255,255,255,.04);--dk:#050913;
-  --g:#8db0ff;--gd:#8db0ff;                     /* สีเน้นสำหรับ "ตัวอักษร" */
-  --base:#070d1a;                               /* พื้นหลังหลัก */
-  --surface:rgba(255,255,255,.045);             /* การ์ด (โปร่ง) */
-  --surface-2:rgba(255,255,255,.07);            /* ช่องกรอก/กล่องย่อย */
-  --solid:#0f1829;                              /* การ์ดทึบ (ป๊อปอัป) */
-  --line:rgba(160,190,255,.3);                  /* เส้นขอบการ์ด (สว่างกว่าพื้นชัด ๆ) */
-  --line-hi:rgba(160,190,255,.6);               /* เส้นขอบตอนชี้ */
-  --accent:#4f7dff;                             /* สีฟ้าสดของปุ่มหลัก */
-  --accent-grad:linear-gradient(135deg,#3461f0 0%,#4f7dff 55%,#7aa0ff 100%);
-  --glass:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.03));
-  --shadow:0 12px 34px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.12);
+  --tx:var(--c-d-text);--mu:var(--c-x-blue-65);--bd:rgba(var(--c-x-blue-81-rgb),.3);--bg:rgba(var(--c-white-rgb),.04);--dk:var(--c-x-blue-05);
+  --g:var(--c-d-ink);--gd:var(--c-d-ink);                     /* สีเน้นสำหรับ "ตัวอักษร" */
+  --base:var(--c-d-page);                               /* พื้นหลังหลัก */
+  --surface:rgba(var(--c-white-rgb),.045);             /* การ์ด (โปร่ง) */
+  --surface-2:rgba(var(--c-white-rgb),.07);            /* ช่องกรอก/กล่องย่อย */
+  --solid:var(--c-d-card);                              /* การ์ดทึบ (ป๊อปอัป) */
+  --line:var(--c-d-border);                      /* เส้นขอบการ์ด (สว่างกว่าพื้นชัด ๆ) */
+  --line-hi:rgba(var(--c-x-blue-81-rgb),.6);               /* เส้นขอบตอนชี้ */
+  --accent:var(--c-d-accent);                             /* สีฟ้าสดของปุ่มหลัก */
+  --accent-grad:var(--c-grad-primary-d);
+  --glass:linear-gradient(180deg,rgba(var(--c-white-rgb),.075),rgba(var(--c-white-rgb),.03));
+  --shadow:0 12px 34px rgba(var(--c-black-rgb),.42),inset 0 1px 0 rgba(var(--c-white-rgb),.12);
 }
 
 /* พื้นหลังทั้งหน้า: กรมท่าเข้ม + แสงฟุ้งฟ้า (บนซ้าย) และเขียว (ล่างขวา) ติดกับจอ ไม่มีรอยต่อระหว่างส่วน */
 html[data-theme="dark"] body{color:var(--tx);background:
-  radial-gradient(900px 600px at 10% -5%,rgba(79,125,255,.16),transparent 60%),
-  radial-gradient(800px 600px at 100% 100%,rgba(6,199,85,.07),transparent 60%),
+  radial-gradient(900px 600px at 10% -5%,rgba(var(--c-d-accent-rgb),.16),transparent 60%),
+  radial-gradient(800px 600px at 100% 100%,rgba(var(--c-line-rgb),.07),transparent 60%),
   var(--base) fixed}
-html[data-theme="dark"] ::selection{background:rgba(79,125,255,.45);color:#fff}
+html[data-theme="dark"] ::selection{background:rgba(var(--c-d-accent-rgb),.45);color:var(--c-white)}
 
 /* ── ตัวอักษร / หัวข้อ ── */
-html[data-theme="dark"] .alt{background:repeating-radial-gradient(circle at 100% 0,transparent 0 40px,rgba(141,176,255,.035) 41px 42px)}
+html[data-theme="dark"] .alt{background:repeating-radial-gradient(circle at 100% 0,transparent 0 40px,rgba(var(--c-d-ink-rgb),.035) 41px 42px)}
 html[data-theme="dark"] .sub,
-html[data-theme="dark"] .card p{color:#b4bfd3}
-html[data-theme="dark"] .eyebrow{color:#7fd6a8;letter-spacing:.06em}
-html[data-theme="dark"] h1,html[data-theme="dark"] h2,html[data-theme="dark"] h3{color:#f3f6fc}
-html[data-theme="dark"] h2:after{background:linear-gradient(90deg,#4f7dff,#06c755);box-shadow:0 0 12px rgba(79,125,255,.5)}
-html[data-theme="dark"] .hl{background:rgba(79,125,255,.2);color:#c9d8ff;box-shadow:inset 0 0 0 1px rgba(141,176,255,.25)}
+html[data-theme="dark"] .card p{color:var(--c-x-blue-77)}
+html[data-theme="dark"] .eyebrow{color:var(--c-d-mint);letter-spacing:.06em}
+html[data-theme="dark"] h1,html[data-theme="dark"] h2,html[data-theme="dark"] h3{color:var(--c-d-heading)}
+html[data-theme="dark"] h2:after{background:linear-gradient(90deg,var(--c-d-accent),var(--c-line));box-shadow:0 0 12px rgba(var(--c-d-accent-rgb),.5)}
+html[data-theme="dark"] .hl{background:rgba(var(--c-d-accent-rgb),.2);color:var(--c-x-blue-89);box-shadow:inset 0 0 0 1px rgba(var(--c-d-ink-rgb),.25)}
 html[data-theme="dark"] .note{color:var(--mu)}
 /* ส่วนที่เป็นพื้นมืดอยู่แล้ว (Hero, สไลด์ขั้นตอน) คงสีเดิม */
-html[data-theme="dark"] .hero .hl{background:rgba(157,185,242,.32);color:#fff;box-shadow:none}
-html[data-theme="dark"] .sl .hl{background:none;box-shadow:inset 0 -.38em 0 rgba(157,185,242,.28)}
+html[data-theme="dark"] .hero .hl{background:rgba(var(--c-x-blue-78-rgb),.32);color:var(--c-white);box-shadow:none}
+html[data-theme="dark"] .sl .hl{background:none;box-shadow:inset 0 -.38em 0 rgba(var(--c-x-blue-78-rgb),.28)}
 
 /* ── การ์ดแบบกระจก ── */
 html[data-theme="dark"] .card,
@@ -53,7 +53,7 @@ html[data-theme="dark"] .lands-msg,
 html[data-theme="dark"] .ok{background:var(--glass);border:1px solid var(--line);box-shadow:var(--shadow);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 html[data-theme="dark"] .tile:hover,
 html[data-theme="dark"] .lcard:hover,
-html[data-theme="dark"] .ct-card:hover{border-color:var(--line-hi);box-shadow:0 18px 44px rgba(0,0,0,.5),0 0 24px rgba(79,125,255,.18),inset 0 1px 0 rgba(255,255,255,.08)}
+html[data-theme="dark"] .ct-card:hover{border-color:var(--line-hi);box-shadow:0 18px 44px rgba(var(--c-black-rgb),.5),0 0 24px rgba(var(--c-d-accent-rgb),.18),inset 0 1px 0 rgba(var(--c-white-rgb),.08)}
 /* การ์ดที่มีแถบสีด้านบน */
 html[data-theme="dark"] #callbackForm,
 html[data-theme="dark"] .calcbox,
@@ -63,186 +63,200 @@ html[data-theme="dark"] .tile .tx,
 html[data-theme="dark"] .lcard-tx{border-top-color:var(--accent)}
 
 /* ── ฟอร์ม ── */
-html[data-theme="dark"] label{color:#c6d0e2}
+html[data-theme="dark"] label{color:var(--c-x-blue-83)}
 html[data-theme="dark"] input,
 html[data-theme="dark"] select,
 html[data-theme="dark"] textarea,
 html[data-theme="dark"] .callback input,html[data-theme="dark"] .callback select,html[data-theme="dark"] .callback textarea,
 html[data-theme="dark"] .calcpage input,html[data-theme="dark"] .calcpage select,
-html[data-theme="dark"] .lfilters select{background:rgba(5,10,22,.55);border-color:rgba(160,190,255,.36);color:var(--tx)}
+html[data-theme="dark"] .lfilters select{background:rgba(var(--c-x-blue-05-2-rgb),.55);border-color:rgba(var(--c-x-blue-81-rgb),.36);color:var(--tx)}
 html[data-theme="dark"] input:hover,
 html[data-theme="dark"] select:hover,
-html[data-theme="dark"] textarea:hover{border-color:rgba(160,190,255,.55)}
+html[data-theme="dark"] textarea:hover{border-color:rgba(var(--c-x-blue-81-rgb),.55)}
 html[data-theme="dark"] input:focus,
 html[data-theme="dark"] select:focus,
-html[data-theme="dark"] textarea:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(79,125,255,.22),0 0 18px rgba(79,125,255,.25)}
+html[data-theme="dark"] textarea:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(var(--c-d-accent-rgb),.22),0 0 18px rgba(var(--c-d-accent-rgb),.25)}
 html[data-theme="dark"] input::placeholder,
-html[data-theme="dark"] textarea::placeholder{color:#5f6c84}
-html[data-theme="dark"] select option{background:#0f1829;color:var(--tx)}
+html[data-theme="dark"] textarea::placeholder{color:var(--c-x-blue-45)}
+html[data-theme="dark"] select option{background:var(--c-d-card);color:var(--tx)}
 html[data-theme="dark"] input[type="checkbox"]{accent-color:var(--accent)}
-html[data-theme="dark"] .upz{background:rgba(79,125,255,.06);border-color:rgba(160,190,255,.42)}
+html[data-theme="dark"] .upz{background:rgba(var(--c-d-accent-rgb),.06);border-color:rgba(var(--c-x-blue-81-rgb),.42)}
 html[data-theme="dark"] .upz:hover,
-html[data-theme="dark"] .upz.drag{background:rgba(79,125,255,.12);border-color:var(--accent)}
+html[data-theme="dark"] .upz.drag{background:rgba(var(--c-d-accent-rgb),.12);border-color:var(--accent)}
 html[data-theme="dark"] .upi{background:var(--surface-2);border-color:var(--line)}
 
 /* ── หัวเว็บ ── */
-html[data-theme="dark"] header{background:rgba(7,13,26,.72);border-bottom:1px solid transparent;
-  border-image:linear-gradient(90deg,transparent,rgba(79,125,255,.45),rgba(6,199,85,.3),transparent) 1}
-html[data-theme="dark"] .brand{background:linear-gradient(90deg,#8db0ff,#7fd6a8);-webkit-background-clip:text;background-clip:text;color:transparent}
-html[data-theme="dark"] #nav a{color:#a9b5cb}
-html[data-theme="dark"] #nav a:hover{background:rgba(255,255,255,.06);color:#fff}
+html[data-theme="dark"] header{background:rgba(var(--c-d-page-rgb),.72);border-bottom:1px solid transparent;
+  border-image:linear-gradient(90deg,transparent,rgba(var(--c-d-accent-rgb),.45),rgba(var(--c-line-rgb),.3),transparent) 1}
+html[data-theme="dark"] .brand{background:var(--c-grad-brand-d);-webkit-background-clip:text;background-clip:text;color:transparent}
+html[data-theme="dark"] #nav a{color:var(--c-x-blue-73)}
+html[data-theme="dark"] #nav a:hover{background:rgba(var(--c-white-rgb),.06);color:var(--c-white)}
 html[data-theme="dark"] #nav a.on,
-html[data-theme="dark"] #nav .nav-toggle{background:var(--accent-grad);color:#fff}
-html[data-theme="dark"] .pill{background:transparent;color:#fff!important;border:1px solid rgba(160,190,255,.6)}
-html[data-theme="dark"] .pill:hover{background:rgba(79,125,255,.15)}
-html[data-theme="dark"] .theme-toggle{background:rgba(15,24,41,.85);border-color:rgba(255,211,107,.35);color:#ffd36b}
-html[data-theme="dark"] .theme-toggle:hover{background:#17233b}
-html[data-theme="dark"] .toast{background:#e8edf7;color:#070d1a}
+html[data-theme="dark"] #nav .nav-toggle{background:var(--accent-grad);color:var(--c-white)}
+html[data-theme="dark"] .pill{background:transparent;color:var(--c-white)!important;border:1px solid rgba(var(--c-x-blue-81-rgb),.6)}
+html[data-theme="dark"] .pill:hover{background:rgba(var(--c-d-accent-rgb),.15)}
+html[data-theme="dark"] .theme-toggle{background:rgba(var(--c-d-card-rgb),.85);border-color:rgba(var(--c-gold-rgb),.35);color:var(--c-gold)}
+html[data-theme="dark"] .theme-toggle:hover{background:var(--c-x-blue-16)}
+html[data-theme="dark"] .toast{background:var(--c-d-text);color:var(--c-d-page)}
 
 /* ── ปุ่ม ── */
-html[data-theme="dark"] .btn-ghost{background:rgba(255,255,255,.04);border:1px solid rgba(160,190,255,.6);color:var(--tx)}
+html[data-theme="dark"] .btn-ghost{background:rgba(var(--c-white-rgb),.04);border:1px solid rgba(var(--c-x-blue-81-rgb),.6);color:var(--tx)}
 html[data-theme="dark"] #sendBtn,
-html[data-theme="dark"] .adm-login .btn{background:var(--accent-grad)!important;color:#fff}
+html[data-theme="dark"] .adm-login .btn{background:var(--accent-grad)!important;color:var(--c-white)}
 
 /* ── หน้าแรก ── */
-html[data-theme="dark"] .hero:after{background:linear-gradient(90deg,rgba(6,12,26,.9),rgba(6,12,26,.35)),linear-gradient(0deg,var(--base) 0%,rgba(7,13,26,.6) 14%,transparent 40%)}
+html[data-theme="dark"] .hero:after{background:linear-gradient(90deg,rgba(var(--c-x-blue-06-rgb),.9),rgba(var(--c-x-blue-06-rgb),.35)),linear-gradient(0deg,var(--base) 0%,rgba(var(--c-d-page-rgb),.6) 14%,transparent 40%)}
 html[data-theme="dark"] .sellpot{background:none}
-html[data-theme="dark"] .sellpot-card{border:1px solid rgba(160,190,255,.34);
-  background:repeating-radial-gradient(circle at 100% 0,transparent 0 30px,rgba(157,185,242,.1) 31px 32px),radial-gradient(600px 300px at 0 100%,rgba(6,199,85,.16),transparent 60%),radial-gradient(500px 300px at 100% 0,rgba(79,125,255,.22),transparent 60%),linear-gradient(150deg,#0e1f45,#081227);
-  box-shadow:0 24px 60px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.08)}
-html[data-theme="dark"] .sellpot-card:hover{box-shadow:0 28px 70px rgba(0,0,0,.6),0 0 40px rgba(79,125,255,.2),inset 0 1px 0 rgba(255,255,255,.1)}
-html[data-theme="dark"] .sellpot-chip{color:#111418}
-html[data-theme="dark"] .sellpot-chip .ic-svg{color:#0b2a5b}
-html[data-theme="dark"] .sellpot-chip.c2 .ic-svg{color:#1d4ed8}
-html[data-theme="dark"] .sellpot-chip.c3 .ic-svg{color:#04a947}
+html[data-theme="dark"] .sellpot-card{border:1px solid rgba(var(--c-x-blue-81-rgb),.34);
+  background:repeating-radial-gradient(circle at 100% 0,transparent 0 30px,rgba(var(--c-x-blue-78-rgb),.1) 31px 32px),radial-gradient(600px 300px at 0 100%,rgba(var(--c-line-rgb),.16),transparent 60%),radial-gradient(500px 300px at 100% 0,rgba(var(--c-d-accent-rgb),.22),transparent 60%),linear-gradient(150deg,var(--c-x-blue-16-2),var(--c-x-blue-09));
+  box-shadow:0 24px 60px rgba(var(--c-black-rgb),.55),inset 0 1px 0 rgba(var(--c-white-rgb),.08)}
+html[data-theme="dark"] .sellpot-card:hover{box-shadow:0 28px 70px rgba(var(--c-black-rgb),.6),0 0 40px rgba(var(--c-d-accent-rgb),.2),inset 0 1px 0 rgba(var(--c-white-rgb),.1)}
+html[data-theme="dark"] .sellpot-chip{color:var(--c-l-text)}
+html[data-theme="dark"] .sellpot-chip .ic-svg{color:var(--c-navy)}
+html[data-theme="dark"] .sellpot-chip.c2 .ic-svg{color:var(--c-x-blue-48)}
+html[data-theme="dark"] .sellpot-chip.c3 .ic-svg{color:var(--c-line-deep)}
 
 /* ── ตัวอย่างผลงาน ── */
 html[data-theme="dark"] .gal figure figcaption{border-top-color:var(--line);color:var(--tx)}
 html[data-theme="dark"] .map{border-color:var(--line)}
 html[data-theme="dark"] .legend{color:var(--mu)}
-html[data-theme="dark"] .tabs{background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px var(--line)}
-html[data-theme="dark"] .tabs button{color:#a9b5cb}
-html[data-theme="dark"] .tabs button.on{background:var(--accent-grad);color:#fff}
-html[data-theme="dark"] .stats div{background:rgba(79,125,255,.08);box-shadow:inset 0 0 0 1px var(--line);color:var(--mu)}
-html[data-theme="dark"] .stats b{color:#a9c2ff}
-html[data-theme="dark"] .logos div{background:var(--glass);border:1px solid var(--line);color:#5f6c84;box-shadow:none}
+html[data-theme="dark"] .tabs{background:rgba(var(--c-white-rgb),.05);box-shadow:inset 0 0 0 1px var(--line)}
+html[data-theme="dark"] .tabs button{color:var(--c-x-blue-73)}
+html[data-theme="dark"] .tabs button.on{background:var(--accent-grad);color:var(--c-white)}
+html[data-theme="dark"] .stats div{background:rgba(var(--c-d-accent-rgb),.08);box-shadow:inset 0 0 0 1px var(--line);color:var(--mu)}
+html[data-theme="dark"] .stats b{color:var(--c-x-blue-83-2)}
+html[data-theme="dark"] .logos div{background:var(--glass);border:1px solid var(--line);color:var(--c-x-blue-45);box-shadow:none}
 
 /* ── สไลด์ขั้นตอน ── */
-html[data-theme="dark"] #show{background:repeating-radial-gradient(circle at 78% 45%,transparent 0 30px,rgba(157,185,242,.07) 31px 32px),radial-gradient(900px 420px at 80% 20%,rgba(79,125,255,.26),transparent 60%),linear-gradient(135deg,#050b18,#0b1f48)}
-html[data-theme="dark"] .dots2 button.on{background:var(--accent-grad);color:#fff}
+html[data-theme="dark"] #show{background:repeating-radial-gradient(circle at 78% 45%,transparent 0 30px,rgba(var(--c-x-blue-78-rgb),.07) 31px 32px),radial-gradient(900px 420px at 80% 20%,rgba(var(--c-d-accent-rgb),.26),transparent 60%),linear-gradient(135deg,var(--c-x-blue-06-2),var(--c-x-blue-16-3))}
+html[data-theme="dark"] .dots2 button.on{background:var(--accent-grad);color:var(--c-white)}
 
 /* ── คำนวณราคา ── */
-html[data-theme="dark"] .result{border:1px solid rgba(160,190,255,.36);
-  background:repeating-radial-gradient(circle at 105% -10%,transparent 0 26px,rgba(157,185,242,.1) 27px 28px),radial-gradient(400px 260px at 100% 0,rgba(79,125,255,.25),transparent 60%),linear-gradient(155deg,#0e1f45,#081227);
-  box-shadow:0 18px 44px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.08)}
-html[data-theme="dark"] .result .note{background:rgba(225,29,72,.12);color:#ff9aa8;border-color:#e11d48}
-html[data-theme="dark"] #dlg{background:rgba(2,6,14,.7);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+html[data-theme="dark"] .result{border:1px solid rgba(var(--c-x-blue-81-rgb),.36);
+  background:repeating-radial-gradient(circle at 105% -10%,transparent 0 26px,rgba(var(--c-x-blue-78-rgb),.1) 27px 28px),radial-gradient(400px 260px at 100% 0,rgba(var(--c-d-accent-rgb),.25),transparent 60%),linear-gradient(155deg,var(--c-x-blue-16-2),var(--c-x-blue-09));
+  box-shadow:0 18px 44px rgba(var(--c-black-rgb),.5),inset 0 1px 0 rgba(var(--c-white-rgb),.08)}
+html[data-theme="dark"] .result .note{background:rgba(var(--c-red-rgb),.12);color:var(--c-red-soft);border-color:var(--c-red)}
+html[data-theme="dark"] #dlg{background:rgba(var(--c-x-gray-03-rgb),.7);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
 html[data-theme="dark"] #dlg .box{background:var(--solid);color:var(--tx)}
 html[data-theme="dark"] #dlg p{color:var(--tx)}
-html[data-theme="dark"] #dlg p span{color:#ff8a9a!important}
-html[data-theme="dark"] #dlg h3{color:#ff8a9a}
+html[data-theme="dark"] #dlg p span{color:var(--c-x-red-77)!important}
+html[data-theme="dark"] #dlg h3{color:var(--c-x-red-77)}
 
 /* ── ลิงก์ข้ามหน้า (ติดต่อกลับ ↔ คำนวณราคา) ── */
-html[data-theme="dark"] .cross-link{background:linear-gradient(90deg,rgba(79,125,255,.12),rgba(6,199,85,.06));border:1px solid var(--line);color:var(--tx)}
-html[data-theme="dark"] .cross-link:hover{border-color:var(--line-hi);background:linear-gradient(90deg,rgba(79,125,255,.2),rgba(6,199,85,.1))}
+html[data-theme="dark"] .cross-link{background:linear-gradient(90deg,rgba(var(--c-d-accent-rgb),.12),rgba(var(--c-line-rgb),.06));border:1px solid var(--line);color:var(--tx)}
+html[data-theme="dark"] .cross-link:hover{border-color:var(--line-hi);background:linear-gradient(90deg,rgba(var(--c-d-accent-rgb),.2),rgba(var(--c-line-rgb),.1))}
 
 /* ── คำถามที่พบบ่อย ── */
-html[data-theme="dark"] details p{color:#b4bfd3}
-html[data-theme="dark"] summary:after{background:rgba(79,125,255,.15);color:#a9c2ff}
+html[data-theme="dark"] details p{color:var(--c-x-blue-77)}
+html[data-theme="dark"] summary:after{background:rgba(var(--c-d-accent-rgb),.15);color:var(--c-x-blue-83-2)}
 html[data-theme="dark"] details[open]{border-color:var(--line-hi);box-shadow:inset 3px 0 0 var(--accent),var(--shadow)}
-html[data-theme="dark"] details[open] summary:after{background:var(--accent-grad);color:#fff}
-html[data-theme="dark"] .faqcta{border:1px solid rgba(160,190,255,.34);
-  background:repeating-radial-gradient(circle at 100% 0,transparent 0 26px,rgba(157,185,242,.1) 27px 28px),linear-gradient(155deg,#0e1f45,#081227)}
+html[data-theme="dark"] details[open] summary:after{background:var(--accent-grad);color:var(--c-white)}
+html[data-theme="dark"] .faqcta{border:1px solid rgba(var(--c-x-blue-81-rgb),.34);
+  background:repeating-radial-gradient(circle at 100% 0,transparent 0 26px,rgba(var(--c-x-blue-78-rgb),.1) 27px 28px),linear-gradient(155deg,var(--c-x-blue-16-2),var(--c-x-blue-09))}
 
 /* ── ติดต่อเรา ── */
 html[data-theme="dark"] section.ct,
 html[data-theme="dark"] section[data-page="contact"]{background:none}
-html[data-theme="dark"] .ct-main{border:1px solid rgba(160,190,255,.34);box-shadow:0 24px 60px rgba(0,0,0,.55)}
-html[data-theme="dark"] .ct-card .ic{background:rgba(79,125,255,.15);color:#a9c2ff}
+html[data-theme="dark"] .ct-main{border:1px solid rgba(var(--c-x-blue-81-rgb),.34);box-shadow:0 24px 60px rgba(var(--c-black-rgb),.55)}
+html[data-theme="dark"] .ct-card .ic{background:rgba(var(--c-d-accent-rgb),.15);color:var(--c-x-blue-83-2)}
 html[data-theme="dark"] .ct-card a,
 html[data-theme="dark"] .ct-card #replyNote2{color:var(--tx)}
-html[data-theme="dark"] .ct-time #replyNote2{color:#b4bfd3}
+html[data-theme="dark"] .ct-time #replyNote2{color:var(--c-x-blue-77)}
 
 /* ── ซื้อขายที่ดิน / ลงประกาศ ── */
-html[data-theme="dark"] .lfilters-reset{background:rgba(79,125,255,.15);color:#a9c2ff}
-html[data-theme="dark"] .lcard-price{color:#a9c2ff}
-html[data-theme="dark"] .lcard-code{color:#5f6c84}
+html[data-theme="dark"] .lfilters-reset{background:rgba(var(--c-d-accent-rgb),.15);color:var(--c-x-blue-83-2)}
+html[data-theme="dark"] .lcard-price{color:var(--c-x-blue-83-2)}
+html[data-theme="dark"] .lcard-code{color:var(--c-x-blue-45)}
 html[data-theme="dark"] .ld-type,
-html[data-theme="dark"] .adm-code{background:rgba(79,125,255,.15);color:#a9c2ff}
-html[data-theme="dark"] .ld-price{color:#a9c2ff}
+html[data-theme="dark"] .adm-code{background:rgba(var(--c-d-accent-rgb),.15);color:var(--c-x-blue-83-2)}
+html[data-theme="dark"] .ld-price{color:var(--c-x-blue-83-2)}
 html[data-theme="dark"] .ld-desc{border-top-color:var(--line)}
-html[data-theme="dark"] .ld-sold-note{background:rgba(225,29,72,.12);color:#ff9aa8!important}
+html[data-theme="dark"] .ld-sold-note{background:rgba(var(--c-red-rgb),.12);color:var(--c-red-soft)!important}
 html[data-theme="dark"] .ldg-main,
 html[data-theme="dark"] .ld-map,
-html[data-theme="dark"] .lcard-im{background:rgba(255,255,255,.04)}
+html[data-theme="dark"] .lcard-im{background:rgba(var(--c-white-rgb),.04)}
 html[data-theme="dark"] .ldg-thumbs button.on{border-color:var(--accent)}
 
 /* ── แอดมิน ── */
-html[data-theme="dark"] .adm-seller{background:rgba(241,207,107,.07);border-color:rgba(241,207,107,.3)}
-html[data-theme="dark"] .adm-seller b{color:#f1cf6b}
+html[data-theme="dark"] .adm-seller{background:rgba(var(--c-x-gold-68-rgb),.07);border-color:rgba(var(--c-x-gold-68-rgb),.3)}
+html[data-theme="dark"] .adm-seller b{color:var(--c-x-gold-68-2)}
 
 /* ── ท้ายเว็บ: โทนเดียวกับหน้า มีเส้นไล่สีคั่นด้านบน ── */
-html[data-theme="dark"] footer{background:linear-gradient(180deg,rgba(7,13,26,0),rgba(4,8,17,.9) 30%),#050a15;border-top:1px solid transparent;
-  border-image:linear-gradient(90deg,transparent,rgba(79,125,255,.4),rgba(6,199,85,.3),transparent) 1}
-html[data-theme="dark"] footer h4{color:#f3f6fc}
-html[data-theme="dark"] footer a{color:#a9b5cb}
-html[data-theme="dark"] footer a:hover{color:#fff}
-html[data-theme="dark"] footer p{color:#a9b5cb!important}
-html[data-theme="dark"] #brand2{background:linear-gradient(90deg,#8db0ff,#7fd6a8);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
-html[data-theme="dark"] .copy{color:#5f6c84}
+html[data-theme="dark"] footer{background:linear-gradient(180deg,rgba(var(--c-d-page-rgb),0),rgba(var(--c-x-gray-04-rgb),.9) 30%),var(--c-x-blue-05-3);border-top:1px solid transparent;
+  border-image:linear-gradient(90deg,transparent,rgba(var(--c-d-accent-rgb),.4),rgba(var(--c-line-rgb),.3),transparent) 1}
+html[data-theme="dark"] footer h4{color:var(--c-d-heading)}
+html[data-theme="dark"] footer a{color:var(--c-x-blue-73)}
+html[data-theme="dark"] footer a:hover{color:var(--c-white)}
+html[data-theme="dark"] footer p{color:var(--c-x-blue-73)!important}
+html[data-theme="dark"] #brand2{background:linear-gradient(90deg,var(--c-d-ink),var(--c-d-mint));-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
+html[data-theme="dark"] .copy{color:var(--c-x-blue-45)}
 
 /* ════ ปุ่มเรืองแสง ════ */
-html[data-theme="dark"] .btn-line{box-shadow:0 0 0 1px rgba(6,199,85,.6),0 0 16px rgba(6,199,85,.5),0 0 40px rgba(6,199,85,.22)}
-html[data-theme="dark"] .btn-line:hover{filter:brightness(1.08);box-shadow:0 0 0 1px rgba(6,199,85,.85),0 0 24px rgba(6,199,85,.7),0 0 56px rgba(6,199,85,.38)}
-html[data-theme="dark"] .btn-w{box-shadow:0 0 0 1px rgba(255,255,255,.7),0 0 18px rgba(141,176,255,.5),0 0 44px rgba(79,125,255,.28)}
-html[data-theme="dark"] .btn-w:hover{box-shadow:0 0 0 1px #fff,0 0 26px rgba(141,176,255,.75),0 0 60px rgba(79,125,255,.42)}
+html[data-theme="dark"] .btn-line{box-shadow:0 0 0 1px rgba(var(--c-line-rgb),.6),0 0 16px rgba(var(--c-line-rgb),.5),0 0 40px rgba(var(--c-line-rgb),.22)}
+html[data-theme="dark"] .btn-line:hover{filter:brightness(1.08);box-shadow:0 0 0 1px rgba(var(--c-line-rgb),.85),0 0 24px rgba(var(--c-line-rgb),.7),0 0 56px rgba(var(--c-line-rgb),.38)}
+html[data-theme="dark"] .btn-w{box-shadow:0 0 0 1px rgba(var(--c-white-rgb),.7),0 0 18px rgba(var(--c-d-ink-rgb),.5),0 0 44px rgba(var(--c-d-accent-rgb),.28)}
+html[data-theme="dark"] .btn-w:hover{box-shadow:0 0 0 1px var(--c-white),0 0 26px rgba(var(--c-d-ink-rgb),.75),0 0 60px rgba(var(--c-d-accent-rgb),.42)}
 html[data-theme="dark"] .btn-k,
-html[data-theme="dark"] .btn-ghost{box-shadow:0 0 12px rgba(79,125,255,.22),inset 0 0 10px rgba(141,176,255,.06)}
+html[data-theme="dark"] .btn-ghost{box-shadow:0 0 12px rgba(var(--c-d-accent-rgb),.22),inset 0 0 10px rgba(var(--c-d-ink-rgb),.06)}
 html[data-theme="dark"] .btn-k:hover,
-html[data-theme="dark"] .btn-ghost:hover{border-color:#8db0ff;box-shadow:0 0 20px rgba(79,125,255,.45),inset 0 0 12px rgba(141,176,255,.1)}
+html[data-theme="dark"] .btn-ghost:hover{border-color:var(--c-d-ink);box-shadow:0 0 20px rgba(var(--c-d-accent-rgb),.45),inset 0 0 12px rgba(var(--c-d-ink-rgb),.1)}
 html[data-theme="dark"] #sendBtn,
 html[data-theme="dark"] .adm-login .btn,
 html[data-theme="dark"] #nav a.on,
 html[data-theme="dark"] .tabs button.on,
 html[data-theme="dark"] .dots2 button.on,
-html[data-theme="dark"] details[open] summary:after{box-shadow:0 0 0 1px rgba(141,176,255,.45),0 0 16px rgba(79,125,255,.55),0 0 36px rgba(79,125,255,.25)}
-html[data-theme="dark"] .pill{box-shadow:0 0 14px rgba(79,125,255,.3),inset 0 0 8px rgba(141,176,255,.1)}
-html[data-theme="dark"] .pill:hover{box-shadow:0 0 22px rgba(79,125,255,.55),inset 0 0 10px rgba(141,176,255,.15)}
-html[data-theme="dark"] .theme-toggle{box-shadow:0 0 0 1px rgba(255,211,107,.25),0 0 18px rgba(255,211,107,.3)}
-html[data-theme="dark"] .theme-toggle:hover{box-shadow:0 0 0 1px rgba(255,211,107,.55),0 0 26px rgba(255,211,107,.5)}
+html[data-theme="dark"] details[open] summary:after{box-shadow:0 0 0 1px rgba(var(--c-d-ink-rgb),.45),0 0 16px rgba(var(--c-d-accent-rgb),.55),0 0 36px rgba(var(--c-d-accent-rgb),.25)}
+html[data-theme="dark"] .pill{box-shadow:0 0 14px rgba(var(--c-d-accent-rgb),.3),inset 0 0 8px rgba(var(--c-d-ink-rgb),.1)}
+html[data-theme="dark"] .pill:hover{box-shadow:0 0 22px rgba(var(--c-d-accent-rgb),.55),inset 0 0 10px rgba(var(--c-d-ink-rgb),.15)}
+html[data-theme="dark"] .theme-toggle{box-shadow:0 0 0 1px rgba(var(--c-gold-rgb),.25),0 0 18px rgba(var(--c-gold-rgb),.3)}
+html[data-theme="dark"] .theme-toggle:hover{box-shadow:0 0 0 1px rgba(var(--c-gold-rgb),.55),0 0 26px rgba(var(--c-gold-rgb),.5)}
 /* ปุ่ม LINE ลอยมุมจอ: เรืองแสงเป็นจังหวะหายใจ */
 @keyframes glow-breathe{
-  0%,100%{box-shadow:0 0 0 1px rgba(6,199,85,.6),0 0 14px rgba(6,199,85,.45),0 0 32px rgba(6,199,85,.2)}
-  50%{box-shadow:0 0 0 1px rgba(6,199,85,.9),0 0 26px rgba(6,199,85,.8),0 0 60px rgba(6,199,85,.4)}
+  0%,100%{box-shadow:0 0 0 1px rgba(var(--c-line-rgb),.6),0 0 14px rgba(var(--c-line-rgb),.45),0 0 32px rgba(var(--c-line-rgb),.2)}
+  50%{box-shadow:0 0 0 1px rgba(var(--c-line-rgb),.9),0 0 26px rgba(var(--c-line-rgb),.8),0 0 60px rgba(var(--c-line-rgb),.4)}
 }
-html[data-theme="dark"] .scroll-cue-circle{box-shadow:0 0 18px rgba(141,176,255,.55),0 0 40px rgba(79,125,255,.3)}
+html[data-theme="dark"] .scroll-cue-circle{box-shadow:0 0 18px rgba(var(--c-d-ink-rgb),.55),0 0 40px rgba(var(--c-d-accent-rgb),.3)}
 @media(prefers-reduced-motion:reduce){
 }
 /* ปุ่มเลื่อนลงตอนลอยอยู่ (ทับเนื้อหา): ใช้พื้นฟ้าสดให้เห็นชัดบนทุกพื้นหลัง */
-html[data-theme="dark"] .scroll-cue.is-compact .scroll-cue-circle{background:var(--accent-grad);border-color:rgba(255,255,255,.85)}
+html[data-theme="dark"] .scroll-cue.is-compact .scroll-cue-circle{background:var(--accent-grad);border-color:rgba(var(--c-white-rgb),.85)}
 /* แท็บลอย "คำนวณราคา" หน้าติดต่อกลับ: เรืองฟ้า */
-html[data-theme="dark"] .side-tab{box-shadow:0 0 0 1px rgba(141,176,255,.45),0 0 18px rgba(79,125,255,.55),0 0 40px rgba(79,125,255,.25)}
-html[data-theme="dark"] .side-tab:hover{box-shadow:0 0 0 1px rgba(141,176,255,.7),0 0 26px rgba(79,125,255,.75),0 0 56px rgba(79,125,255,.35)}
+html[data-theme="dark"] .side-tab{box-shadow:0 0 0 1px rgba(var(--c-d-ink-rgb),.45),0 0 18px rgba(var(--c-d-accent-rgb),.55),0 0 40px rgba(var(--c-d-accent-rgb),.25)}
+html[data-theme="dark"] .side-tab:hover{box-shadow:0 0 0 1px rgba(var(--c-d-ink-rgb),.7),0 0 26px rgba(var(--c-d-accent-rgb),.75),0 0 56px rgba(var(--c-d-accent-rgb),.35)}
 
 /* ── ความคมชัดตัวหนังสือ (อ่านง่ายสำหรับผู้สูงอายุ): ตัวสีเทาสว่างขึ้นทั้งหมด ── */
-html[data-theme="dark"]{--mu:#b2bdd1}
+html[data-theme="dark"]{--mu:var(--c-d-muted)}
 html[data-theme="dark"] .sub,
 html[data-theme="dark"] .card p,
 html[data-theme="dark"] details p,
 html[data-theme="dark"] .sv-desc,
 html[data-theme="dark"] .term-pop p,
-html[data-theme="dark"] .ct-time #replyNote2{color:#c8d1e2}
+html[data-theme="dark"] .ct-time #replyNote2{color:var(--c-d-body)}
 html[data-theme="dark"] #nav a,
 html[data-theme="dark"] .tabs button,
 html[data-theme="dark"] footer a,
-html[data-theme="dark"] footer p{color:#c8d1e2!important}
+html[data-theme="dark"] footer p{color:var(--c-d-body)!important}
 html[data-theme="dark"] #nav a.on,
-html[data-theme="dark"] .tabs button.on{color:#fff!important}
+html[data-theme="dark"] .tabs button.on{color:var(--c-white)!important}
 html[data-theme="dark"] .lcard-code,
 html[data-theme="dark"] .copy,
-html[data-theme="dark"] .logos div{color:#8f9bb2}
+html[data-theme="dark"] .logos div{color:var(--c-x-blue-63)}
 html[data-theme="dark"] input::placeholder,
-html[data-theme="dark"] textarea::placeholder{color:#8390a8}
+html[data-theme="dark"] textarea::placeholder{color:var(--c-x-blue-59)}
 html[data-theme="dark"] #nav a:hover,
 html[data-theme="dark"] .tabs button:hover,
-html[data-theme="dark"] footer a:hover{color:#fff!important}
+html[data-theme="dark"] footer a:hover{color:var(--c-white)!important}
+
+/* หน้าแอดมิน: ตัวเลขแท็บ / ป้ายสถานะ / เตือนเบอร์ซ้ำ / ปุ่มลบ */
+html[data-theme="dark"] .adm-count{background:rgba(var(--c-white-rgb),.12)}
+html[data-theme="dark"] .adm-count.is-alert{background:var(--c-red);color:var(--c-white)}
+html[data-theme="dark"] .adm-status{background:rgba(var(--c-white-rgb),.08);color:var(--c-d-body)}
+html[data-theme="dark"] .adm-status.is-pending{background:rgba(var(--c-x-gold-68-rgb),.14);color:var(--c-x-gold-68-2)}
+html[data-theme="dark"] .adm-status.is-approved{background:rgba(var(--c-x-green-52-rgb),.14);color:var(--c-x-green-67)}
+html[data-theme="dark"] .adm-status.is-sold{background:rgba(var(--c-d-accent-rgb),.16);color:var(--c-x-blue-83-2)}
+html[data-theme="dark"] .adm-status.is-rejected{background:rgba(var(--c-x-red-69-rgb),.14);color:var(--c-red-soft)}
+html[data-theme="dark"] .adm-dup{background:rgba(var(--c-x-red-69-rgb),.12);border-color:rgba(var(--c-x-red-69-rgb),.45);color:var(--c-red-soft)}
+html[data-theme="dark"] .adm-actions .adm-del{border-color:rgba(var(--c-x-red-69-rgb),.45);color:var(--c-red-soft)}
+html[data-theme="dark"] .adm-actions .adm-del:hover{background:rgba(var(--c-x-red-69-rgb),.12)}
+html[data-theme="dark"] .adm-link{color:var(--c-x-blue-83-2)}
+html[data-theme="dark"] .adm-edit{box-shadow:inset 0 0 0 2px rgba(var(--c-d-ink-rgb),.6),0 0 24px rgba(var(--c-d-accent-rgb),.2)!important}

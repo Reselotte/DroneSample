@@ -5,7 +5,7 @@
 .tile .im{height:130px;padding:0}
 .tile h3{font-size:21px}
 .tile .tx{padding:14px 12px}
-.tile:hover{transform:translateY(-6px);box-shadow:0 16px 36px rgba(11,42,91,.16)}
+.tile:hover{transform:translateY(-6px);box-shadow:0 16px 36px rgba(var(--c-navy-rgb),.16)}
 .tile .im{transition:transform .5s}
 .tile:hover .im{transform:scale(1.05)}
 .tile{overflow:hidden}
@@ -21,7 +21,7 @@
 @media(hover:none){
   .tile:hover{transform:none}
 }
-.tile{border:0;box-shadow:0 10px 30px rgba(11,42,91,.10),0 0 0 1px rgba(11,42,91,.07)}
+.tile{border:0;box-shadow:0 10px 30px rgba(var(--c-navy-rgb),.10),0 0 0 1px rgba(var(--c-navy-rgb),.07)}
 .tile .im{position:relative;height:150px}
-.tile .im:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(6,22,48,.35))}
+.tile .im:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(var(--c-x-blue-11-rgb),.35))}
 .tile .tx{border-top:3px solid var(--g)}

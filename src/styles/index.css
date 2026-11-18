@@ -1,4 +1,5 @@
 /* ลำดับการ import สำคัญ: ไฟล์ท้าย ๆ ทับค่าของไฟล์ก่อนหน้าได้ */
+@import "./base/color-tokens.css"; /* ชุดสีของเว็บ (ล็อกไว้ที่เดียว) */
 @import "./base/global-and-typography.css";
 @import "./base/buttons.css";
 @import "./base/forms.css";

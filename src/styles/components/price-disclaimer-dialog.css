@@ -1,9 +1,9 @@
 /* ป๊อปอัปเตือน "ไม่ใช่ราคาซื้อขายจริง" */
-#dlg{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100vh;height:100dvh;z-index:100;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.55)}
+#dlg{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100vh;height:100dvh;z-index:100;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(var(--c-black-rgb),.55)}
 #dlg.show{display:flex}
-#dlg .box{background:#fff;border-radius:18px;max-width:420px;width:100%;padding:22px 20px;text-align:center;border:2px solid #ff2d4a;box-shadow:0 0 28px 6px rgba(255,45,74,.55);animation:pop2 .2s ease-out}
+#dlg .box{background:var(--c-white);border-radius:18px;max-width:420px;width:100%;padding:22px 20px;text-align:center;border:2px solid var(--c-x-red-59);box-shadow:0 0 28px 6px rgba(var(--c-x-red-59-rgb),.55);animation:pop2 .2s ease-out}
 @keyframes pop2{from{transform:scale(.92);opacity:0}to{transform:none;opacity:1}}
 #dlg .ic{font-size:40px;line-height:1}
-#dlg h3{margin:8px 0 6px;font-size:22px;color:#c8001a}
+#dlg h3{margin:8px 0 6px;font-size:22px;color:var(--c-red-ink)}
 #dlg p{margin:0 0 16px;font-size:18px;font-weight:600;color:var(--tx);line-height:1.5}
 #dlg .btns{display:flex;flex-direction:column;gap:8px}

@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import FileDropZone from "../../components/common/FileDropZone";
 import LineLink from "../../components/common/LineLink";
 import useFileAttachments from "../../hooks/useFileAttachments";
 import { isSupabaseConfigured } from "../../lib/supabaseClient";
-import { submitListing } from "../../lib/listingsApi";
+import { ListingLimitError, submitListing } from "../../lib/listingsApi";
 import { LAND_TYPES, PRICE_UNITS, PROVINCES } from "../../data/landListingOptions";
 import { isInThailand, listingCode, parseLatLng } from "../../utils/listingFormat";
 import SetupNotice from "../LandsPage/SetupNotice";
@@ -12,11 +12,22 @@ import LocationField from "../../components/common/LocationField";
 
 const MAX_PHOTOS = 10;
 
+// ── กันสแปม (ฝั่งหน้าเว็บ) ──
+// ส่งเร็วกว่านี้หลังเปิดหน้า = ไม่ใช่คนกรอก (ฟอร์มนี้ต้องแนบรูป คนจริงใช้เวลาเป็นนาที)
+const MIN_FILL_MS = 6000;
+// ข้อความเมื่อเกินโควตาจากฐานข้อมูล (supabase/schema.sql)
+const LIMIT_MESSAGES = {
+  RATE_PHONE: "เบอร์โทรนี้ลงประกาศครบ 3 รายการใน 24 ชั่วโมงแล้ว กรุณาลองใหม่พรุ่งนี้ หรือส่งข้อมูลที่ดินให้ทีมงานทาง LINE",
+  RATE_GLOBAL: "ขณะนี้มีประกาศรอตรวจสอบจำนวนมาก กรุณาลองใหม่ภายหลัง หรือส่งข้อมูลที่ดินให้ทีมงานทาง LINE",
+  RATE_UPLOAD: "ขณะนี้มีการอัปโหลดรูปจำนวนมาก กรุณาลองใหม่ในอีกสักครู่ หรือส่งข้อมูลที่ดินให้ทีมงานทาง LINE",
+};
+
 const EMPTY_VALUES = {
   title: "", landType: "", province: "", district: "",
   rai: "", ngan: "", wah: "", price: "", priceUnit: "total",
   location: "", description: "",
   sellerName: "", phone: "", lineId: "", deedNo: "", consent: false,
+  website: "", // ช่องดักบอท: ซ่อนจากคน บอทที่กรอกทุกช่องจะใส่ค่าลงมา
 };
 
 /** ตรวจค่าในฟอร์ม คืน { errors, listing } (listing = ค่าที่พร้อมส่ง) */
@@ -74,6 +85,7 @@ export default function PostListingPage() {
   const [errors, setErrors] = useState({});
   const [sending, setSending] = useState(false);
   const [sentId, setSentId] = useState(null);
+  const openedAt = useRef(Date.now()); // เวลาเปิดฟอร์ม (ดักส่งเร็วเกินคน)
   const photos = useFileAttachments({ maxFiles: MAX_PHOTOS, allowPdf: false });
   const deed = useFileAttachments({ maxFiles: 5, allowPdf: true });
 
@@ -92,6 +104,19 @@ export default function PostListingPage() {
       return;
     }
 
+    // บอทกรอกช่องที่ซ่อนไว้ → ทำเหมือนส่งสำเร็จ แต่ไม่บันทึกอะไร (บอทจะได้ไม่ลองวิธีอื่น)
+    if (values.website) {
+      setSentId("ignored");
+      window.scrollTo(0, 0);
+      return;
+    }
+    // ส่งเร็วเกินคนกรอก → ให้กดส่งอีกครั้ง (คนจริงที่บังเอิญเร็ว กดซ้ำก็ผ่าน)
+    if (Date.now() - openedAt.current < MIN_FILL_MS) {
+      openedAt.current = Date.now() - MIN_FILL_MS / 2;
+      setErrors({ send: "กรุณาตรวจสอบข้อมูลอีกครั้ง แล้วกดส่งประกาศ" });
+      return;
+    }
+
     setSending(true);
     try {
       const id = await submitListing(listing, photos.files, deed.files);
@@ -99,7 +124,11 @@ export default function PostListingPage() {
       window.scrollTo(0, 0);
     } catch (err) {
       console.error(err);
-      setErrors({ send: "ส่งประกาศไม่สำเร็จ กรุณาลองอีกครั้ง หรือติดต่อทีมงานทาง LINE" });
+      setErrors({
+        send: err instanceof ListingLimitError
+          ? LIMIT_MESSAGES[err.code]
+          : "ส่งประกาศไม่สำเร็จ กรุณาลองอีกครั้ง หรือติดต่อทีมงานทาง LINE",
+      });
     }
     setSending(false);
   };
@@ -115,7 +144,7 @@ export default function PostListingPage() {
           <div className="ok post-ok">
             <div className="ico ico-ok"><CheckCircleIcon /></div>
             <h3>ได้รับประกาศของท่านแล้ว</h3>
-            <p>รหัสประกาศ <b>{listingCode(sentId)}</b></p>
+            {typeof sentId === "number" && <p>รหัสประกาศ <b>{listingCode(sentId)}</b></p>}
             <p>ทีมงานจะตรวจสอบข้อมูลก่อนเผยแพร่ และอาจโทรติดต่อเพื่อยืนยันข้อมูล ภายใน 1–2 วันทำการ</p>
             <div className="post-ok-act">
               <a className="btn btn-ghost" href="#/lands">ดูที่ดินประกาศขาย</a>
@@ -134,6 +163,11 @@ export default function PostListingPage() {
         <p className="sub">กรอกข้อมูลที่ดิน <span className="hl">ทีมงานตรวจสอบก่อนเผยแพร่</span> ผู้ซื้อติดต่อผ่านทีมงาน ข้อมูลติดต่อของท่านไม่แสดงบนเว็บ</p>
 
         <form className="post-form" noValidate onSubmit={submit}>
+          {/* ช่องดักบอท: คนมองไม่เห็นและกด Tab ข้าม — อย่าใช้ display:none (บอทบางตัวข้ามช่องแบบนั้น) */}
+          <div className="post-hp" aria-hidden="true">
+            <label htmlFor="p_website">เว็บไซต์ (ไม่ต้องกรอก)</label>
+            <input id="p_website" name="website" type="text" tabIndex={-1} autoComplete="off" {...bind("website")} />
+          </div>
           {/* คอม: ซ้าย = ผู้ขาย + ปุ่มส่ง (ค้างตอนเลื่อน) / ขวา = ข้อมูลที่ดิน · มือถือ: ผู้ขาย → ที่ดิน → ปุ่มส่ง (จัดลำดับด้วย CSS) */}
           <div className="post-side">
             <div className="card post-block post-seller">

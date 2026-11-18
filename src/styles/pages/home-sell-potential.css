@@ -1,34 +1,34 @@
 /* หน้าแรก: แบนเนอร์ "อยากรู้ไหมว่าที่ดินของคุณขายได้ดีแค่ไหน?" → พาไปหน้าให้ทีมงานติดต่อกลับ */
-.sellpot{padding:40px 0 8px;background:linear-gradient(180deg,#f4f6f9,#fff)}
-.sellpot-card{position:relative;display:grid;gap:26px;align-items:center;overflow:hidden;padding:30px 26px;border-radius:28px;text-align:left;text-decoration:none;color:#fff;
-  background:repeating-radial-gradient(circle at 100% 0,transparent 0 30px,rgba(157,185,242,.14) 31px 32px),radial-gradient(600px 300px at 0 100%,rgba(6,199,85,.18),transparent 60%),linear-gradient(150deg,#0b2a5b,#061630);
-  box-shadow:0 22px 50px rgba(11,42,91,.28);transition:transform .25s,box-shadow .25s}
-.sellpot-card:hover{transform:translateY(-4px);box-shadow:0 28px 60px rgba(11,42,91,.36)}
-.sellpot-card:focus-visible{outline:3px solid #7aa2ee;outline-offset:4px}
+.sellpot{padding:40px 0 8px;background:linear-gradient(180deg,var(--c-x-gray-97-3),var(--c-white))}
+.sellpot-card{position:relative;display:grid;gap:26px;align-items:center;overflow:hidden;padding:30px 26px;border-radius:28px;text-align:left;text-decoration:none;color:var(--c-white);
+  background:repeating-radial-gradient(circle at 100% 0,transparent 0 30px,rgba(var(--c-x-blue-78-rgb),.14) 31px 32px),radial-gradient(600px 300px at 0 100%,rgba(var(--c-line-rgb),.18),transparent 60%),linear-gradient(150deg,var(--c-navy),var(--c-x-blue-11));
+  box-shadow:0 22px 50px rgba(var(--c-navy-rgb),.28);transition:transform .25s,box-shadow .25s}
+.sellpot-card:hover{transform:translateY(-4px);box-shadow:0 28px 60px rgba(var(--c-navy-rgb),.36)}
+.sellpot-card:focus-visible{outline:3px solid var(--c-sky);outline-offset:4px}
 @media(min-width:820px){
   .sellpot-card{grid-template-columns:1.25fr 1fr;padding:40px 44px;gap:40px}
 }
 
 .sellpot-tx{display:flex;flex-direction:column;align-items:flex-start;gap:12px}
-.sellpot-badge{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:99px;font-size:13.5px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3)}
-.sellpot-badge:before{content:"";width:8px;height:8px;border-radius:50%;background:#06c755;box-shadow:0 0 0 4px rgba(6,199,85,.3);animation:sellpot-pulse 1.8s ease-in-out infinite}
-@keyframes sellpot-pulse{50%{box-shadow:0 0 0 7px rgba(6,199,85,0)}}
-.sellpot h2{margin:0;color:#fff;font-size:clamp(26px,4.4vw,38px);line-height:1.25;text-wrap:balance}
+.sellpot-badge{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:99px;font-size:13.5px;background:rgba(var(--c-white-rgb),.12);border:1px solid rgba(var(--c-white-rgb),.3)}
+.sellpot-badge:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c-line);box-shadow:0 0 0 4px rgba(var(--c-line-rgb),.3);animation:sellpot-pulse 1.8s ease-in-out infinite}
+@keyframes sellpot-pulse{50%{box-shadow:0 0 0 7px rgba(var(--c-line-rgb),0)}}
+.sellpot h2{margin:0;color:var(--c-white);font-size:clamp(26px,4.4vw,38px);line-height:1.25;text-wrap:balance}
 .sellpot h2:after{display:none}
-.sellpot h2 span{background:linear-gradient(90deg,#9db9f2,#7be0a2);-webkit-background-clip:text;background-clip:text;color:transparent}
-.sellpot p{margin:0;max-width:520px;color:#cfd9ea;font-size:16px;line-height:1.6}
-.sellpot ul{list-style:none;margin:2px 0 4px;padding:0;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14.5px;color:#e5ecfa}
-.sellpot li:before{content:"✓";color:#7be0a2;font-weight:800;margin-right:7px}
+.sellpot h2 span{background:linear-gradient(90deg,var(--c-x-blue-78-2),var(--c-x-green-68));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sellpot p{margin:0;max-width:520px;color:var(--c-x-blue-86);font-size:16px;line-height:1.6}
+.sellpot ul{list-style:none;margin:2px 0 4px;padding:0;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14.5px;color:var(--c-x-blue-94-3)}
+.sellpot li:before{content:"✓";color:var(--c-x-green-68);font-weight:800;margin-right:7px}
 .sellpot-btn{font-size:17px;padding:14px 26px}
 .sellpot-btn i{font-style:normal;display:inline-block;transition:transform .25s}
 .sellpot-card:hover .sellpot-btn i{transform:translateX(5px)}
 
 /* ภาพประกอบ: แผนที่ Contour เอียงเล็กน้อย + ป้ายข้อมูลลอยรอบ ๆ */
 .sellpot-vis{position:relative;padding:18px 10px}
-.sellpot-map{aspect-ratio:4/3;border-radius:20px;overflow:hidden;border:4px solid rgba(255,255,255,.9);box-shadow:0 20px 44px rgba(0,0,0,.4);transform:rotate(2.5deg);transition:transform .4s}
+.sellpot-map{aspect-ratio:4/3;border-radius:20px;overflow:hidden;border:4px solid rgba(var(--c-white-rgb),.9);box-shadow:0 20px 44px rgba(var(--c-black-rgb),.4);transform:rotate(2.5deg);transition:transform .4s}
 .sellpot-map svg{width:100%;height:100%;display:block}
 .sellpot-card:hover .sellpot-map{transform:rotate(0) scale(1.02)}
-.sellpot-chip{position:absolute;padding:7px 14px;border-radius:99px;background:#fff;color:var(--tx);font-size:13.5px;font-weight:600;white-space:nowrap;box-shadow:0 10px 24px rgba(0,0,0,.25);animation:sellpot-float 4s ease-in-out infinite}
+.sellpot-chip{position:absolute;padding:7px 14px;border-radius:99px;background:var(--c-white);color:var(--tx);font-size:13.5px;font-weight:600;white-space:nowrap;box-shadow:0 10px 24px rgba(var(--c-black-rgb),.25);animation:sellpot-float 4s ease-in-out infinite}
 .sellpot-chip.c1{top:4px;left:-4px}
 .sellpot-chip.c2{top:44%;right:-6px;animation-delay:-1.3s}
 .sellpot-chip.c3{bottom:2px;left:14%;animation-delay:-2.6s}

@@ -1,15 +1,15 @@
 /* หน้าตัวอย่างผลงาน: แกลเลอรี, แท็บ, แผนที่, ช่องโลโก้ลูกค้า */
-.map{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--bd);background:#e9efe9}
+.map{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--bd);background:var(--c-x-gray-93)}
 .map>svg{display:block;width:100%;height:auto}
 .gal .map{aspect-ratio:4/3}
 .gal .map>svg{height:100%}
 .gal figcaption{font-size:13px;color:var(--mu);margin-top:6px}
 .gal figure{margin:0}
-.stamp{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.65);color:#fff;font-size:12px;padding:2px 10px;border-radius:99px}
-.lock{position:absolute;left:0;right:0;bottom:0;padding:34px 16px 12px;background:linear-gradient(transparent,rgba(0,0,0,.7));color:#fff;font-size:14px}
+.stamp{position:absolute;top:8px;left:8px;background:rgba(var(--c-black-rgb),.65);color:var(--c-white);font-size:12px;padding:2px 10px;border-radius:99px}
+.lock{position:absolute;left:0;right:0;bottom:0;padding:34px 16px 12px;background:linear-gradient(transparent,rgba(var(--c-black-rgb),.7));color:var(--c-white);font-size:14px}
 .tabs{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:14px}
-.tabs button{border:1px solid var(--bd);background:#fff;color:var(--tx);border-radius:99px;padding:8px 18px;font:inherit;cursor:pointer}
-.tabs button.on{background:var(--g);color:#fff;border-color:var(--g);font-weight:700}
+.tabs button{border:1px solid var(--bd);background:var(--c-white);color:var(--tx);border-radius:99px;padding:8px 18px;font:inherit;cursor:pointer}
+.tabs button.on{background:var(--g);color:var(--c-white);border-color:var(--g);font-weight:700}
 .legend{display:flex;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--mu);margin-top:8px}
 .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:4px}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
@@ -29,7 +29,7 @@ ul.ck li{font-size:18px;font-weight:600;padding:7px 0 7px 28px}
 .gal figcaption{font-size:15.5px;color:var(--tx);font-weight:600}
 .stamp{font-size:13px}
 .map{border-radius:20px}
-.map{box-shadow:0 10px 30px rgba(11,42,91,.12)}
+.map{box-shadow:0 10px 30px rgba(var(--c-navy-rgb),.12)}
 .tabs button{transition:all .2s}
 .tabs button:hover{border-color:var(--g)}
 .tabs button{font-size:15.5px;padding:8px 18px}
@@ -47,27 +47,46 @@ ul.ck li{font-size:14.5px;padding:5px 0 5px 24px}
 .legend{font-size:12px}
 .gal figcaption{font-size:13px}
 .logos div{font-size:12.5px}
-.gal figure{background:#fff;border-radius:22px;padding:10px 10px 12px;box-shadow:0 10px 30px rgba(11,42,91,.10),0 0 0 1px rgba(11,42,91,.06)}
+.gal figure{background:var(--c-white);border-radius:22px;padding:10px 10px 12px;box-shadow:0 10px 30px rgba(var(--c-navy-rgb),.10),0 0 0 1px rgba(var(--c-navy-rgb),.06)}
 .gal .map{box-shadow:none;border-radius:14px}
-.gal figure figcaption{margin-top:10px;padding:10px 4px 0;border-top:1px dashed rgba(11,42,91,.2);font-size:14px;font-weight:500;text-align:left}
-.stamp{background:rgba(6,22,48,.72);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);letter-spacing:.04em}
-.tabs{width:fit-content;max-width:100%;margin:0 auto 18px;padding:5px;gap:4px;flex-wrap:nowrap;background:#e8edf6;border-radius:99px}
+.gal figure figcaption{margin-top:10px;padding:10px 4px 0;border-top:1px dashed rgba(var(--c-navy-rgb),.2);font-size:14px;font-weight:500;text-align:left}
+.stamp{background:rgba(var(--c-x-blue-11-rgb),.72);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);letter-spacing:.04em}
+.tabs{width:fit-content;max-width:100%;margin:0 auto 18px;padding:5px;gap:4px;flex-wrap:nowrap;background:var(--c-x-blue-94-2);border-radius:99px}
 .tabs button{border:0;background:transparent;color:var(--mu)}
-.tabs button.on{background:var(--g);color:#fff;box-shadow:0 6px 16px rgba(11,42,91,.28)}
-.stats div{background:#eef3fb}
-.logos div{background:#fff;border:1px solid rgba(11,42,91,.08);color:#a3acbb;font-weight:500;box-shadow:0 4px 14px rgba(11,42,91,.05)}
-.tabs button:focus-visible{outline:3px solid #7aa2ee;outline-offset:2px}
+.tabs button.on{background:var(--g);color:var(--c-white);box-shadow:0 6px 16px rgba(var(--c-navy-rgb),.28)}
+.stats div{background:var(--c-x-gray-96-3)}
+.logos div{background:var(--c-white);border:1px solid rgba(var(--c-navy-rgb),.08);color:var(--c-x-blue-69);font-weight:500;box-shadow:0 4px 14px rgba(var(--c-navy-rgb),.05)}
+.tabs button:focus-visible{outline:3px solid var(--c-sky);outline-offset:2px}
 
 /* ── การ์ดตัวอย่างกดดูได้ ── */
 .gal figure{transition:transform .25s,box-shadow .25s}
 .gal figure:hover{transform:translateY(-4px)}
 .gal-open{display:block;width:100%;min-height:0;padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:zoom-in}
-.gal-open:focus-visible{outline:3px solid #7aa2ee;outline-offset:4px;border-radius:14px}
+.gal-open:focus-visible{outline:3px solid var(--c-sky);outline-offset:4px;border-radius:14px}
 .gal-open .map>svg{transition:transform .5s}
 .gal-open:hover .map>svg{transform:scale(1.06)}
-.gal-hint{position:absolute;left:50%;top:50%;transform:translate(-50%,-30%);opacity:0;padding:8px 18px;border-radius:99px;background:rgba(6,22,48,.78);color:#fff;font-size:14px;font-weight:600;white-space:nowrap;pointer-events:none;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);transition:opacity .25s,transform .25s}
+.gal-hint{position:absolute;left:50%;top:50%;transform:translate(-50%,-30%);opacity:0;padding:8px 18px;border-radius:99px;background:rgba(var(--c-x-blue-11-rgb),.78);color:var(--c-white);font-size:14px;font-weight:600;white-space:nowrap;pointer-events:none;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);transition:opacity .25s,transform .25s}
 .gal-open:hover .gal-hint,.gal-open:focus-visible .gal-hint{opacity:1;transform:translate(-50%,-50%)}
 @media(hover:none){
   .gal-hint{opacity:1;left:auto;top:auto;right:8px;bottom:8px;transform:none;padding:4px 12px;font-size:12.5px}
   .gal figure:hover{transform:none}
 }
+
+/* ── แท็บ "Contour สำหรับงานแต่ละประเภท" สลับอัตโนมัติ ── */
+.type-rotator .tabs button{position:relative;overflow:hidden}
+/* แถบความคืบหน้าที่ขอบล่างของแท็บที่เปิดอยู่ (เต็ม = ถึงเวลาสลับ) */
+.tab-progress{position:absolute;left:12%;right:12%;bottom:4px;height:3px;border-radius:99px;background:rgba(var(--c-white-rgb),.35);overflow:hidden;pointer-events:none}
+.tab-progress:after{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--c-white);transform-origin:left;transform:scaleX(0);animation:tab-progress linear forwards;animation-duration:inherit}
+@keyframes tab-progress{to{transform:scaleX(1)}}
+/* แผนที่ + รายละเอียด: จางออก (.is-out) แล้วจางเข้าแบบนุ่ม */
+.type-panel{transition:opacity .45s ease,transform .45s ease}
+.type-panel.is-out{opacity:0;transform:translateY(8px);transition-duration:.28s}
+
+/* แถบไฮไลต์เลื่อนไหลไปหาแท็บที่เลือก (แทนการเปลี่ยนสีกระโดด) */
+.type-rotator .tabs{position:relative}
+.type-rotator .tabs button{z-index:1;transition:color .4s ease}
+.tab-pill{position:absolute;left:0;top:0;border-radius:99px;background:var(--g);box-shadow:0 6px 16px rgba(var(--c-navy-rgb),.28);pointer-events:none;
+  transition:transform .55s cubic-bezier(.65,0,.35,1),width .55s cubic-bezier(.65,0,.35,1),height .55s cubic-bezier(.65,0,.35,1)}
+html[data-theme] .type-rotator .tabs button.on{background:transparent!important;box-shadow:none!important}
+html[data-theme="light"] .tab-pill{background:var(--accent-grad);box-shadow:0 6px 16px rgba(var(--c-blue-deep-rgb),.3)}
+html[data-theme="dark"] .tab-pill{background:var(--accent-grad);box-shadow:0 0 0 1px rgba(var(--c-d-ink-rgb),.45),0 0 16px rgba(var(--c-d-accent-rgb),.55),0 0 36px rgba(var(--c-d-accent-rgb),.25)}

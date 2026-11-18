@@ -10,7 +10,7 @@ export default function SiteFooter() {
         <div className="fg">
           <div>
             <h4 id="brand2">{siteConfig.brand}</h4>
-            <p style={{ color: "#cfd3d1", margin: "0 0 10px" }}>สำรวจที่ดินจากมุมสูง เพื่อการซื้อขายอย่างมั่นใจ</p>
+            <p style={{ color: "var(--c-x-gray-82)", margin: "0 0 10px" }}>สำรวจที่ดินจากมุมสูง เพื่อการซื้อขายอย่างมั่นใจ</p>
             <div className="qr" id="qrBox"><LineQrCode size={120} /></div>
           </div>
           <div>
@@ -33,7 +33,7 @@ export default function SiteFooter() {
             <a id="tel" href={siteConfig.phoneHref}>{siteConfig.phone}</a>
             <a id="mail" href={siteConfig.emailHref}>{siteConfig.email}</a>
             <LineLink variant="plain" id="lineLink">LINE: {siteConfig.lineId}</LineLink>
-            <div style={{ color: "#9aa", fontSize: 13, marginTop: 6 }} id="replyNote">{siteConfig.replyText}</div>
+            <div style={{ color: "var(--c-x-gray-63)", fontSize: 13, marginTop: 6 }} id="replyNote">{siteConfig.replyText}</div>
           </div>
         </div>
         <div className="copy">ข้อมูลเป็นแนวทางประกอบการตัดสินใจ ไม่ใช่คำแนะนำทางกฎหมายหรือการเงิน</div>

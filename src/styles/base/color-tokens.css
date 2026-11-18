@@ -1,0 +1,239 @@
+/*
+ * ชุดสีของเว็บ (ล็อกไว้ที่นี่ที่เดียว)
+ * ─────────────────────────────────────────────────────────────────────────
+ * • ใช้สีจากไฟล์นี้เท่านั้น: var(--c-navy) แทนการพิมพ์ #0b2a5b ตรง ๆ
+ * • ทุกสีของเว็บอยู่ในไฟล์นี้ที่เดียว (ไฟล์ CSS / JSX อื่นไม่มีโค้ดสีพิมพ์ตรงแล้ว)
+ * • สีโปร่งแสง: rgba(var(--c-navy-rgb),.12) — ตัวแปร -rgb อยู่ท้ายไฟล์ ต้องแก้คู่กับสีต้นทางเสมอ
+ * • ต้องการสีใหม่ → เพิ่มที่นี่ + เพิ่มใน src/data/colorGuide.js (คู่มือสีในหน้าแอดมินจะแสดงให้เอง)
+ * • ดูตัวอย่างสี / คัดลอกโค้ดสี / เช็กความอ่านง่าย: เข้าหน้าแอดมิน → "คู่มือสีเว็บ" (#/admin/colors)
+ * ชื่อ: --c-l-* = ธีมสว่าง, --c-d-* = ธีมมืด, ไม่มี l/d = ใช้ได้ทั้งสองธีม
+ */
+:root{
+  /* แบรนด์ */
+  --c-navy:#0b2a5b;
+  --c-blue:#3461f0;
+  --c-blue-deep:#2453e6;
+  --c-blue-ink:#1d44c4;
+  --c-blue-soft:#6b93ff;
+  --c-sky:#7aa2ee;
+  --c-line:#06c755;
+  --c-line-deep:#04a947;
+  --c-gold:#ffd36b;
+
+  /* ธีมสว่าง */
+  --c-l-page:#f6f8fc;
+  --c-l-card:#ffffff;
+  --c-l-tint:#eef2ff;
+  --c-l-heading:#0f1a2e;
+  --c-l-text:#111418;
+  --c-l-body:#3d4452;
+  --c-l-muted:#454d5c;
+  --c-l-border:rgba(36,83,230,.12);
+
+  /* ธีมมืด */
+  --c-d-page:#070d1a;
+  --c-d-card:#0f1829;
+  --c-d-heading:#f3f6fc;
+  --c-d-text:#e8edf7;
+  --c-d-body:#c8d1e2;
+  --c-d-muted:#b2bdd1;
+  --c-d-accent:#4f7dff;
+  --c-d-ink:#8db0ff;
+  --c-d-mint:#7fd6a8;
+  --c-d-border:rgba(160,190,255,.3);
+
+  /* สถานะ / แจ้งเตือน */
+  --c-red:#e11d48;
+  --c-red-ink:#c8001a;
+  --c-red-soft:#ff9aa8;
+  --c-red-tint:#fde8ec;
+  --c-warn-ink:#7a5b00;
+  --c-warn-tint:#fff8e6;
+
+  /* ไล่สี */
+  --c-grad-primary-l:linear-gradient(135deg,#2453e6 0%,#3d6df5 55%,#6b93ff 100%);
+  --c-grad-primary-d:linear-gradient(135deg,#3461f0 0%,#4f7dff 55%,#7aa0ff 100%);
+  --c-grad-line:linear-gradient(135deg,#06c755,#04a947);
+  --c-grad-heading:linear-gradient(90deg,#3461f0,#06c755);
+  --c-grad-brand-l:linear-gradient(90deg,#2453e6,#05964a);
+  --c-grad-brand-d:linear-gradient(90deg,#8db0ff,#7fd6a8);
+
+  /* ขาว / ดำ */
+  --c-white:#ffffff;
+  --c-black:#000000;
+
+  /* สีเสริม (เฉดย่อยที่ใช้ในบางจุด) ชื่อ = --c-x-<โทนสี>-<ความสว่าง 0–100> */
+  --c-x-gray-99:#fbfcff;
+  --c-x-gray-98:#f7f9fd;
+  --c-x-gray-98-2:#f4f7ff;
+  --c-x-gray-98-3:#f8fafd;
+  --c-x-gray-97-2:#f4f7fd;
+  --c-x-gray-97-3:#f4f6f9;
+  --c-x-gray-97-4:#f3fbf6;
+  --c-x-gray-97-5:#f3f7fd;
+  --c-x-gray-97-6:#f2f6ff;
+  --c-x-gray-97-7:#f3f5fa;
+  --c-x-gray-96:#f1faf5;
+  --c-x-gray-96-2:#eef2fa;
+  --c-x-gray-96-3:#eef3fb;
+  --c-x-gray-96-4:#f1f3f7;
+  --c-x-gray-95:#eef2f9;
+  --c-x-gray-95-2:#eef1f6;
+  --c-x-gray-94:#e9eef6;
+  --c-x-gray-93:#e9efe9;
+  --c-x-gray-92:#e6e9ef;
+  --c-x-gray-91:#e5ece7;
+  --c-x-gray-91-2:#e3e7ee;
+  --c-x-gray-90:#dfe3ea;
+  --c-x-gray-89:#dde3ea;
+  --c-x-gray-83:#cfd9d3;
+  --c-x-gray-82:#cfd3d1;
+  --c-x-gray-33:#555555;
+  --c-x-gray-20:#333333;
+  --c-x-gray-13:#222222;
+  --c-x-gray-07:#111111;
+  --c-x-gray-04-2:#0b0b0b;
+  --c-x-blue-97:#f0f4ff;
+  --c-x-blue-96:#eef3fc;
+  --c-x-blue-96-2:#ebf0ff;
+  --c-x-blue-95:#eaf0fb;
+  --c-x-blue-95-2:#e6ecff;
+  --c-x-blue-95-3:#e8ecff;
+  --c-x-blue-94:#e4ecf9;
+  --c-x-blue-94-2:#e8edf6;
+  --c-x-blue-94-3:#e5ecfa;
+  --c-x-blue-94-4:#e2e9ff;
+  --c-x-blue-92:#dbe6fb;
+  --c-x-blue-92-2:#dfe8f8;
+  --c-x-blue-91:#dbe4f5;
+  --c-x-blue-90:#d9e1f0;
+  --c-x-blue-90-2:#dbe2ee;
+  --c-x-blue-89:#c9d8ff;
+  --c-x-blue-87:#d5dbe6;
+  --c-x-blue-86:#cfd9ea;
+  --c-x-blue-85:#bcd0f7;
+  --c-x-blue-83:#c6d0e2;
+  --c-x-blue-83-2:#a9c2ff;
+  --c-x-blue-83-3:#c9d0dc;
+  --c-x-blue-81-2:#b9c7e6;
+  --c-x-blue-78-2:#9db9f2;
+  --c-x-blue-77:#b4bfd3;
+  --c-x-blue-77-2:#b9c1cf;
+  --c-x-blue-74:#7aa0ff;
+  --c-x-blue-73:#a9b5cb;
+  --c-x-blue-69:#a3acbb;
+  --c-x-blue-65:#93a0b8;
+  --c-x-blue-65-2:#9aa3b2;
+  --c-x-blue-63:#8f9bb2;
+  --c-x-blue-60-2:#3d6df5;
+  --c-x-blue-59:#8390a8;
+  --c-x-blue-59-2:#8a93a3;
+  --c-x-blue-54-2:#3b6fd8;
+  --c-x-blue-48:#1d4ed8;
+  --c-x-blue-47:#2a5bc7;
+  --c-x-blue-47-2:#6b7383;
+  --c-x-blue-47-3:#6b7385;
+  --c-x-blue-45:#5f6c84;
+  --c-x-blue-45-2:#2f47b8;
+  --c-x-blue-42:#5f6878;
+  --c-x-blue-41:#5b6475;
+  --c-x-blue-40:#5b6270;
+  --c-x-blue-35:#4a5468;
+  --c-x-blue-35-2:#4a5568;
+  --c-x-blue-29:#163e80;
+  --c-x-blue-25:#333b4a;
+  --c-x-blue-23:#333344;
+  --c-x-blue-21:#2b3140;
+  --c-x-blue-16:#17233b;
+  --c-x-blue-16-2:#0e1f45;
+  --c-x-blue-16-3:#0b1f48;
+  --c-x-blue-16-4:#1f2533;
+  --c-x-blue-13:#1a1f29;
+  --c-x-blue-13-2:#0a1a36;
+  --c-x-blue-11:#061630;
+  --c-x-blue-10:#0d1526;
+  --c-x-blue-10-2:#0c1528;
+  --c-x-blue-09:#081227;
+  --c-x-blue-08:#0a1220;
+  --c-x-blue-08-2:#0b1220;
+  --c-x-blue-06-2:#050b18;
+  --c-x-blue-05:#050913;
+  --c-x-blue-05-3:#050a15;
+  --c-x-teal-63:#99aaaa;
+  --c-x-green-94:#e9f7ef;
+  --c-x-green-93:#e3f6ea;
+  --c-x-green-68:#7be0a2;
+  --c-x-green-67:#6ee7a0;
+  --c-x-green-44:#0bd665;
+  --c-x-green-30:#05964a;
+  --c-x-green-26:#11743a;
+  --c-x-green-25:#047a3c;
+  --c-x-gold-94:#fff7e0;
+  --c-x-gold-92:#fff4d6;
+  --c-x-gold-82:#ffe3a3;
+  --c-x-gold-81:#f6e3a6;
+  --c-x-gold-81-2:#f1dfae;
+  --c-x-gold-75:#f0d98c;
+  --c-x-gold-68-2:#f1cf6b;
+  --c-x-gold-43:#d99500;
+  --c-x-gold-27:#8a6100;
+  --c-x-gold-24:#7a5200;
+  --c-x-gold-18:#5c4100;
+  --c-x-red-97:#fff1f2;
+  --c-x-red-91:#fbd3db;
+  --c-x-red-80:#f0a8b6;
+  --c-x-red-77:#ff8a9a;
+  --c-x-red-59:#ff2d4a;
+  --c-x-red-53:#dd3333;
+  --c-x-red-39:#b4123a;
+  --c-x-red-35:#b0001a;
+
+  --c-x-gray-63:#99aaaa;
+  --c-x-gray-27:#444444;
+
+  /* แผนที่ตัวอย่าง (หน้าตัวอย่างผลงาน / ภาพประกอบ contour) */
+  --c-map-low:#4f9bd1;          /* คำอธิบาย: พื้นที่ลุ่มต่ำ */
+  --c-map-mid:#8fc78a;          /* คำอธิบาย: ระดับปานกลาง */
+  --c-map-high:#d9c58b;         /* คำอธิบาย: พื้นที่สูง */
+  --c-map-elev-low:#bcd9ea;     /* พื้นแผนที่ ระดับต่ำ */
+  --c-map-elev-mid:#cfe5c8;     /* พื้นแผนที่ ระดับกลาง */
+  --c-map-elev-high:#ecdfba;    /* พื้นแผนที่ ระดับสูง */
+  --c-map-contour-major:#5b3b1a;/* เส้นชั้นความสูงหลัก */
+  --c-map-contour-minor:#8a6a45;/* เส้นชั้นความสูงรอง */
+
+  /* ค่า R,G,B สำหรับสีโปร่งแสง: rgba(var(--c-navy-rgb),.12) — ต้องตรงกับสีต้นทางเสมอ */
+  --c-black-rgb:0,0,0;
+  --c-blue-deep-rgb:36,83,230;
+  --c-blue-rgb:52,97,240;
+  --c-d-accent-rgb:79,125,255;
+  --c-d-card-rgb:15,24,41;
+  --c-d-ink-rgb:141,176,255;
+  --c-d-page-rgb:7,13,26;
+  --c-gold-rgb:255,211,107;
+  --c-l-page-rgb:246,248,252;
+  --c-line-rgb:6,199,85;
+  --c-navy-rgb:11,42,91;
+  --c-red-ink-rgb:200,0,26;
+  --c-red-rgb:225,29,72;
+  --c-sky-rgb:122,162,238;
+  --c-white-rgb:255,255,255;
+  --c-x-blue-04-rgb:3,8,18;
+  --c-x-blue-05-2-rgb:5,10,22;
+  --c-x-blue-05-4-rgb:4,10,24;
+  --c-x-blue-06-rgb:6,12,26;
+  --c-x-blue-09-2-rgb:6,16,38;
+  --c-x-blue-11-rgb:6,22,48;
+  --c-x-blue-17-rgb:16,32,72;
+  --c-x-blue-54-rgb:59,111,216;
+  --c-x-blue-60-rgb:61,109,245;
+  --c-x-blue-78-rgb:157,185,242;
+  --c-x-blue-81-rgb:160,190,255;
+  --c-x-blue-95-rgb:234,240,251;
+  --c-x-gold-68-rgb:241,207,107;
+  --c-x-gray-03-rgb:2,6,14;
+  --c-x-gray-04-rgb:4,8,17;
+  --c-x-gray-97-rgb:244,246,249;
+  --c-x-green-52-rgb:52,211,120;
+  --c-x-red-59-rgb:255,45,74;
+  --c-x-red-69-rgb:255,99,132;
+}

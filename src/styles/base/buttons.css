@@ -1,18 +1,18 @@
 /* ปุ่มทุกแบบ (.btn, .btn-line, .btn-w ...) */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:10px;padding:13px 22px;font:inherit;font-weight:700;cursor:pointer;text-decoration:none}
-.btn-line{background:var(--line);color:#fff}
+.btn-line{background:var(--line);color:var(--c-white)}
 .btn-line:hover{filter:brightness(.93)}
-.btn-w{background:#fff;color:#111}
-.btn-k{background:var(--dk);color:#fff}
-.btn-ghost{background:#fff;border:1px solid var(--bd);color:var(--tx)}
+.btn-w{background:var(--c-white);color:var(--c-x-gray-07)}
+.btn-k{background:var(--dk);color:var(--c-white)}
+.btn-ghost{background:var(--c-white);border:1px solid var(--bd);color:var(--tx)}
 .btn{font-size:18px;padding:15px 26px}
 .btn{border-radius:99px;transition:transform .2s,box-shadow .2s,filter .2s}
 .btn{font-weight:600}
 .btn:hover{transform:translateY(-2px)}
-.btn-line{background:linear-gradient(135deg,#06c755,#04a947);box-shadow:0 8px 22px rgba(6,199,85,.35)}
-.btn-w{box-shadow:0 8px 22px rgba(0,0,0,.25)}
-.btn-k{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.45);backdrop-filter:blur(6px)}
-.btn-g{box-shadow:0 8px 22px rgba(11,42,91,.3)}
+.btn-line{background:var(--c-grad-line);box-shadow:0 8px 22px rgba(var(--c-line-rgb),.35)}
+.btn-w{box-shadow:0 8px 22px rgba(var(--c-black-rgb),.25)}
+.btn-k{background:rgba(var(--c-white-rgb),.12);border:1px solid rgba(var(--c-white-rgb),.45);backdrop-filter:blur(6px)}
+.btn-g{box-shadow:0 8px 22px rgba(var(--c-navy-rgb),.3)}
 @media(prefers-reduced-motion:reduce){
   .btn{transition:none}
   .btn:hover{transform:none}
@@ -25,4 +25,4 @@
 @media(hover:none){
   .btn:hover{transform:none}
 }
-.btn:focus-visible{outline:3px solid #7aa2ee;outline-offset:2px}
+.btn:focus-visible{outline:3px solid var(--c-sky);outline-offset:2px}

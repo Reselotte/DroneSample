@@ -1,6 +1,7 @@
 import ContourMapSvg from "../../components/common/ContourMapSvg";
 import { AreaIcon, CameraIcon, PinIcon } from "../../components/common/Icons";
 import { photoUrl } from "../../lib/listingsApi";
+import ListingHighlights from "./ListingHighlights";
 import { landTypeLabel } from "../../data/landListingOptions";
 import { formatArea, formatPriceShort, listingCode } from "../../utils/listingFormat";
 
@@ -26,6 +27,7 @@ export default function ListingCard({ listing }) {
           <span><AreaIcon /> {formatArea(listing.rai, listing.ngan, listing.wah)}</span>
           <span><PinIcon /> {listing.district ? `${listing.district}, ` : ""}{listing.province}</span>
         </div>
+        <ListingHighlights highlights={listing.highlights} compact max={2} />
         <div className="lcard-code">รหัส {listingCode(listing.id)}</div>
       </div>
     </a>

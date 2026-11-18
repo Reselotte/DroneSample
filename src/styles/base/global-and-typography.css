@@ -1,8 +1,8 @@
 /* พื้นฐานทั้งเว็บ: ตัวแปรสี, รีเซ็ต, ฟอนต์, หัวข้อ, คำอธิบาย, ส่วนเน้นข้อความ (.hl) */
-:root{--g:#0b2a5b;--gd:#0b2a5b;--line:#06c755;--tx:#111418;--mu:#5b6270;--bd:#dfe3ea;--bg:#f4f6f9;--dk:#0b0b0b}
+:root{--g:var(--c-navy);--gd:var(--c-navy);--line:var(--c-line);--tx:var(--c-l-text);--mu:var(--c-x-blue-40);--bd:var(--c-x-gray-90);--bg:var(--c-x-gray-97-3);--dk:var(--c-x-gray-04-2)}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;font-family:system-ui,-apple-system,"Noto Sans Thai","Sarabun",sans-serif;color:var(--tx);background:#fff;line-height:1.6;padding-bottom:76px}
+body{margin:0;font-family:system-ui,-apple-system,"Noto Sans Thai","Sarabun",sans-serif;color:var(--tx);background:var(--c-white);line-height:1.6;padding-bottom:76px}
 a{color:inherit}
 .wrap{max-width:1040px;margin:0 auto;padding:0 16px}
 section{padding:48px 0;text-align:center}
@@ -12,25 +12,25 @@ h1{font-size:clamp(28px,6.5vw,48px);line-height:1.2;margin:0 0 12px}
 h2{font-size:clamp(22px,4.5vw,30px);margin:4px 0 8px}
 h3{margin:0 0 6px;font-size:17px}
 .sub{color:var(--mu);margin:0 auto 26px;max-width:640px}
-.num{width:30px;height:30px;border-radius:50%;background:var(--g);color:#fff;display:grid;place-items:center;font-weight:700;margin-bottom:8px}
-.step{border:2px solid #222;border-radius:14px;padding:18px;text-align:left;background:#fff}
+.num{width:30px;height:30px;border-radius:50%;background:var(--g);color:var(--c-white);display:grid;place-items:center;font-weight:700;margin-bottom:8px}
+.step{border:2px solid var(--c-x-gray-13);border-radius:14px;padding:18px;text-align:left;background:var(--c-white)}
 .step ul{margin:8px 0 0;padding:0;list-style:none;font-size:14px;color:var(--mu)}
 .step li:before{content:"✓ ";color:var(--g);font-weight:800}
 .note{font-size:13px;color:var(--mu);margin-top:10px}
 body{font-size:17px}
 h1{font-size:clamp(34px,7.5vw,60px);line-height:1.18}
-.hl{background:#dbe6fb;color:var(--g);font-weight:700;padding:0 6px;border-radius:5px}
+.hl{background:var(--c-x-blue-92);color:var(--g);font-weight:700;padding:0 6px;border-radius:5px}
 .eyebrow{font-size:17px;font-weight:700;color:var(--g);letter-spacing:.02em}
 h2{font-size:clamp(28px,5.5vw,40px);line-height:1.25}
 h2:after{content:"";display:block;width:56px;height:4px;border-radius:2px;background:var(--g);margin:10px auto 0}
-.sub{font-size:19px;color:#3d4452}
+.sub{font-size:19px;color:var(--c-l-body)}
 body,button{font-family:"Kanit","Noto Sans Thai","Sarabun",system-ui,sans-serif}
 svg text{font-family:inherit}
 body{letter-spacing:.005em}
 h1,h2,h3{font-weight:600;letter-spacing:-.005em}
 h1{font-weight:700}
-h2:after{background:linear-gradient(90deg,var(--g),#7aa2ee);width:64px}
-.alt{background:linear-gradient(180deg,#f4f6f9,#fff)}
+h2:after{background:linear-gradient(90deg,var(--g),var(--c-sky));width:64px}
+.alt{background:linear-gradient(180deg,var(--c-x-gray-97-3),var(--c-white))}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){
   section[data-page]{animation:none!important}
@@ -60,6 +60,6 @@ button,a.btn{touch-action:manipulation;min-height:44px}
   .wrap{max-width:1120px}
 }
 body{display:flex;flex-direction:column;min-height:100vh;min-height:100dvh;padding-bottom:0}
-.alt{background:repeating-radial-gradient(circle at 100% 0,transparent 0 40px,rgba(11,42,91,.045) 41px 42px),linear-gradient(180deg,#f4f6f9,#fff)}
+.alt{background:repeating-radial-gradient(circle at 100% 0,transparent 0 40px,rgba(var(--c-navy-rgb),.045) 41px 42px),linear-gradient(180deg,var(--c-x-gray-97-3),var(--c-white))}
 /* ให้ #root ยืดเต็มความสูงจอ: ท้ายเว็บจะชิดล่างเสมอ (ไม่มีพื้นว่างใต้ท้ายเว็บในหน้าที่เนื้อหาสั้น) */
 #root{flex:1 0 auto;display:flex;flex-direction:column}

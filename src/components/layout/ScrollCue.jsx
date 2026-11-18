@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ChevronDownIcon } from "../common/Icons";
+import { gentleScrollTo } from "../../utils/gentleScroll";
 
 const HEADER_OFFSET = 72; // ความสูงแถบเมนู (+ระยะเผื่อ) ตอนเลื่อนไปส่วนถัดไป
 const BOTTOM_ZONE = 140; // เหลือระยะถึงท้ายหน้าไม่เกินนี้ (px) = ถือว่าถึงท้ายแล้ว ซ่อนปุ่ม
@@ -48,12 +49,14 @@ export default function ScrollCue({ showLabel = false }) {
     };
   }, []);
 
+  // ค่อย ๆ เลื่อนลงไปส่วนถัดไป (ออกตัวช้า → ไหล → ชะลอตอนถึง) ไม่พุ่งจนมึนหัว
+  // ใช้ตัวเลื่อนเดียวกับปุ่มลัดในศัพท์น่ารู้ และทำงานเหมือนกันแม้เครื่องตั้งค่าลดการเคลื่อนไหว
   const goNext = () => {
     const next = findNextBlock();
     const top = next
       ? window.scrollY + next.getBoundingClientRect().top - HEADER_OFFSET
       : window.scrollY + window.innerHeight * 0.85;
-    window.scrollTo({ top, behavior: "smooth" });
+    gentleScrollTo(top);
   };
 
   return (

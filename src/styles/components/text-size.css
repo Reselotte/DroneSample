@@ -45,11 +45,11 @@ html[data-text-size] .term-pop b{font-size:calc(15px * var(--ts))}
 header .wrap{padding-right:calc(max(16px,env(safe-area-inset-right)) + 108px)}
 .text-size-toggle{position:fixed;top:10px;right:calc(max(16px,env(safe-area-inset-right)) + 52px);z-index:25;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:44px;height:44px;min-height:44px;padding:0;
-  border-radius:50%;border:1px solid rgba(36,83,230,.18);background:#fff;color:#2453e6;cursor:pointer;
-  box-shadow:0 4px 14px rgba(36,83,230,.14);transition:transform .2s,background .2s}
-.text-size-toggle:hover{background:#f0f4ff}
+  border-radius:50%;border:1px solid rgba(var(--c-blue-deep-rgb),.18);background:var(--c-white);color:var(--c-blue-deep);cursor:pointer;
+  box-shadow:0 4px 14px rgba(var(--c-blue-deep-rgb),.14);transition:transform .2s,background .2s}
+.text-size-toggle:hover{background:var(--c-x-blue-97)}
 .text-size-toggle:active{transform:scale(.92)}
-.text-size-toggle:focus-visible{outline:3px solid #7aa2ee;outline-offset:2px}
+.text-size-toggle:focus-visible{outline:3px solid var(--c-sky);outline-offset:2px}
 .tst-glyph{font-size:17px;font-weight:700;line-height:1;transition:font-size .2s}
 .text-size-toggle.is-lg .tst-glyph{font-size:20px}
 .text-size-toggle.is-xl .tst-glyph{font-size:23px}
@@ -59,9 +59,9 @@ header .wrap{padding-right:calc(max(16px,env(safe-area-inset-right)) + 108px)}
 @media(max-width:360px){
   .text-size-toggle{width:40px;height:40px;min-height:40px;right:calc(max(16px,env(safe-area-inset-right)) + 46px)}
 }
-html[data-theme="dark"] .text-size-toggle{background:rgba(15,24,41,.85);border-color:rgba(160,190,255,.4);color:#a9c2ff;
-  box-shadow:0 0 0 1px rgba(141,176,255,.2),0 0 16px rgba(79,125,255,.3)}
-html[data-theme="dark"] .text-size-toggle:hover{background:#17233b}
+html[data-theme="dark"] .text-size-toggle{background:rgba(var(--c-d-card-rgb),.85);border-color:rgba(var(--c-x-blue-81-rgb),.4);color:var(--c-x-blue-83-2);
+  box-shadow:0 0 0 1px rgba(var(--c-d-ink-rgb),.2),0 0 16px rgba(var(--c-d-accent-rgb),.3)}
+html[data-theme="dark"] .text-size-toggle:hover{background:var(--c-x-blue-16)}
 
 /* ── ป้าย "ขนาดตัวอักษร": ปุ่มยืดออกไปทางซ้ายตอนเอาเมาส์ชี้/โฟกัส ──
  * - ปกติเป็นวงกลม ก กว้างคงที่
@@ -80,7 +80,7 @@ html[data-theme="dark"] .text-size-toggle:hover{background:#17233b}
   opacity:0;transform:translateX(14px);transition:opacity .2s,transform .3s var(--tst-ease)}
 .tst-label-in small{font-size:11.5px;font-weight:500;opacity:.75}
 .text-size-toggle:hover,
-.text-size-toggle:focus-visible{z-index:26;box-shadow:0 8px 24px rgba(36,83,230,.22)}
+.text-size-toggle:focus-visible{z-index:26;box-shadow:0 8px 24px rgba(var(--c-blue-deep-rgb),.22)}
 .text-size-toggle:hover .tst-label,
 .text-size-toggle:focus-visible .tst-label{max-width:112px;padding-left:12px}
 .text-size-toggle:hover .tst-label-in,
@@ -102,7 +102,7 @@ header .wrap{transition:padding-right .5s var(--tst-ease)}
   .text-size-toggle:hover .tst-glyph{animation:none}
 }
 html[data-theme="dark"] .text-size-toggle:hover,
-html[data-theme="dark"] .text-size-toggle:focus-visible{box-shadow:0 0 0 1px rgba(141,176,255,.4),0 0 22px rgba(79,125,255,.45)}
+html[data-theme="dark"] .text-size-toggle:focus-visible{box-shadow:0 0 0 1px rgba(var(--c-d-ink-rgb),.4),0 0 22px rgba(var(--c-d-accent-rgb),.45)}
 @media(prefers-reduced-motion:reduce){
   /* การยืดของปุ่ม + เลื่อนปุ่ม "ติดต่อเรา" เป็นการเคลื่อนไหวเล็กน้อย จึงคงไว้แม้ตั้งค่าลดการเคลื่อนไหว (ปิดเฉพาะตัว ก เด้ง) */
   .text-size-toggle:hover .tst-glyph{animation:none}
@@ -110,10 +110,10 @@ html[data-theme="dark"] .text-size-toggle:focus-visible{box-shadow:0 0 0 1px rgb
 
 /* มือถือ (ไม่มีเมาส์): ปุ่มยืดเอง (is-peek) ตอนเข้าเว็บ 2 ครั้งแรก และหลังแตะเปลี่ยนขนาด
  * วางหลังกฎ hover:none เพื่อทับ (มือถือบางรุ่นค้างสถานะ :hover หลังแตะ) */
-.text-size-toggle.is-peek{z-index:26;box-shadow:0 8px 24px rgba(36,83,230,.25)}
+.text-size-toggle.is-peek{z-index:26;box-shadow:0 8px 24px rgba(var(--c-blue-deep-rgb),.25)}
 .text-size-toggle.is-peek .tst-label{max-width:112px;padding-left:12px}
 .text-size-toggle.is-peek .tst-label-in{opacity:1;transform:none;transition:opacity .3s .12s,transform .45s .08s var(--tst-ease)}
-html[data-theme="dark"] .text-size-toggle.is-peek{box-shadow:0 0 0 1px rgba(141,176,255,.4),0 0 22px rgba(79,125,255,.45)}
+html[data-theme="dark"] .text-size-toggle.is-peek{box-shadow:0 0 0 1px rgba(var(--c-d-ink-rgb),.4),0 0 22px rgba(var(--c-d-accent-rgb),.45)}
 
 /* ตัวอักษรใหญ่: เมนูลงไปแถวที่ 2 ทำให้แถวแรกเตี้ยลง → ล็อกแถวแรกให้สูง 64px เท่าเดิม
  * ปุ่ม "ติดต่อเรา" จะอยู่กึ่งกลางแนวเดียวกับปุ่ม ก / ปุ่มธีม (ที่ลอยอยู่ top:10px สูง 44px) */

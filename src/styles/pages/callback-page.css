@@ -7,9 +7,9 @@
 .callback .note{font-size:12px}
 .callback .upz{padding:10px}
 .callback .upz b{font-size:14px}
-.callback input,.callback select,.callback textarea{background:#f8fafd;border-color:#dbe2ee}
+.callback input,.callback select,.callback textarea{background:var(--c-x-gray-98-3);border-color:var(--c-x-blue-90-2)}
 
-#callbackForm{padding:18px;box-shadow:inset 0 4px 0 var(--g),0 10px 30px rgba(11,42,91,.08)}
+#callbackForm{padding:18px;box-shadow:inset 0 4px 0 var(--g),0 10px 30px rgba(var(--c-navy-rgb),.08)}
 #callbackForm::before{content:"ให้ทีมงานติดต่อกลับ";display:block;grid-column:1/-1;margin:0 0 12px;font-size:17px;font-weight:600;color:var(--tx)}
 @media(min-width:760px){
   #callbackForm{display:grid;grid-template-columns:1fr 1fr;column-gap:14px;padding:24px}
@@ -23,8 +23,8 @@
 .callback-ok p{margin:0;color:var(--mu)}
 
 /* ลิงก์ไปหน้าคำนวณราคา */
-.cross-link{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px;margin-top:16px;padding:14px 18px;border-radius:18px;background:#eaf0fb;color:var(--tx);text-decoration:none;transition:background .2s}
-.cross-link:hover{background:#dfe8f8}
+.cross-link{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px;margin-top:16px;padding:14px 18px;border-radius:18px;background:var(--c-x-blue-95);color:var(--tx);text-decoration:none;transition:background .2s}
+.cross-link:hover{background:var(--c-x-blue-92-2)}
 .cross-link b{font-weight:600}
 .cross-link span{color:var(--g);font-weight:600;white-space:nowrap}
 
@@ -35,11 +35,11 @@
 
 /* แท็บลอยขอบขวากลางจอ → หน้าคำนวณราคา (เปิดหน้ามาจะสไลด์เข้ามาจากขอบจอ) */
 .side-tab{position:fixed;right:0;top:50%;z-index:27;transform:translateY(-50%);display:flex;align-items:center;gap:12px;padding:14px 18px 14px 14px;border-radius:18px 0 0 18px;
-  background:var(--accent-grad,linear-gradient(135deg,#2453e6,#6b93ff));color:#fff;text-decoration:none;
-  box-shadow:0 12px 30px rgba(36,83,230,.35);animation:side-tab-in .6s .35s both;transition:padding .25s,box-shadow .25s}
-.side-tab:hover{padding-right:26px;box-shadow:0 16px 38px rgba(36,83,230,.45)}
-.side-tab:focus-visible{outline:3px solid #7aa2ee;outline-offset:3px}
-.side-tab-ic{flex:none;display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,.18);font-size:22px}
+  background:var(--accent-grad,linear-gradient(135deg,var(--c-blue-deep),var(--c-blue-soft)));color:var(--c-white);text-decoration:none;
+  box-shadow:0 12px 30px rgba(var(--c-blue-deep-rgb),.35);animation:side-tab-in .6s .35s both;transition:padding .25s,box-shadow .25s}
+.side-tab:hover{padding-right:26px;box-shadow:0 16px 38px rgba(var(--c-blue-deep-rgb),.45)}
+.side-tab:focus-visible{outline:3px solid var(--c-sky);outline-offset:3px}
+.side-tab-ic{flex:none;display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:rgba(var(--c-white-rgb),.18);font-size:22px}
 .side-tab-tx{display:flex;flex-direction:column;line-height:1.3}
 .side-tab-tx small{font-size:12.5px;opacity:.88}
 .side-tab-tx b{font-size:16px;font-weight:600;white-space:nowrap}
@@ -62,9 +62,9 @@
 
 /* ปุ่มลัดช่วงเวลาที่สะดวกให้ติดต่อกลับ */
 .time-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.time-chips button{min-height:36px;padding:6px 14px;border-radius:99px;border:1px solid rgba(36,83,230,.22);background:#fff;color:#334;font:inherit;font-size:13.5px;font-weight:500;cursor:pointer;transition:background .2s,border-color .2s,color .2s}
-.time-chips button:hover{border-color:#3461f0;color:#1d44c4}
-.time-chips button.on{background:var(--accent-grad,linear-gradient(135deg,#2453e6,#6b93ff));border-color:transparent;color:#fff;box-shadow:0 4px 12px rgba(36,83,230,.28)}
-.time-chips button:focus-visible{outline:3px solid #7aa2ee;outline-offset:2px}
-html[data-theme="dark"] .time-chips button{background:rgba(255,255,255,.05);border-color:rgba(160,190,255,.35);color:#c8d1e2}
-html[data-theme="dark"] .time-chips button.on{color:#fff;border-color:transparent;box-shadow:0 0 14px rgba(79,125,255,.5)}
+.time-chips button{min-height:36px;padding:6px 14px;border-radius:99px;border:1px solid rgba(var(--c-blue-deep-rgb),.22);background:var(--c-white);color:var(--c-x-blue-23);font:inherit;font-size:13.5px;font-weight:500;cursor:pointer;transition:background .2s,border-color .2s,color .2s}
+.time-chips button:hover{border-color:var(--c-blue);color:var(--c-blue-ink)}
+.time-chips button.on{background:var(--accent-grad,linear-gradient(135deg,var(--c-blue-deep),var(--c-blue-soft)));border-color:transparent;color:var(--c-white);box-shadow:0 4px 12px rgba(var(--c-blue-deep-rgb),.28)}
+.time-chips button:focus-visible{outline:3px solid var(--c-sky);outline-offset:2px}
+html[data-theme="dark"] .time-chips button{background:rgba(var(--c-white-rgb),.05);border-color:rgba(var(--c-x-blue-81-rgb),.35);color:var(--c-d-body)}
+html[data-theme="dark"] .time-chips button.on{color:var(--c-white);border-color:transparent;box-shadow:0 0 14px rgba(var(--c-d-accent-rgb),.5)}

@@ -1,21 +1,21 @@
 /* ช่องกรอกข้อมูลและข้อความแจ้งผิดพลาด */
 label{display:block;font-size:14px;color:var(--mu);margin-bottom:4px}
-input,select{width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:8px;font:inherit;background:#fff;color:var(--tx)}
+input,select{width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:8px;font:inherit;background:var(--c-white);color:var(--tx)}
 input:focus,select:focus{outline:2px solid var(--g);outline-offset:1px}
-.req{color:#d33}
+.req{color:var(--c-x-red-53)}
 .opt{font-size:12px;opacity:.8}
 .field{margin-bottom:14px}
-.err{color:#d33;font-size:13px;margin-top:4px}
+.err{color:var(--c-x-red-53);font-size:13px;margin-top:4px}
 .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-label{font-size:16px;color:#2b3140;font-weight:600}
+label{font-size:16px;color:var(--c-x-blue-21);font-weight:600}
 input,select{font-size:17px;padding:12px 14px}
 .opt{font-size:13.5px;font-weight:400}
 .err{font-size:14.5px}
 .req{font-weight:800}
 input,select{font-family:"Kanit","Noto Sans Thai","Sarabun",system-ui,sans-serif}
-input,select{border-radius:12px;border-color:#d5dbe6;transition:box-shadow .2s,border-color .2s}
-input:focus,select:focus{outline:0;border-color:var(--g);box-shadow:0 0 0 4px rgba(11,42,91,.14)}
+input,select{border-radius:12px;border-color:var(--c-x-blue-87);transition:box-shadow .2s,border-color .2s}
+input:focus,select:focus{outline:0;border-color:var(--g);box-shadow:0 0 0 4px rgba(var(--c-navy-rgb),.14)}
 label{font-size:15px}
 input,select{font-size:16px;padding:10px 12px}
 .opt{font-size:12.5px}

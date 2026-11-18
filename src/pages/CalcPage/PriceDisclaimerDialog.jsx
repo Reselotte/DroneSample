@@ -23,7 +23,7 @@ export default function PriceDisclaimerDialog({ onConfirm, onCancel }) {
         <h3 id="dlgT">โปรดทราบก่อนส่ง</h3>
         <p>
           ตัวเลขนี้คำนวณจากที่ท่านกรอกเท่านั้น<br />
-          <span style={{ color: "#c8001a" }}>ไม่ใช่ราคาซื้อขายจริงของที่ดิน</span>
+          <span style={{ color: "var(--c-red-ink)" }}>ไม่ใช่ราคาซื้อขายจริงของที่ดิน</span>
         </p>
         <div className="btns">
           <button type="button" className="btn btn-line" id="dlgOk" autoFocus onClick={onConfirm}>รับทราบ และส่งทาง LINE</button>

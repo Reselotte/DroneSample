@@ -9,7 +9,7 @@
 --  • ข้อมูลผู้ขาย (ชื่อ เบอร์ LINE เลขโฉนด สำเนาโฉนด) อยู่ในตาราง listing_private
 --    มีแต่แอดมินที่อ่านได้ ไม่ขึ้นหน้าเว็บ (ผู้ซื้อติดต่อผ่าน LINE ทีมงาน)
 -- ════════════════════════════════════════════════════════════════════════════
-
+  
 -- ── แอดมิน ──────────────────────────────────────────────────────────────────
 create table if not exists public.admins (
   user_id uuid primary key references auth.users on delete cascade
@@ -57,6 +57,13 @@ create table if not exists public.listings (
   check (rai * 400 + ngan * 100 + wah > 0)
 );
 
+-- จุดเด่นจากเช็กลิสต์ฝ่ายขาย (แสดงบนเว็บ): { "near_rail": "BTS สำโรง 500 ม.", "chanote": "" }
+-- รายชื่อ key อยู่ใน src/data/landChecklist.js — แอดมินเป็นคนกรอก
+alter table public.listings add column if not exists highlights jsonb not null default '{}'::jsonb;
+alter table public.listings drop constraint if exists listings_highlights_check;
+alter table public.listings add constraint listings_highlights_check
+  check (jsonb_typeof(highlights) = 'object' and pg_column_size(highlights) <= 8000);
+
 create index if not exists listings_status_created_idx on public.listings (status, created_at desc);
 create index if not exists listings_province_idx on public.listings (province);
 
@@ -99,12 +106,60 @@ create table if not exists public.listing_private (
   deed_files  text[] not null default '{}' check (cardinality(deed_files) <= 5)
 );
 
+-- คำตอบเช็กลิสต์ส่วนที่ไม่แสดงบนเว็บ (ติดจำนอง ราคาต่ำสุด เหตุผลที่ขาย …) รูปแบบเดียวกับ highlights
+alter table public.listing_private add column if not exists checklist jsonb not null default '{}'::jsonb;
+alter table public.listing_private drop constraint if exists listing_private_checklist_check;
+alter table public.listing_private add constraint listing_private_checklist_check
+  check (jsonb_typeof(checklist) = 'object' and pg_column_size(checklist) <= 8000);
+
 alter table public.listing_private enable row level security;
 
 drop policy if exists "admins manage private info" on public.listing_private;
 create policy "admins manage private info" on public.listing_private
   for all to authenticated
   using (public.is_admin()) with check (public.is_admin());
+
+-- ── กันสแปม: จำกัดจำนวนประกาศ / ไฟล์ ───────────────────────────────────────
+--  • เบอร์โทรเดียวกัน ลงได้ไม่เกิน 3 ประกาศ ใน 24 ชั่วโมง          → 'RATE_PHONE'
+--  • ประกาศรอตรวจทั้งเว็บ ไม่เกิน 50 รายการ (แอดมินตรวจแล้วจึงรับเพิ่ม) → 'RATE_GLOBAL'
+--  • ไฟล์อัปโหลดทั้งเว็บ ไม่เกิน 300 ไฟล์ ต่อชั่วโมง                  → 'RATE_UPLOAD'
+--  ปรับตัวเลขได้ในฟังก์ชันด้านล่าง แล้วรันไฟล์นี้ใหม่
+create index if not exists listing_private_phone_idx on public.listing_private (phone);
+
+create or replace function public.upload_quota_ok()
+returns boolean
+language sql stable security definer set search_path = public, storage
+as $$
+  select count(*) < 300
+  from storage.objects
+  where bucket_id in ('listing-photos', 'deed-files')
+    and created_at > now() - interval '1 hour';
+$$;
+revoke all on function public.upload_quota_ok() from public;
+grant execute on function public.upload_quota_ok() to anon, authenticated;
+
+-- คืนรหัสเหตุผลที่ส่งไม่ได้ หรือ null = ส่งได้ (หน้าเว็บเรียกก่อนอัปโหลดรูป)
+create or replace function public.listing_quota_error(p_phone text, p_check_uploads boolean default true)
+returns text
+language plpgsql stable security definer set search_path = public
+as $$
+begin
+  if (select count(*)
+      from public.listing_private lp
+      join public.listings l on l.id = lp.listing_id
+      where lp.phone = p_phone and l.created_at > now() - interval '24 hours') >= 3 then
+    return 'RATE_PHONE';
+  end if;
+  if (select count(*) from public.listings where status = 'pending') >= 50 then
+    return 'RATE_GLOBAL';
+  end if;
+  if p_check_uploads and not public.upload_quota_ok() then
+    return 'RATE_UPLOAD';
+  end if;
+  return null;
+end $$;
+revoke all on function public.listing_quota_error(text, boolean) from public;
+grant execute on function public.listing_quota_error(text, boolean) to anon, authenticated;
 
 -- ── ส่งประกาศใหม่ (ช่องทางเดียวที่คนทั่วไปเขียนข้อมูลได้) ───────────────────
 create or replace function public.submit_listing(
@@ -119,7 +174,16 @@ as $$
 declare
   new_id bigint;
   path_re constant text := '^uploads/[0-9a-f-]{36}/[A-Za-z0-9._-]+$';
+  quota_err text;
 begin
+  -- กันสแปม: เช็กจำนวนอีกรอบตอนบันทึกจริง (ล็อกตามเบอร์ กันยิงพร้อมกันหลายครั้ง)
+  -- ไม่เช็กโควตาไฟล์ซ้ำ เพราะรูปของประกาศนี้อัปโหลดไปแล้ว
+  perform pg_advisory_xact_lock(hashtext('submit_listing:' || coalesce(p_phone, '')));
+  quota_err := public.listing_quota_error(p_phone, false);
+  if quota_err is not null then
+    raise exception '%', quota_err;
+  end if;
+
   if cardinality(coalesce(p_photos, '{}')) < 1 then
     raise exception 'ต้องมีรูปที่ดินอย่างน้อย 1 รูป';
   end if;
@@ -169,12 +233,15 @@ create policy "anyone uploads listing files" on storage.objects
   with check (
     bucket_id in ('listing-photos', 'deed-files')
     and (storage.foldername(name))[1] = 'uploads'
+    and public.upload_quota_ok() -- กันสแปม: เกินโควตาไฟล์ต่อชั่วโมง = อัปโหลดไม่ได้
   );
 
+-- แอดมินอ่านไฟล์ได้ทั้ง 2 bucket (ต้องมีสิทธิ์อ่านด้วย ถึงจะลบไฟล์ได้ตอนลบประกาศ)
 drop policy if exists "admins read deed files" on storage.objects;
-create policy "admins read deed files" on storage.objects
+drop policy if exists "admins read listing files" on storage.objects;
+create policy "admins read listing files" on storage.objects
   for select to authenticated
-  using (bucket_id = 'deed-files' and public.is_admin());
+  using (bucket_id in ('listing-photos', 'deed-files') and public.is_admin());
 
 drop policy if exists "admins delete listing files" on storage.objects;
 create policy "admins delete listing files" on storage.objects
@@ -189,3 +256,4 @@ create policy "admins delete listing files" on storage.objects
 --     select id from auth.users where email = 'admin@example.com'
 --     on conflict do nothing;
 -- ════════════════════════════════════════════════════════════════════════════
+

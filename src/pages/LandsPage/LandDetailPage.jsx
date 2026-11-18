@@ -10,6 +10,8 @@ import {
 } from "../../utils/listingFormat";
 import { sendLineMessage } from "../../utils/sendLineMessage";
 import SetupNotice from "./SetupNotice";
+import ListingHighlights from "./ListingHighlights";
+import { highlightList } from "../../data/landChecklist";
 
 /** แกลเลอรีรูป: รูปใหญ่ + รูปย่อให้กดเลือก */
 function PhotoGallery({ photos, title }) {
@@ -111,6 +113,13 @@ export default function LandDetailPage({ param }) {
               <PhotoGallery photos={listing.photos || []} title={listing.title} />
               {sold && <span className="ld-sold">ขายแล้ว</span>}
             </div>
+
+            {highlightList(listing.highlights).length > 0 && (
+              <div className="card ld-section ld-highlights">
+                <h3>จุดเด่นของที่ดินแปลงนี้</h3>
+                <ListingHighlights highlights={listing.highlights} />
+              </div>
+            )}
 
             <div className="card ld-section">
               <h3>รายละเอียด</h3>

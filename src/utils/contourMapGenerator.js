@@ -53,7 +53,7 @@ function cellColor(mode, i, j) {
     return `hsl(35,15%,${25 + light * 60}%)`;
   }
 
-  return t < 0.33 ? "#bcd9ea" : t < 0.66 ? "#cfe5c8" : "#ecdfba";
+  return t < 0.33 ? "var(--c-map-elev-low)" : t < 0.66 ? "var(--c-map-elev-mid)" : "var(--c-map-elev-high)";
 }
 
 /** เส้นความสูง (contour) ที่ระดับ level หนึ่ง ๆ */
@@ -105,15 +105,15 @@ export function buildMapSvgContent(options = {}) {
     for (let k = Math.ceil((hMin - LEVEL_START) / LEVEL_STEP); LEVEL_START + k * LEVEL_STEP < hMax; k++) {
       const level = LEVEL_START + k * LEVEL_STEP;
       const isMajor = k % 2 === 0; // เส้นหนาทุกช่วง 5 เมตร
-      s += `<path d="${contourPath(level)}" fill="none" stroke="${options.lines ? "#fff" : isMajor ? "#5b3b1a" : "#8a6a45"}" stroke-width="${isMajor ? 2 : 1}" opacity="${options.lines ? 0.45 : isMajor ? 0.9 : 0.6}"/>`;
+      s += `<path d="${contourPath(level)}" fill="none" stroke="${options.lines ? "var(--c-white)" : isMajor ? "var(--c-map-contour-major)" : "var(--c-map-contour-minor)"}" stroke-width="${isMajor ? 2 : 1}" opacity="${options.lines ? 0.45 : isMajor ? 0.9 : 0.6}"/>`;
     }
   }
 
   if (options.parcel) {
-    s += `<polygon points="${PARCEL_POINTS.map((p) => p.join(",")).join(" ")}" fill="rgba(11,42,91,.15)" stroke="#e11d48" stroke-width="3" stroke-dasharray="10 6"/><text x="330" y="290" font-size="22" font-weight="700" fill="#e11d48" stroke="#fff" stroke-width="4" paint-order="stroke">แปลงตัวอย่าง</text>`;
-    if (options.arrows) s += `<g stroke="#1d4ed8" stroke-width="3" fill="#1d4ed8"><path d="M300 190l-40 40M520 170l30 60M450 400l-20-30"/></g>`;
-    if (options.pond) s += `<ellipse cx="440" cy="300" rx="55" ry="34" fill="none" stroke="#1d4ed8" stroke-width="3" stroke-dasharray="6 4"/><text x="388" y="352" font-size="18" fill="#1d4ed8" stroke="#fff" stroke-width="3" paint-order="stroke">จุดน้ำขัง/ตำแหน่งสระ</text>`;
-    if (options.pad) s += `<rect x="380" y="150" width="150" height="100" fill="rgba(0,0,0,.08)" stroke="#444" stroke-width="2.5"/><text x="392" y="205" font-size="18" fill="#222" stroke="#fff" stroke-width="3" paint-order="stroke">พื้นที่ตั้งอาคาร</text>`;
+    s += `<polygon points="${PARCEL_POINTS.map((p) => p.join(",")).join(" ")}" fill="rgba(var(--c-navy-rgb),.15)" stroke="var(--c-red)" stroke-width="3" stroke-dasharray="10 6"/><text x="330" y="290" font-size="22" font-weight="700" fill="var(--c-red)" stroke="var(--c-white)" stroke-width="4" paint-order="stroke">แปลงตัวอย่าง</text>`;
+    if (options.arrows) s += `<g stroke="var(--c-x-blue-48)" stroke-width="3" fill="var(--c-x-blue-48)"><path d="M300 190l-40 40M520 170l30 60M450 400l-20-30"/></g>`;
+    if (options.pond) s += `<ellipse cx="440" cy="300" rx="55" ry="34" fill="none" stroke="var(--c-x-blue-48)" stroke-width="3" stroke-dasharray="6 4"/><text x="388" y="352" font-size="18" fill="var(--c-x-blue-48)" stroke="var(--c-white)" stroke-width="3" paint-order="stroke">จุดน้ำขัง/ตำแหน่งสระ</text>`;
+    if (options.pad) s += `<rect x="380" y="150" width="150" height="100" fill="rgba(var(--c-black-rgb),.08)" stroke="var(--c-x-gray-27)" stroke-width="2.5"/><text x="392" y="205" font-size="18" fill="var(--c-x-gray-13)" stroke="var(--c-white)" stroke-width="3" paint-order="stroke">พื้นที่ตั้งอาคาร</text>`;
   }
 
   return s;

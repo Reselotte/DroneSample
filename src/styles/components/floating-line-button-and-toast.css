@@ -1,23 +1,23 @@
 /* แท็บแอด LINE ลอยขอบขวากลางจอ (components/layout/FloatingLineButton.jsx) และป้ายแจ้งเตือน (toast) */
 
-.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:var(--tx);color:#fff;padding:8px 16px;border-radius:99px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:40}
+.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:var(--tx);color:var(--c-white);padding:8px 16px;border-radius:99px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:40}
 .toast.show{opacity:1}
 
 /* ── แท็บ LINE ──
  * ส่วนที่เห็นตลอด (ไอคอน + "Contour ฟรี") อยู่ชิดขอบขวา
  * ข้อความเต็มยืดออกไปทางซ้ายตอนชี้/โฟกัส หรือ is-peek (โชว์เองตอนเข้าเว็บ) */
 .line-tab{position:fixed;right:0;top:50%;z-index:30;transform:translateY(-50%);display:flex;align-items:center;
-  padding:10px 4px 10px 8px;border-radius:20px 0 0 20px;color:#fff;text-decoration:none;
-  background:linear-gradient(160deg,#0bd665 0%,#06c755 45%,#04a947 100%);
-  box-shadow:0 10px 28px rgba(6,199,85,.42),inset 0 1px 0 rgba(255,255,255,.3);
+  padding:10px 4px 10px 8px;border-radius:20px 0 0 20px;color:var(--c-white);text-decoration:none;
+  background:linear-gradient(160deg,var(--c-x-green-44) 0%,var(--c-line) 45%,var(--c-line-deep) 100%);
+  box-shadow:0 10px 28px rgba(var(--c-line-rgb),.42),inset 0 1px 0 rgba(var(--c-white-rgb),.3);
   animation:lt-in .6s .3s cubic-bezier(.2,.8,.2,1) both;transition:box-shadow .3s,filter .2s}
-.line-tab:hover{box-shadow:0 14px 36px rgba(6,199,85,.55),inset 0 1px 0 rgba(255,255,255,.3);filter:brightness(1.04)}
-.line-tab:focus-visible{outline:3px solid #7aa2ee;outline-offset:3px}
+.line-tab:hover{box-shadow:0 14px 36px rgba(var(--c-line-rgb),.55),inset 0 1px 0 rgba(var(--c-white-rgb),.3);filter:brightness(1.04)}
+.line-tab:focus-visible{outline:3px solid var(--c-sky);outline-offset:3px}
 
 .lt-main{flex:none;display:flex;flex-direction:column;align-items:center;gap:6px;width:56px}
-.lt-ic{position:relative;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.22);font-size:22px}
+.lt-ic{position:relative;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:rgba(var(--c-white-rgb),.22);font-size:22px}
 /* วงแสงกระเพื่อมจากไอคอนเป็นระยะ */
-.lt-ic:after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid rgba(255,255,255,.75);animation:lt-ring 2.8s ease-out 1.2s infinite;opacity:0}
+.lt-ic:after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid rgba(var(--c-white-rgb),.75);animation:lt-ring 2.8s ease-out 1.2s infinite;opacity:0}
 .lt-short{font-size:11.5px;font-weight:700;line-height:1.15;text-align:center;letter-spacing:.01em}
 
 .lt-full{display:block;max-width:0;overflow:hidden;transition:max-width .45s cubic-bezier(.4,0,.2,1)}
@@ -56,7 +56,7 @@
 /* ธีมมืด: เรืองแสงเขียวเป็นจังหวะหายใจ */
 html[data-theme="dark"] .line-tab{animation:lt-in .6s .3s cubic-bezier(.2,.8,.2,1) both,glow-breathe 2.6s 1s ease-in-out infinite}
 @media(prefers-reduced-motion:reduce){
-  html[data-theme="dark"] .line-tab{animation:none;box-shadow:0 0 0 1px rgba(6,199,85,.7),0 0 20px rgba(6,199,85,.6)}
+  html[data-theme="dark"] .line-tab{animation:none;box-shadow:0 0 0 1px rgba(var(--c-line-rgb),.7),0 0 20px rgba(var(--c-line-rgb),.6)}
 }
 
 /* หน้าติดต่อกลับมีแท็บ "คำนวณราคา" ขวากลางด้วย → เลื่อนลงไปใต้แท็บ LINE */
@@ -75,7 +75,7 @@ body .side-tab{top:calc(50% + 110px)}
   .lt-face{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
   .lt-face-a{gap:4px;animation:tst-face-a 6s ease-in-out infinite}
   .lt-face-b{font-size:14px;font-weight:800;line-height:1.12;text-align:center;animation:tst-face-b 6s ease-in-out infinite}
-  .lt-face-b small{margin-top:3px;padding:1px 7px;border-radius:99px;background:rgba(255,255,255,.25);font-size:10.5px;font-weight:700}
+  .lt-face-b small{margin-top:3px;padding:1px 7px;border-radius:99px;background:rgba(var(--c-white-rgb),.25);font-size:10.5px;font-weight:700}
 }
 @media(hover:none) and (prefers-reduced-motion:reduce){
   .lt-face-a{animation-name:tst-fade-a}

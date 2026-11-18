@@ -1,13 +1,13 @@
 /* ช่องแนบไฟล์ (FileDropZone) และกล่องข้อความส่งสำเร็จ (.ok) — ใช้ในหน้าติดต่อกลับและหน้าลงประกาศ */
-.ok{background:#eef2f9;border:1px solid #cfd9ea;border-radius:14px;padding:20px;text-align:center}
-.upz{display:flex;flex-direction:column;gap:4px;align-items:center;text-align:center;padding:18px 14px;border:2px dashed rgba(11,42,91,.28);border-radius:16px;background:#f3f7fd;cursor:pointer;color:var(--tx);transition:.15s}
-.upz:hover,.upz.drag,.upz:focus-visible{border-color:var(--g);background:#eef3fb;outline:none}
+.ok{background:var(--c-x-gray-95);border:1px solid var(--c-x-blue-86);border-radius:14px;padding:20px;text-align:center}
+.upz{display:flex;flex-direction:column;gap:4px;align-items:center;text-align:center;padding:18px 14px;border:2px dashed rgba(var(--c-navy-rgb),.28);border-radius:16px;background:var(--c-x-gray-97-5);cursor:pointer;color:var(--tx);transition:.15s}
+.upz:hover,.upz.drag,.upz:focus-visible{border-color:var(--g);background:var(--c-x-gray-96-3);outline:none}
 .upz b{font-size:15px;color:var(--g)}
 .upz span{font-size:13px;color:var(--mu);font-weight:400}
 .uplist{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin-top:10px}
 .uplist:empty{display:none}
-.upi{position:relative;border:1px solid var(--bd);border-radius:10px;overflow:hidden;background:#fff;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center}
+.upi{position:relative;border:1px solid var(--bd);border-radius:10px;overflow:hidden;background:var(--c-white);aspect-ratio:1/1;display:flex;align-items:center;justify-content:center}
 .upi img{width:100%;height:100%;object-fit:cover}
-.upi .pdf{font-weight:800;color:#d33;font-size:20px;text-align:center;padding:6px}
+.upi .pdf{font-weight:800;color:var(--c-x-red-53);font-size:20px;text-align:center;padding:6px}
 .upi .pdf small{display:block;color:var(--mu);font-weight:400;font-size:11px;word-break:break-all;margin-top:4px}
-.upi button{position:absolute;top:4px;right:4px;width:26px;height:26px;min-height:0;border-radius:50%;border:0;background:rgba(0,0,0,.7);color:#fff;font-size:16px;line-height:1;cursor:pointer;padding:0}
+.upi button{position:absolute;top:4px;right:4px;width:26px;height:26px;min-height:0;border-radius:50%;border:0;background:rgba(var(--c-black-rgb),.7);color:var(--c-white);font-size:16px;line-height:1;cursor:pointer;padding:0}
