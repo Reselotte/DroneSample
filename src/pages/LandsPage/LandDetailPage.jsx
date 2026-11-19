@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import ContourMapSvg from "../../components/common/ContourMapSvg";
+import { useCallback, useEffect, useRef, useState } from "react";
 import FitImage from "../../components/common/FitImage";
 import { isSupabaseConfigured } from "../../lib/supabaseClient";
 import { fetchListing, photoUrl } from "../../lib/listingsApi";
@@ -12,33 +11,21 @@ import {
 import { sendLineMessage } from "../../utils/sendLineMessage";
 import SetupNotice from "./SetupNotice";
 import ListingHighlights from "./ListingHighlights";
+import PhotoGallery from "./PhotoGallery";
 import { highlightList } from "../../data/landChecklist";
 
-/** แกลเลอรีรูป: รูปใหญ่ + รูปย่อให้กดเลือก */
-function PhotoGallery({ photos, title }) {
-  const [index, setIndex] = useState(0);
-  if (!photos.length) {
-    return <div className="ldg-main"><ContourMapSvg mode="ortho" cover /></div>;
-  }
+/** แท็กจุดเด่น (แบบแท็กร้านเกม) — กดแล้วเลื่อนไปที่หัวข้อจุดเด่น */
+function HighlightTags({ highlights, max = 6 }) {
+  const list = highlightList(highlights);
+  if (!list.length) return null;
+  const toSection = () => document.getElementById("ld-highlights")?.scrollIntoView({ behavior: "smooth", block: "center" });
   return (
-    <div className="ldg">
-      <div className="ldg-main">
-        <FitImage key={photos[index]} src={photoUrl(photos[index])} alt={`${title} รูปที่ ${index + 1}`} eager />
-      </div>
-      {photos.length > 1 && (
-        <div className="ldg-thumbs">
-          {photos.map((path, i) => (
-            <button
-              key={path}
-              type="button"
-              className={i === index ? "on" : undefined}
-              aria-label={`ดูรูปที่ ${i + 1}`}
-              onClick={() => setIndex(i)}
-            >
-              <img src={photoUrl(path)} alt="" loading="lazy" />
-            </button>
-          ))}
-        </div>
+    <div className="ld-tags" aria-label="จุดเด่น">
+      {list.slice(0, max).map((h) => (
+        <button key={h.key} type="button" className="ld-tag" title={h.note || h.label} onClick={toSection}>{h.label}</button>
+      ))}
+      {list.length > max && (
+        <button type="button" className="ld-tag is-more" onClick={toSection}>+{list.length - max}</button>
       )}
     </div>
   );
@@ -50,7 +37,9 @@ export default function LandDetailPage({ param }) {
   const [status, setStatus] = useState("loading"); // loading | ready | notfound | error
   const toast = useToast();
   const id = Number(param);
-
+  const [photoIndex, setPhotoIndex] = useState(0);
+  const setIndex = useCallback((v) => setPhotoIndex(v), []);
+  const mainPhoto = useRef(null);
   useEffect(() => {
     if (!isSupabaseConfigured) return undefined;
     if (!Number.isInteger(id) || id <= 0) {
@@ -97,26 +86,87 @@ export default function LandDetailPage({ param }) {
   const { perRai, perWah } = unitPrices(listing.total_price, listing.area_wah);
   const hasLocation = listing.lat != null && listing.lng != null;
   const pageUrl = window.location.href;
+  const photos = listing.photos || [];
+  const cover = photos[photoIndex] || photos[0];
+  const location = `${listing.district ? `${listing.district}, ` : ""}${listing.province}`;
+  const shortDesc = (listing.description || "").replace(/\s+/g, " ").trim();
 
   const askAboutListing = () =>
     sendLineMessage(`สวัสดีครับ สนใจที่ดินรหัส ${code}\n${listing.title}\n${pageUrl}`, toast);
   const askForContour = () =>
     sendLineMessage(`สวัสดีครับ ขอ Contour ของที่ดินรหัส ${code}\n${listing.title}\n${pageUrl}`, toast);
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(pageUrl);
+      toast("คัดลอกลิงก์ประกาศแล้ว");
+    } catch {
+      toast("คัดลอกไม่สำเร็จ");
+    }
+  };
+  const toGallery = () => mainPhoto.current?.scrollIntoView({ behavior: "smooth", block: "center" });
 
   return (
     <section className="alt lands ld" data-page="lands">
       <div className="wrap">
         {back}
 
-        <div className="ld-grid">
-          <div className="ld-left">
-            <div className="ld-photo-wrap">
-              <PhotoGallery photos={listing.photos || []} title={listing.title} />
-              {sold && <span className="ld-sold">ขายแล้ว</span>}
-            </div>
+        {/* หัวเรื่อง: ชื่อประกาศ + ประเภท + รหัส */}
+        <div className="ld-head">
+          <h1 className="ld-title">{listing.title}</h1>
+          <div className="ld-head-meta">
+            <span className="ld-type">{landTypeLabel(listing.land_type)}</span>
+            <span>รหัส {code}</span>
+          </div>
+        </div>
+
+        {/* บล็อกหลัก: แกลเลอรี (ซ้าย) | แผงข้อมูล (ขวา) */}
+        <div className="ld-hero">
+          <div className="ld-photo-wrap">
+            <PhotoGallery photos={photos} title={listing.title} index={photoIndex} onIndex={setIndex} mainRef={mainPhoto} />
+            {sold && <span className="ld-sold">ขายแล้ว</span>}
+          </div>
+
+          <div className="ld-info">
+            {/* รูปหน้าปก (รูปแรกของประกาศ คงที่ ไม่เปลี่ยนตามแกลเลอรี) */}
+            {photos[0] && (
+              <button type="button" className="ld-cover" onClick={toGallery} aria-label="ดูรูปใหญ่">
+                <FitImage src={photoUrl(photos[0])} />
+              </button>
+            )}
+            {shortDesc && <p className="ld-short">{shortDesc}</p>}
+
+            <dl className="ld-rows">
+              <dt>ราคา</dt><dd className="ld-price">{formatBaht(listing.total_price)}</dd>
+              {perRai != null && <><dt>ราคาต่อไร่</dt><dd>{formatNumber(perRai)} บาท</dd></>}
+              {perWah != null && <><dt>ราคาต่อตร.วา</dt><dd>{formatNumber(perWah)} บาท</dd></>}
+              <dt className="is-gap">ขนาด</dt><dd className="is-gap">{formatArea(listing.rai, listing.ngan, listing.wah)}</dd>
+              <dt>ที่ตั้ง</dt><dd>{location}</dd>
+              <dt>ลงประกาศ</dt><dd>{formatThaiDate(listing.created_at)}</dd>
+            </dl>
 
             {highlightList(listing.highlights).length > 0 && (
-              <div className="card ld-section ld-highlights">
+              <div className="ld-tags-box">
+                <span>จุดเด่นของที่ดินแปลงนี้:</span>
+                <HighlightTags highlights={listing.highlights} />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* แถบปุ่ม: ติดต่อ (ซ้าย) | ดูแปลงอื่น (ขวา) */}
+        <div className="ld-actions">
+          <button type="button" className="btn btn-line" onClick={askAboutListing}>สนใจแปลงนี้ ติดต่อทาง LINE</button>
+          <button type="button" className="btn btn-ghost" onClick={askForContour}>ขอ Contour ที่ดินแปลงนี้</button>
+          <button type="button" className="btn btn-ghost" onClick={copyLink}>คัดลอกลิงก์</button>
+          <a className="btn btn-ghost ld-actions-next" href="#/lands">ดูแปลงอื่น →</a>
+        </div>
+        {sold && <p className="ld-sold-note">ที่ดินแปลงนี้ขายแล้ว ทักทีมงานทาง LINE เพื่อหาแปลงใกล้เคียงได้</p>}
+
+        {/* ด้านล่าง: รายละเอียด (ซ้าย) | กล่องติดต่อค้างจอ (ขวา) */}
+        <div className="ld-grid">
+          <div className="ld-left">
+            {highlightList(listing.highlights).length > 0 && (
+              <div className="card ld-section ld-highlights" id="ld-highlights">
                 <h3>จุดเด่นของที่ดินแปลงนี้</h3>
                 <ListingHighlights highlights={listing.highlights} />
               </div>
@@ -128,7 +178,7 @@ export default function LandDetailPage({ param }) {
                 <dt>ประเภท</dt><dd>{landTypeLabel(listing.land_type)}</dd>
                 <dt>ขนาด</dt><dd>{formatArea(listing.rai, listing.ngan, listing.wah)}</dd>
                 <dt>คิดเป็น</dt><dd>{formatNumber(listing.area_wah * 4)} ตร.ม.</dd>
-                <dt>ที่ตั้ง</dt><dd>{listing.district ? `${listing.district}, ` : ""}{listing.province}</dd>
+                <dt>ที่ตั้ง</dt><dd>{location}</dd>
                 <dt>ลงประกาศ</dt><dd>{formatThaiDate(listing.created_at)}</dd>
                 <dt>รหัสประกาศ</dt><dd>{code}</dd>
               </dl>
@@ -160,27 +210,16 @@ export default function LandDetailPage({ param }) {
 
           <aside className="ld-side">
             <div className="card ld-pricebox">
-              <span className="ld-type">{landTypeLabel(listing.land_type)}</span>
-              <h1 className="ld-title">{listing.title}</h1>
-              <div className="ld-price">{formatBaht(listing.total_price)}</div>
-              <div className="ld-unit">
-                {perRai != null && <span>{formatNumber(perRai)} บาท/ไร่</span>}
-                {perWah != null && <span>{formatNumber(perWah)} บาท/ตร.วา</span>}
-              </div>
-
-              {sold && (
-                <p className="ld-sold-note">ที่ดินแปลงนี้ขายแล้ว ทักทีมงานทาง LINE เพื่อหาแปลงใกล้เคียงได้</p>
+              {cover && (
+                <button type="button" className="ld-side-photo" onClick={toGallery} aria-label="กลับไปดูรูปใหญ่">
+                  <FitImage src={photoUrl(cover)} />
+                  {photos.length > 1 && <em>{photoIndex + 1} / {photos.length}</em>}
+                </button>
               )}
-
-              <button type="button" className="btn btn-line" onClick={askAboutListing}>
-                สนใจแปลงนี้ ติดต่อทาง LINE
-              </button>
-              <button type="button" className="btn btn-ghost" onClick={askForContour}>
-                ขอ Contour ที่ดินแปลงนี้
-              </button>
-              <p className="note">
-                กดแล้วระบบจะคัดลอกรหัสประกาศให้ วางในแชท LINE ได้ทันที ทีมงานจะประสานกับผู้ขายให้
-              </p>
+              <b className="ld-side-title">{listing.title}</b>
+              <div className="ld-side-price">{formatBaht(listing.total_price)}</div>
+              <button type="button" className="btn btn-line" onClick={askAboutListing}>สนใจแปลงนี้ ติดต่อทาง LINE</button>
+              <p className="note">กดแล้วระบบจะคัดลอกรหัสประกาศให้ วางในแชท LINE ได้ทันที ทีมงานจะประสานกับผู้ขายให้</p>
             </div>
           </aside>
         </div>

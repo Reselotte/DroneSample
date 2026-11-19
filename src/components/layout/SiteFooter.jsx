@@ -1,6 +1,7 @@
 import siteConfig from "../../config/siteConfig";
 import LineQrCode from "../common/LineQrCode";
 import LineLink from "../common/LineLink";
+import { SERVICE_LINKS } from "../../data/navigationMenu";
 
 /** ส่วนท้ายเว็บ: ลิงก์ลัด ข้อมูลติดต่อ และ QR Code */
 export default function SiteFooter() {
@@ -15,12 +16,7 @@ export default function SiteFooter() {
           </div>
           <div>
             <h4>บริการของเรา</h4>
-            <a href="#/home">เกษตรกรรม</a>
-            <a href="#/home">โรงงานและอุตสาหกรรม</a>
-            <a href="#/home">อสังหา / จัดสรร</a>
-            <a href="#/callback">นัดบินสำรวจพื้นที่</a>
-            <a href="#/post">ลงประกาศขาย + คำนวณราคา</a>
-            <a href="#/lands">ประกาศซื้อขายที่ดิน</a>
+            {SERVICE_LINKS.map((l) => <a key={l.label} href={l.href}>{l.label}</a>)}
           </div>
           <div>
             <h4>เกี่ยวกับเรา</h4>

@@ -115,3 +115,41 @@ section[data-page]:not([hidden]):not(.hero){animation:fadeUp .55s both}
   .scroll-cue{bottom:max(18px,env(safe-area-inset-bottom))}
   .hero{padding-bottom:104px}
 }
+
+/* เส้นแบ่งแปลงที่ดินบนวิดีโอ (HeroLandOutline) — เหนือชั้นสีเข้ม ใต้ตัวหนังสือ, แต่ละแปลงสีต่างกัน
+ * ห้ามใส่ vector-effect:non-scaling-stroke กับ .hero-plot: Chrome คิดความยาวเส้นผิด แอนิเมชันวาดเส้นจะวาดไม่ครบกรอบ */
+.hero-land{position:absolute;inset:0;z-index:1;width:100%;height:100%;pointer-events:none}
+.hero-land{--step:3.4s}
+.hero-plot{--pc:var(--c-plot-1-rgb);fill:rgba(var(--pc),0);stroke:rgb(var(--pc));stroke-width:3;stroke-linejoin:round;stroke-linecap:round;filter:drop-shadow(0 0 5px rgba(var(--pc),.6));stroke-dasharray:1;stroke-dashoffset:1;opacity:0}
+.hero-pin{--pc:var(--c-plot-1-rgb);opacity:0}
+.hero-land .is-2{--pc:var(--c-plot-2-rgb)}
+.hero-land .is-3{--pc:var(--c-plot-3-rgb)}
+.hero-land .is-4{--pc:var(--c-plot-4-rgb)}
+.hero-land .is-5{--pc:var(--c-plot-5-rgb)}
+.hero-land .is-6{--pc:var(--c-plot-6-rgb)}
+.hero-land .is-7{--pc:var(--c-plot-7-rgb)}
+.hero-land .is-8{--pc:var(--c-plot-8-rgb)}
+.hero-land .is-9{--pc:var(--c-plot-9-rgb)}
+.hero-land .is-10{--pc:var(--c-plot-10-rgb)}
+/* ทีละแปลง: หมุดตกลงมาปัก (0–15%) → เส้นวาดรอบแปลง (15–50%) → พื้นสีจาง ๆ ขึ้น → ค้าง → จางหาย (85–100%) */
+.hero-plot.is-on{animation:heroplot var(--step) linear forwards}
+.hero-pin.is-on{animation:heropinfade var(--step) linear forwards}
+.hero-pin.is-on .hero-pin-drop{animation:heropindrop .55s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes heroplot{
+  0%,15%{opacity:1;stroke-dashoffset:1;fill:rgba(var(--pc),0)}
+  50%{stroke-dashoffset:0;fill:rgba(var(--pc),0)}
+  60%,85%{opacity:1;stroke-dashoffset:0;fill:rgba(var(--pc),.18)}
+  100%{opacity:0;stroke-dashoffset:0;fill:rgba(var(--pc),.18)}
+}
+@keyframes heropinfade{0%,85%{opacity:1}100%{opacity:0}}
+@keyframes heropindrop{from{transform:translateY(-70px);opacity:0}60%{opacity:1}to{transform:none;opacity:1}}
+.hero-pin-body{fill:rgb(var(--pc));stroke:var(--c-white);stroke-width:2.5;filter:drop-shadow(0 4px 8px rgba(var(--c-black-rgb),.45))}
+.hero-pin-shadow{fill:rgba(var(--c-black-rgb),.4)}
+.hero-pin text{fill:var(--c-navy);font-size:17px;font-weight:800;font-family:inherit}
+/* ปิดแอนิเมชันในเครื่อง: ยังไล่ทีละแปลง แต่ไม่มีการเคลื่อนไหว (ไม่มีหมุดตก/เส้นวิ่ง) แค่ค่อย ๆ ปรากฏแล้วจางหาย */
+@media(prefers-reduced-motion:reduce){
+  .hero-plot.is-on{stroke-dashoffset:0;fill:rgba(var(--pc),.16);animation:heropinfade2 var(--step) linear forwards}
+  .hero-pin.is-on{animation:heropinfade2 var(--step) linear forwards}
+  .hero-pin.is-on .hero-pin-drop{animation:none}
+}
+@keyframes heropinfade2{0%{opacity:0}12%,85%{opacity:1}100%{opacity:0}}

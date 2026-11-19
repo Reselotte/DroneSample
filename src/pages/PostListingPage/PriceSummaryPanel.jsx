@@ -5,6 +5,7 @@ import LineLink from "../../components/common/LineLink";
 import { CalculatorIcon } from "../../components/common/Icons";
 import { useToast } from "../../hooks/useToast";
 import { formatNumber } from "../../utils/formatNumber";
+import { districtText } from "../../utils/listingFormat";
 import { trackLineClick } from "../../utils/trackLineClick";
 import PriceDisclaimerDialog from "./PriceDisclaimerDialog";
 
@@ -41,7 +42,7 @@ export default function PriceSummaryPanel({ values, onEdit }) {
 
   const summary = [
     "สวัสดีครับ ขอคำแนะนำราคาที่ดิน",
-    values.province && `จังหวัด: ${values.province}${values.district ? ` (${values.district})` : ""}`,
+    values.province && `จังหวัด: ${values.province}${districtText(values) ? ` (${districtText(values)})` : ""}`,
     r.areaWah && `ขนาด: ${areaText(r.areaWah)}`,
     ready && `ราคาที่ตั้งไว้: ${baht(r.total)} (ไร่ละ ${baht(r.perRai)})`,
   ].filter(Boolean).join("\n");

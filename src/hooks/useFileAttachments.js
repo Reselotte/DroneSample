@@ -12,7 +12,7 @@ const readAsDataUrl = (file) =>
   });
 
 /** ย่อรูปให้ด้านยาวไม่เกิน 1800px และแปลงเป็น JPEG เพื่อให้ไฟล์เล็กลงก่อนส่ง */
-const shrinkImage = (file) =>
+export const shrinkImage = (file) =>
   new Promise((resolve, reject) => {
     const url = URL.createObjectURL(file);
     const img = new Image();

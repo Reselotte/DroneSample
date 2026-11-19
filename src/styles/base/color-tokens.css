@@ -19,6 +19,17 @@
   --c-line:#06c755;
   --c-line-deep:#04a947;
   --c-gold:#ffd36b;
+  /* สีแบ่งแปลงที่ดินบนวิดีโอหน้าแรก (สว่าง เห็นชัดบนพื้นเขียว/มืด) */
+  --c-plot-1:#ffc21a;
+  --c-plot-2:#ff4545;
+  --c-plot-3:#2fd35a;
+  --c-plot-4:#2aa7ff;
+  --c-plot-5:#c05ae0;
+  --c-plot-6:#b6f03a;
+  --c-plot-7:#ff9ec7;
+  --c-plot-8:#8ee8f0;
+  --c-plot-9:#5a6cff;
+  --c-plot-10:#d0844c;
 
   /* ธีมสว่าง */
   --c-l-page:#f6f8fc;
@@ -210,6 +221,16 @@
   --c-d-ink-rgb:141,176,255;
   --c-d-page-rgb:7,13,26;
   --c-gold-rgb:255,211,107;
+  --c-plot-1-rgb:255,194,26;
+  --c-plot-2-rgb:255,69,69;
+  --c-plot-3-rgb:47,211,90;
+  --c-plot-4-rgb:42,167,255;
+  --c-plot-5-rgb:192,90,224;
+  --c-plot-6-rgb:182,240,58;
+  --c-plot-7-rgb:255,158,199;
+  --c-plot-8-rgb:142,232,240;
+  --c-plot-9-rgb:90,108,255;
+  --c-plot-10-rgb:208,132,76;
   --c-l-page-rgb:246,248,252;
   --c-line-rgb:6,199,85;
   --c-navy-rgb:11,42,91;

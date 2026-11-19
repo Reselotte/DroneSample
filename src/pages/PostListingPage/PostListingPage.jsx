@@ -1,18 +1,18 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import FileDropZone from "../../components/common/FileDropZone";
+import PhotoSlots, { missingRequired, orderedPhotos } from "./PhotoSlots";
 import LineLink from "../../components/common/LineLink";
 import useFileAttachments from "../../hooks/useFileAttachments";
+import useThaiAddress from "../../hooks/useThaiAddress";
 import { isSupabaseConfigured } from "../../lib/supabaseClient";
 import { ListingLimitError, submitListing } from "../../lib/listingsApi";
 import { LAND_TYPES, PRICE_UNITS, PROVINCES } from "../../data/landListingOptions";
-import { isInThailand, listingCode, parseLatLng } from "../../utils/listingFormat";
+import { districtText, isInThailand, listingCode, parseLatLng } from "../../utils/listingFormat";
 import SetupNotice from "../LandsPage/SetupNotice";
 import { CheckCircleIcon, LockIcon } from "../../components/common/Icons";
 import LocationField from "../../components/common/LocationField";
 import { PHONE_ERROR, PHONE_PLACEHOLDER, formatThaiPhone, isIntlFormat, isThaiPhone, normalizeThaiPhone } from "../../utils/thaiPhone";
 import PriceSummaryPanel, { areaText, calcPrice } from "./PriceSummaryPanel";
-
-const MAX_PHOTOS = 10;
 
 // ── กันสแปม (ฝั่งหน้าเว็บ) ──
 // ส่งเร็วกว่านี้หลังเปิดหน้า = ไม่ใช่คนกรอก (ฟอร์มนี้ต้องแนบรูป คนจริงใช้เวลาเป็นนาที)
@@ -32,7 +32,7 @@ const STEPS = [
 ];
 const STEP_FIELDS = {
   1: ["sellerName", "phone"],
-  2: ["title", "landType", "province", "area", "price", "location"],
+  2: ["title", "landType", "province", "district", "subdistrict", "area", "price", "location"],
   3: ["photos", "consent"],
 };
 const reduceMotion = () => window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
@@ -67,7 +67,7 @@ const ERROR_KEY = { rai: "area", ngan: "area", wah: "area", priceUnit: "price" }
 const pickErrors = (errors, n) => Object.fromEntries(STEP_FIELDS[n].filter((k) => errors[k]).map((k) => [k, errors[k]]));
 
 const EMPTY_VALUES = {
-  title: "", landType: "", province: "", district: "",
+  title: "", landType: "", province: "", subdistrict: "", district: "",
   rai: "", ngan: "", wah: "", price: "", priceUnit: "total",
   location: "", description: "",
   sellerName: "", phone: "", lineId: "", deedNo: "", consent: false,
@@ -75,7 +75,7 @@ const EMPTY_VALUES = {
 };
 
 /** ตรวจค่าในฟอร์ม คืน { errors, listing } (listing = ค่าที่พร้อมส่ง) */
-function validate(values, photoCount) {
+function validate(values, photoSlots) {
   const errors = {};
   const num = (v) => (v === "" ? 0 : Number(v));
   const rai = num(values.rai);
@@ -89,6 +89,9 @@ function validate(values, photoCount) {
   if (title.length < 5) errors.title = "กรุณาใส่หัวข้อประกาศอย่างน้อย 5 ตัวอักษร";
   if (!values.landType) errors.landType = "กรุณาเลือกประเภทที่ดิน";
   if (!values.province) errors.province = "กรุณาเลือกจังหวัด";
+  const bkk = values.province === "กรุงเทพมหานคร";
+  if (values.province && !values.district) errors.district = bkk ? "กรุณาเลือกเขต" : "กรุณาเลือกอำเภอ";
+  if (values.province && !values.subdistrict) errors.subdistrict = bkk ? "กรุณาเลือกแขวง" : "กรุณาเลือกตำบล";
   if ([rai, ngan, wah].some((n) => Number.isNaN(n) || n < 0) || rai * 400 + ngan * 100 + wah <= 0) {
     errors.area = "กรุณาระบุขนาดที่ดิน";
   }
@@ -100,7 +103,8 @@ function validate(values, photoCount) {
       : "อ่านพิกัดไม่ได้ ใส่แบบ 13.7563, 100.5018 หรือวางลิงก์ Google Maps";
     else if (!isInThailand(coords)) errors.location = "พิกัดนี้อยู่นอกประเทศไทย กรุณาตรวจสอบอีกครั้ง";
   }
-  if (photoCount < 1) errors.photos = "กรุณาแนบรูปที่ดินอย่างน้อย 1 รูป";
+  const missing = missingRequired(photoSlots);
+  if (missing.length) errors.photos = `กรุณาใส่รูป${missing.map((m) => `"${m.label}"`).join(", ")}`;
   if (!values.sellerName.trim()) errors.sellerName = "กรุณาระบุชื่อ";
   if (!isThaiPhone(phone)) errors.phone = PHONE_ERROR;
   if (!values.consent) errors.consent = "กรุณายืนยันก่อนส่งประกาศ";
@@ -109,7 +113,7 @@ function validate(values, photoCount) {
     title,
     landType: values.landType,
     province: values.province,
-    district: values.district.trim(),
+    district: districtText(values),
     rai, ngan, wah, price,
     priceUnit: values.priceUnit,
     lat: coords?.lat ?? null,
@@ -130,7 +134,10 @@ export default function PostListingPage() {
   const [sending, setSending] = useState(false);
   const [sentId, setSentId] = useState(null);
   const openedAt = useRef(Date.now()); // เวลาเปิดฟอร์ม (ดักส่งเร็วเกินคน)
-  const photos = useFileAttachments({ maxFiles: MAX_PHOTOS, allowPdf: false });
+  const [photoSlots, setPhotoSlots] = useState({}); // หัวข้อรูป → รูป (หัวข้อละ 1 รูป)
+  const [coverKey, setCoverKey] = useState("overview");
+  const photoCount = Object.keys(photoSlots).length;
+  const address = useThaiAddress();
   const deed = useFileAttachments({ maxFiles: 5, allowPdf: true });
   const [step, setStep] = useState(1);
   const [maxStep, setMaxStep] = useState(1); // ขั้นไกลสุดที่ไปถึงแล้ว (จิ้มกลับไปได้)
@@ -178,7 +185,7 @@ export default function PostListingPage() {
   };
 
   const goNext = () => {
-    const stepErrors = pickErrors(validate(values, photos.files.length).errors, step);
+    const stepErrors = pickErrors(validate(values, photoSlots).errors, step);
     setErrors(stepErrors);
     if (Object.keys(stepErrors).length) { scrollToError(); return; }
     flyIntoBox(stageRef.current, railRefs.current[step]);
@@ -190,20 +197,22 @@ export default function PostListingPage() {
 
   // แก้ช่องไหน → เอาข้อความเตือน (และกรอบแดง) ของช่องนั้นออกทันที
   const clearError = (key) => setErrors((er) => (er[key] ? { ...er, [key]: undefined } : er));
+  // เปลี่ยนจังหวัด → ล้างอำเภอ/ตำบล, เปลี่ยนอำเภอ → ล้างตำบล (กันเลือกไม่ตรงกัน)
+  const RESETS = { province: { district: "", subdistrict: "" }, district: { subdistrict: "" } };
   const bind = (field) => ({
     value: values[field],
     onChange: (e) => {
-      setValues((v) => ({ ...v, [field]: e.target.value }));
+      setValues((v) => ({ ...v, [field]: e.target.value, ...RESETS[field] }));
       clearError(ERROR_KEY[field] || field);
     },
   });
 
   // แนบรูปแล้ว → เอาเตือน "กรุณาแนบรูป" ออก
-  useEffect(() => { if (photos.files.length) clearError("photos"); }, [photos.files.length]);
+  useEffect(() => { if (!missingRequired(photoSlots).length) clearError("photos"); }, [photoSlots]);
 
   const submit = async (e) => {
     e.preventDefault();
-    const { errors: nextErrors, listing } = validate(values, photos.files.length);
+    const { errors: nextErrors, listing } = validate(values, photoSlots);
     if (Object.values(nextErrors).some(Boolean)) {
       // พาไปขั้นแรกที่ยังผิด แล้วเลื่อนไปที่ช่องนั้น
       const bad = STEPS.find((s) => Object.keys(pickErrors(nextErrors, s.n)).length);
@@ -234,7 +243,7 @@ export default function PostListingPage() {
 
     setSending(true);
     try {
-      const id = await submitListing(listing, photos.files, deed.files);
+      const id = await submitListing(listing, orderedPhotos(photoSlots, coverKey), deed.files);
       setSentId(id);
       window.scrollTo(0, 0);
     } catch (err) {
@@ -277,9 +286,12 @@ export default function PostListingPage() {
     2: values.title.trim()
       ? `${values.title.trim()}${r.areaWah ? ` · ${areaText(r.areaWah)}` : ""}${values.province ? ` · ${values.province}` : ""}`
       : "ยังไม่ได้กรอก",
-    3: photos.files.length ? `แนบรูปแล้ว ${photos.files.length} รูป` : "ยังไม่ได้แนบรูป",
+    3: photoCount ? `แนบรูปแล้ว ${photoCount} รูป` : "ยังไม่ได้แนบรูป",
   };
   const next = STEPS[step]; // ขั้นถัดไป (undefined = ขั้นสุดท้าย)
+  const bkk = values.province === "กรุงเทพมหานคร";
+  const districts = Object.keys(address?.[values.province] || {});
+  const subdistricts = address?.[values.province]?.[values.district] || [];
 
   return (
     <section className="alt post" data-page="post">
@@ -397,9 +409,23 @@ export default function PostListingPage() {
                       <div className="err">{errors.province}</div>
                     </div>
                   </div>
-                  <div className="field">
-                    <label htmlFor="p_dist">อำเภอ / ตำบล <span className="opt">(ไม่บังคับ)</span></label>
-                    <input id="p_dist" maxLength={100} {...bind("district")} />
+                  <div className="row2">
+                    <div className="field">
+                      <label htmlFor="p_dist">{bkk ? "เขต" : "อำเภอ"} <span className="req">*</span></label>
+                      <select id="p_dist" disabled={!values.province || !address} {...bind("district")}>
+                        <option value="">{!values.province ? "— เลือกจังหวัดก่อน —" : !address ? "กำลังโหลด…" : "— เลือก —"}</option>
+                        {districts.map((d) => <option key={d} value={d}>{d}</option>)}
+                      </select>
+                      <div className="err">{errors.district}</div>
+                    </div>
+                    <div className="field">
+                      <label htmlFor="p_sub">{bkk ? "แขวง" : "ตำบล"} <span className="req">*</span></label>
+                      <select id="p_sub" disabled={!values.district} {...bind("subdistrict")}>
+                        <option value="">{values.district ? "— เลือก —" : `— เลือก${bkk ? "เขต" : "อำเภอ"}ก่อน —`}</option>
+                        {subdistricts.map((t) => <option key={t} value={t}>{t}</option>)}
+                      </select>
+                      <div className="err">{errors.subdistrict}</div>
+                    </div>
                   </div>
                   <div className="field">
                     <label>ขนาดที่ดิน <span className="req">*</span></label>
@@ -429,12 +455,12 @@ export default function PostListingPage() {
                     onError={(msg) => setErrors((prev) => ({ ...prev, location: msg }))}
                   />
                   <div className="field">
-                    <label htmlFor="p_desc">รายละเอียดเพิ่มเติม <span className="opt">(ไม่บังคับ)</span></label>
+                    <label htmlFor="p_desc">รายละเอียดเพิ่มเติม / จุดขาย <span className="opt">(ไม่บังคับ)</span></label>
                     <textarea
                       id="p_desc"
                       rows={4}
                       maxLength={3000}
-                      placeholder="เช่น หน้ากว้างติดถนน, มีไฟฟ้า/ประปา, ถมแล้วหรือยัง, ใกล้สถานที่สำคัญ, เอกสารสิทธิ์ (โฉนด/น.ส.3)"
+                      placeholder="จุดขายของที่ดิน เช่น หน้ากว้างติดถนน, ใกล้รถไฟฟ้า/ตลาด/โรงเรียน, มีไฟฟ้า/ประปา, ถมแล้ว, น้ำไม่ท่วม, เอกสารสิทธิ์ (โฉนด/น.ส.3)"
                       {...bind("description")}
                     />
                   </div>
@@ -443,15 +469,11 @@ export default function PostListingPage() {
 
               {step === 3 && (
                 <>
-                  <FileDropZone
-                    attachments={photos}
-                    id="p_photos"
-                    accept="image/*"
-                    label={<>รูปที่ดิน <span className="req">*</span></>}
-                    hint={`รูปภาพสูงสุด ${MAX_PHOTOS} รูป รูปแรกจะเป็นรูปหน้าปก`}
-                  >
-                    <b>เลือกรูป หรือถ่ายภาพที่ดิน</b>
-                  </FileDropZone>
+                  <div className="field">
+                    <label className="pslots-label">รูปที่ดิน <span className="opt">(<span className="req">*</span> = ต้องใส่)</span></label>
+                    <p className="pslots-intro">แตะช่องเพื่อดูตัวอย่างและเพิ่มรูป · กด <b>☆</b> เลือกรูปหน้าปก</p>
+                    <PhotoSlots slots={photoSlots} onChange={setPhotoSlots} coverKey={coverKey} onCover={setCoverKey} />
+                  </div>
                   <div className="err">{errors.photos}</div>
                   <div className="field post-consent">
                     <label>

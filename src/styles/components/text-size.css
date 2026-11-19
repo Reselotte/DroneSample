@@ -28,8 +28,7 @@ html[data-text-size] .term-pop b{font-size:calc(15px * var(--ts))}
 }
 /* มือถือ: แถวบนจอแคบ ขยายทั้งแถบแล้วปุ่ม "ติดต่อเรา" จะตกลงแถว 2 → ขยายเฉพาะตัวหนังสือเมนูที่กางลงมาแทน */
 @media(max-width:899px){
-  html[data-text-size] #nav a,
-  html[data-text-size] #nav .nav-toggle{font-size:calc(15px * var(--ts));min-height:calc(42px * var(--ts))}
+  html[data-text-size] #nav a{font-size:calc(15px * var(--ts));min-height:calc(42px * var(--ts))}
 }
 @media(min-width:900px){
   html[data-text-size] #nav{order:3;flex:none;width:100%;flex-wrap:wrap;justify-content:center;gap:4px 2px;padding:0 0 8px}

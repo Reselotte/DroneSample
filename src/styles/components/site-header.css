@@ -42,28 +42,9 @@ header .wrap{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(
 @media(hover:none){
   #nav a:hover,header .pill:hover{transform:none}
 }
-@media(max-width:899px){
-  #nav{display:flex;flex-direction:column;gap:6px;overflow:visible;padding:0 0 10px;position:relative}
-  #nav a{display:none;align-items:center;justify-content:center;text-align:center;white-space:normal;line-height:1.25;font-size:15px;padding:8px 12px;min-height:42px;background:var(--bg);border-radius:12px}
-  #nav a.on{display:flex;background:var(--g);color:var(--c-white);gap:8px}
-  #nav a.on::after{content:"";width:8px;height:8px;border-right:2.5px solid currentColor;border-bottom:2.5px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .2s;animation:navhint 1.6s ease-in-out 3}
-  #nav.open{display:flex;flex-direction:column;gap:6px}
-  #nav.open a{display:flex}
-  #nav.open a:not(.on){font-size:16px;padding:10px 12px;min-height:46px}
-  #nav.open a.on::after{transform:translateY(2px) rotate(-135deg);animation:none}
-}
-@keyframes navhint{0%,100%{margin-top:0}50%{margin-top:5px}}
 header .wrap{min-height:64px}
 @media(min-width:900px){
   #nav a:hover,header .pill:hover{transform:scale(1.06)}
-}
-
-/* หน้าติดต่อเรา (ไม่มีเมนูที่ถูกเลือก): บนมือถือแสดงปุ่ม "เมนู" เพื่อกางรายการ */
-#nav .nav-toggle{display:none}
-@media(max-width:899px){
-  #nav .nav-toggle{display:flex;align-items:center;justify-content:center;gap:8px;min-height:42px;border:0;border-radius:12px;background:var(--g);color:var(--c-white);font:inherit;font-size:15px;font-weight:700;cursor:pointer}
-  #nav .nav-toggle::after{content:"";width:8px;height:8px;border-right:2.5px solid currentColor;border-bottom:2.5px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .2s}
-  #nav.open .nav-toggle::after{transform:translateY(2px) rotate(-135deg)}
 }
 
 /* ซ่อนแถบเมนูตอนเลื่อนลง / โผล่กลับตอนเลื่อนขึ้น */

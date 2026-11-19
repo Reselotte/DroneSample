@@ -1,0 +1,66 @@
+/* ── มือถือ: ปุ่ม ☰ มุมขวาบน + แผงเมนูเลื่อนออกมาจากขอบขวา (รายการเรียงลงมา ทยอยเด้งเข้ามา) ──
+ * ปุ่มลอยมุมขวาบนเรียงจากขวา: ☰ → ปุ่มธีม → ปุ่ม ก (ห่างกันช่องละ 52px)
+ * ไฟล์นี้โหลดหลัง text-size.css จึงทับตำแหน่งปุ่มลอยของจอมือถือได้ */
+.nav-burger,.nav-drawer,.nav-backdrop{display:none}
+@media(max-width:899px){
+  /* ปุ่ม ☰ → ✕ */
+  .nav-burger{position:fixed;top:10px;right:max(16px,env(safe-area-inset-right));z-index:42;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:44px;height:44px;min-height:0;padding:0;border:1px solid var(--line);border-radius:50%;background:var(--c-white);box-shadow:0 6px 18px rgba(var(--c-navy-rgb),.14);cursor:pointer;touch-action:manipulation}
+  .nav-burger span{display:block;width:18px;height:2.2px;border-radius:2px;background:var(--c-navy);transition:transform .25s ease,opacity .2s}
+  .nav-burger.is-open span:nth-child(1){transform:translateY(6.2px) rotate(45deg)}
+  .nav-burger.is-open span:nth-child(2){opacity:0}
+  .nav-burger.is-open span:nth-child(3){transform:translateY(-6.2px) rotate(-45deg)}
+  .nav-burger:focus-visible{outline:3px solid var(--c-sky);outline-offset:2px}
+
+  .theme-toggle{right:calc(max(16px,env(safe-area-inset-right)) + 52px)}
+  .text-size-toggle{right:calc(max(16px,env(safe-area-inset-right)) + 104px)}
+  header .pill{margin-right:172px}
+  #nav{display:none!important} /* มือถือใช้แผงด้านข้างแทน */
+
+  /* ฉากหลังหรี่ (กดเพื่อปิด) */
+  .nav-backdrop{display:block;position:fixed;inset:0;z-index:40;background:rgba(var(--c-x-blue-04-rgb),.45);opacity:0;pointer-events:none;transition:opacity .3s ease}
+  .nav-backdrop.is-open{opacity:1;pointer-events:auto}
+
+  /* แผงเมนูด้านขวา */
+  .nav-drawer{display:flex;flex-direction:column;gap:4px;position:fixed;top:0;right:0;bottom:0;z-index:41;width:min(300px,82vw);padding:max(18px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) 24px 14px;overflow-y:auto;background:var(--c-white);border-radius:24px 0 0 24px;box-shadow:-18px 0 44px rgba(var(--c-navy-rgb),.22);transform:translateX(105%);transition:transform .38s cubic-bezier(.2,.8,.2,1);visibility:hidden}
+  .nav-drawer.is-open{transform:none;visibility:visible}
+  .nav-drawer-title{display:flex;align-items:center;min-height:44px;margin:0 56px 8px 8px;font-size:18px;color:var(--g)}
+  .nav-drawer a{display:flex;align-items:center;min-height:50px;padding:10px 16px;border-radius:14px;color:var(--tx);font-size:16.5px;font-weight:500;text-decoration:none;opacity:0;transform:translateX(28px);transition:opacity .3s ease,transform .38s cubic-bezier(.2,.9,.3,1.25),background .2s}
+  .nav-drawer.is-open a{opacity:1;transform:none;transition-delay:calc(.08s + var(--i) * .045s),calc(.08s + var(--i) * .045s),0s}
+  .nav-drawer a:hover{background:var(--c-l-tint)}
+  .nav-drawer a.on{background:var(--accent-grad,var(--c-grad-primary-l));color:var(--c-white);font-weight:700}
+  .nav-drawer a.is-contact{margin-top:8px;border:1px solid var(--line)}
+  .nav-drawer a.is-contact.on{border-color:transparent}
+
+  /* ท้ายแผง: บริการ + ติดต่อ (ตัวเล็ก สีจาง) */
+  .nav-drawer-extra{display:flex;flex-direction:column;gap:14px;margin-top:auto;padding:18px 8px 0;border-top:1px solid var(--line);opacity:0;transition:opacity .4s ease}
+  .nav-drawer.is-open .nav-drawer-extra{opacity:1;transition-delay:.4s}
+  .nav-drawer-extra>div{display:flex;flex-direction:column;gap:2px}
+  .nav-drawer-extra b{margin-bottom:2px;font-size:12.5px;font-weight:700;color:var(--mu);letter-spacing:.02em}
+  .nav-drawer .nav-drawer-extra a{min-height:0;padding:4px 0;border-radius:0;font-size:13.5px;font-weight:400;color:var(--mu);opacity:1;transform:none;transition:color .2s}
+  .nav-drawer .nav-drawer-extra a:hover{background:none;color:var(--g)}
+  .nav-drawer-extra small{font-size:12px;color:var(--mu);opacity:.85}
+}
+@media(max-width:360px){
+  .theme-toggle{right:calc(max(16px,env(safe-area-inset-right)) + 48px)}
+  .text-size-toggle{right:calc(max(16px,env(safe-area-inset-right)) + 94px)}
+}
+/* จอแคบมาก: แถวบนไม่พอวาง "ติดต่อเรา" → ซ่อนไว้ (กดจากแผงเมนูแทน) */
+@media(max-width:399px){
+  header .pill{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .nav-drawer,.nav-drawer a,.nav-backdrop,.nav-burger span{transition:none!important}
+}
+
+html[data-theme="dark"] .nav-burger{background:rgba(var(--c-d-card-rgb),.9);border-color:var(--c-d-border);box-shadow:0 6px 18px rgba(var(--c-black-rgb),.4)}
+html[data-theme="dark"] .nav-burger span{background:var(--c-white)}
+html[data-theme="dark"] .nav-drawer{background:var(--c-d-card);box-shadow:-18px 0 44px rgba(var(--c-black-rgb),.55),inset 1px 0 0 var(--c-d-border)}
+html[data-theme="dark"] .nav-drawer-title{color:var(--c-d-ink)}
+html[data-theme="dark"] .nav-drawer a{color:var(--c-d-text)}
+html[data-theme="dark"] .nav-drawer .nav-drawer-extra a,html[data-theme="dark"] .nav-drawer-extra b,html[data-theme="dark"] .nav-drawer-extra small{color:var(--c-d-muted)}
+html[data-theme="dark"] .nav-drawer .nav-drawer-extra a:hover{color:var(--c-d-ink)}
+html[data-theme="dark"] .nav-drawer-extra{border-color:var(--c-d-border)}
+html[data-theme="dark"] .nav-drawer a:hover{background:rgba(var(--c-white-rgb),.06)}
+html[data-theme="dark"] .nav-drawer a.on{color:var(--c-white)}
+html[data-theme="dark"] .nav-drawer a.is-contact{border-color:var(--c-d-border)}
+html[data-theme="dark"] .nav-backdrop{background:rgba(var(--c-black-rgb),.55)}

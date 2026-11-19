@@ -45,3 +45,12 @@ export function parseLatLng(text) {
 
 /** พิกัดอยู่ในกรอบประเทศไทยคร่าว ๆ หรือไม่ */
 export const isInThailand = ({ lat, lng }) => lat >= 5 && lat <= 21 && lng >= 97 && lng <= 106;
+
+/** ตำบล + อำเภอ รวมเป็นข้อความเดียว (กรุงเทพฯ ใช้ แขวง/เขต) เช่น "ต.บางพลีใหญ่ อ.บางพลี" */
+export function districtText(values) {
+  const bkk = values.province === "กรุงเทพมหานคร";
+  const strip = (v) => v.trim().replace(/^(ตำบล|ต\.|แขวง|อำเภอ|อ\.|เขต)\s*/, "");
+  const sub = strip(values.subdistrict || "");
+  const dist = strip(values.district || "");
+  return [sub && `${bkk ? "แขวง" : "ต."}${sub}`, dist && `${bkk ? "เขต" : "อ."}${dist}`].filter(Boolean).join(" ");
+}
