@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { isSupabaseConfigured, supabase } from "../../lib/supabaseClient";
 import {
-  checkIsAdmin, deleteListing, fetchAdminListings, fetchPhoneCounts, fetchStatusCounts, photoUrl,
+  deleteListing, fetchMyRole, fetchAdminListing, fetchAdminListings, fetchPhoneCounts, fetchStatusCounts, photoUrl,
   searchAdminListings, setListingStatus, signIn, signOut,
 } from "../../lib/listingsApi";
 import { useToast } from "../../hooks/useToast";
@@ -12,6 +12,10 @@ import AdminColorGuide from "./AdminColorGuide";
 import AdminSalesChecklist from "./AdminSalesChecklist";
 import AdminListingsTable, { StatCards, statusLabel } from "./AdminListingsTable";
 import ListingsReport from "./ListingsReport";
+import AdminMembers from "./AdminMembers";
+import AdminSystemCheck from "./AdminSystemCheck";
+import { canUseBackoffice, roleLabel } from "../../data/roles";
+import AdminListingEditor from "./AdminListingEditor";
 
 /** ไอคอนเมนู (เส้น ใช้สีตามตัวอักษร) */
 const icon = (d) => <svg viewBox="0 0 24 24" aria-hidden="true"><path d={d} /></svg>;
@@ -22,6 +26,7 @@ const ICONS = {
   print: icon("M7 9V3h10v6M7 17H4v-7h16v7h-3M7 14h10v7H7z"),
   logout: icon("M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 16l-4-4 4-4M6 12h10"),
   search: icon("M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4"),
+  members: icon("M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM2 21c0-3.9 3.1-6.5 7-6.5s7 2.6 7 6.5M17 11a3.5 3.5 0 1 0 0-7M22 21c0-3-1.8-5.3-4.5-6.1"),
 };
 
 /** เมนูแอดมิน: แต่ละเมนูมีที่อยู่ของตัวเอง (#/admin, #/admin/colors) */
@@ -29,6 +34,8 @@ const ADMIN_SECTIONS = [
   { key: "listings", href: "#/admin", label: "จัดการประกาศ", title: "จัดการประกาศ", sub: "ตรวจ อนุมัติ และแก้ไขประกาศขายที่ดิน" },
   { key: "checklist", href: "#/admin/checklist", label: "เช็กลิสต์ฝ่ายขาย", title: "เช็กลิสต์ฝ่ายขาย", sub: "ถามเจ้าของที่ดินทีละหัวข้อ สรุปและพิมพ์ได้" },
   { key: "colors", href: "#/admin/colors", label: "คู่มือสีเว็บ", title: "คู่มือสีเว็บ", sub: "ชุดสีทั้งหมดของเว็บ ดาวน์โหลดไปใช้ต่อได้" },
+  { key: "members", href: "#/admin/members", label: "สมาชิก", title: "สมาชิก", sub: "บัญชีทั้งหมดในระบบ และระดับสิทธิ์ (ผู้ดูแลระบบเท่านั้น)", adminOnly: true },
+  { key: "system", href: "#/admin/system", label: "ตรวจระบบ", title: "ตรวจระบบ", sub: "เช็กความพร้อมของฐานข้อมูล และเช็กลิสต์ทดสอบฟีเจอร์ (ผู้ดูแลระบบเท่านั้น)", adminOnly: true },
 ];
 
 const STATUS_VALUES = LISTING_STATUSES.map((s) => s.value);
@@ -70,10 +77,40 @@ function LoginForm() {
   );
 }
 
+/** หน้าแก้ไขประกาศ (#/admin/edit/<รหัส>): โหลดประกาศเดียว แล้วแสดงฟอร์มเต็มหน้า */
+function AdminEditPage({ id, onSaved }) {
+  const [listing, setListing] = useState(null);
+  const [state, setState] = useState("loading"); // loading | ready | notfound
+  useEffect(() => {
+    let alive = true;
+    setState("loading");
+    fetchAdminListing(id)
+      .then((l) => { if (alive) { setListing(l); setState(l ? "ready" : "notfound"); } })
+      .catch((err) => { console.error(err); if (alive) setState("notfound"); });
+    return () => { alive = false; };
+  }, [id]);
+
+  const back = () => { window.location.hash = "#/admin"; };
+  if (state === "loading") return <div className="lands-msg">กำลังโหลดประกาศ…</div>;
+  if (state === "notfound") {
+    return (
+      <div className="lands-msg">
+        <b>ไม่พบประกาศ {listingCode(id)}</b>
+        <a className="btn btn-ghost" href="#/admin">กลับไปรายการประกาศ</a>
+      </div>
+    );
+  }
+  return <AdminListingEditor key={listing.id} listing={listing} onCancel={back} onSaved={(updated) => { onSaved(updated); back(); }} />;
+}
+
 /** หน้าแอดมิน (#/admin) — ไม่มีในเมนู เข้าผ่านลิงก์โดยตรง · param = เมนูในแถบเครื่องมือ */
 export default function AdminPage({ param }) {
-  const section = ADMIN_SECTIONS.find((s) => s.key === param) || ADMIN_SECTIONS[0];
-  const onListings = section.key === "listings";
+  const [role, setRole] = useState(null); // ระดับสิทธิ์: staff = ทีมงาน, admin = ผู้ดูแลระบบ
+  const isTopAdmin = role === "admin";
+  const sections = ADMIN_SECTIONS.filter((s) => !s.adminOnly || isTopAdmin);
+  const section = sections.find((s) => s.key === param) || sections[0];
+  const editId = /^edit\/\d+$/.test(param || "") ? Number(param.slice(5)) : null; // #/admin/edit/12
+  const onListings = section.key === "listings" && !editId;
   const [session, setSession] = useState(undefined); // undefined = กำลังเช็ก
   const [isAdmin, setIsAdmin] = useState(null);
   const [tab, setTab] = useState("pending");
@@ -95,7 +132,9 @@ export default function AdminPage({ param }) {
 
   useEffect(() => {
     if (!session) { setIsAdmin(null); return; }
-    checkIsAdmin().then(setIsAdmin).catch(() => setIsAdmin(false));
+    fetchMyRole()
+      .then((r) => { setRole(r); setIsAdmin(canUseBackoffice(r)); })
+      .catch(() => setIsAdmin(false));
   }, [session]);
 
   const refreshCounts = useCallback(() => {
@@ -151,6 +190,7 @@ export default function AdminPage({ param }) {
   const saved = (updated) => {
     setItems((list) => list.map((l) => (l.id === updated.id ? updated : l)));
     toast(`${listingCode(updated.id)}: บันทึกการแก้ไขแล้ว`);
+    refreshCounts();
   };
 
   const remove = async (listing) => {
@@ -197,8 +237,11 @@ export default function AdminPage({ param }) {
   }
 
   let body;
-  if (section.key === "checklist") body = <AdminSalesChecklist />;
+  if (editId) body = <AdminEditPage id={editId} onSaved={saved} />;
+  else if (section.key === "checklist") body = <AdminSalesChecklist />;
   else if (section.key === "colors") body = <AdminColorGuide />;
+  else if (section.key === "members") body = <AdminMembers myId={session.user.id} />;
+  else if (section.key === "system") body = <AdminSystemCheck myId={session.user.id} />;
   else {
     body = (
       <div className="adm-listings">
@@ -251,8 +294,7 @@ export default function AdminPage({ param }) {
             busyId={busyId}
             phoneCounts={phoneCounts}
             onChangeStatus={changeStatus}
-            onSaved={saved}
-            onDelete={remove}
+            onDelete={isTopAdmin ? remove : null}
             onSearchPhone={runSearch}
           />
         ))}
@@ -277,7 +319,7 @@ export default function AdminPage({ param }) {
           <span>หลังบ้าน</span>
         </div>
         <nav className="adm-nav" aria-label="เมนูแอดมิน">
-          {ADMIN_SECTIONS.map((s) => (
+          {sections.map((s) => (
             <a key={s.key} href={s.href} className={s.key === section.key ? "on" : undefined} aria-current={s.key === section.key ? "page" : undefined}>
               {ICONS[s.key]}
               <span>{s.label}</span>
@@ -287,15 +329,18 @@ export default function AdminPage({ param }) {
         </nav>
         <div className="adm-side-foot">
           <span title={session.user.email}>{session.user.email}</span>
+          {role && <em className={`adm-role is-${role}`}>{roleLabel(role)}</em>}
           <button type="button" onClick={signOut}>{ICONS.logout} ออกจากระบบ</button>
         </div>
       </aside>
 
       <div className="adm-main">
-        <div className="adm-head">
-          <h1>{section.title}</h1>
-          <p>{section.sub}</p>
-        </div>
+        {!editId && (
+          <div className="adm-head">
+            <h1>{section.title}</h1>
+            <p>{section.sub}</p>
+          </div>
+        )}
         {body}
       </div>
     </section>

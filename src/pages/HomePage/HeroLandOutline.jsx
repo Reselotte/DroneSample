@@ -32,7 +32,22 @@ const SHAPES = PLOTS.map(({ label, tag, pts }) => ({
   tag: tag || [pts.reduce((s, p) => s + p[0], 0) / pts.length, pts.reduce((s, p) => s + p[1], 0) / pts.length],
 }));
 
-/** เวลาต่อหนึ่งแปลง (ms): หมุดปัก → วาดเส้น → ค้างไว้ → จางหาย — ต้องตรงกับ --step ใน home-hero.css */
+/**
+ * รูปแบบแอนิเมชัน
+ *  "all" = หมุดปักเรียงทีละแปลง (A → J) จนครบ → แล้วเส้นวาดตามกันไปทีละแปลง → ค้างไว้ทั้งหมด
+ *  "one" = ไล่ทีละแปลง: หมุดปัก → วาดเส้น → จางหาย → แปลงถัดไป (วนไปเรื่อย ๆ)
+ */
+const MODE = "all";
+
+/** โหมด "all": ระยะห่างระหว่างหมุดแต่ละอัน / ระหว่างเส้นแต่ละแปลง (วินาที) */
+const START = 3; // เริ่มปักหมุดที่วินาทีที่ 3 ของวิดีโอ (ช่วงแรกกล้องยังต่ำ แปลงฝั่งไกลยังไม่เข้าภาพ)
+const PIN_GAP = 0.22;
+const LINE_GAP = 0.35;
+const LINE_START = START + PIN_GAP * 10 + 0.3; // เส้นแรกเริ่มหลังหมุดอันสุดท้ายปักเสร็จ
+/** วิดีโอค่อย ๆ สว่างขึ้นตอนเริ่ม / มืดลงตอนจบ (วินาที) — ตอนวนกลับไปต้นคลิปจะไม่ตัดฉับ */
+const FADE = 0.8;
+
+/** เวลาต่อหนึ่งแปลง (ms) ในโหมด "one": หมุดปัก → วาดเส้น → ค้างไว้ → จางหาย — ต้องตรงกับ --step ใน home-hero.css */
 const STEP_MS = 3400;
 
 const KEYS = track.keys; // [t, h11, h12, h13, h21, h22, h23, h31, h32]
@@ -62,6 +77,8 @@ export default function HeroLandOutline({ videoRef }) {
   const polys = useRef([]);
   const tags = useRef([]);
   const [active, setActive] = useState(-1); // แปลงที่กำลังโชว์ (-1 = ยังไม่เริ่ม)
+  const [cycle, setCycle] = useState(0); // นับรอบวิดีโอ: เปลี่ยนเมื่อวิดีโอวนกลับไปต้นคลิป → แอนิเมชันเริ่มใหม่
+  const svgRef = useRef(null);
 
   // ไล่ทีละแปลง เริ่มหลังเปิดหน้า 0.6 วินาที
   // ข้ามแปลงที่ตอนนั้นอยู่นอกภาพ (เช่น แปลงไกลช่วงต้นคลิปที่กล้องยังต่ำ) จะได้ไม่มีช่วงว่างที่หมุดไปปักนอกจอ
@@ -70,6 +87,7 @@ export default function HeroLandOutline({ videoRef }) {
       const [x, y] = project(homographyAt(videoRef.current?.currentTime || 0), SHAPES[i].tag);
       return x > 40 && x < track.w - 40 && y > 60 && y < track.h - 20;
     };
+    if (MODE !== "one") return undefined;
     let timer = setTimeout(function next() {
       setActive((cur) => {
         for (let k = 1; k <= SHAPES.length; k += 1) {
@@ -88,8 +106,18 @@ export default function HeroLandOutline({ videoRef }) {
     if (!video) return undefined;
     let raf = 0;
     let vfc = 0;
+    let lastT = video.currentTime || 0;
     const draw = () => {
-      const h = homographyAt(video.currentTime || 0);
+      const t = video.currentTime || 0;
+      // วิดีโอวนกลับไปต้นคลิป → เริ่มแอนิเมชันหมุด/เส้นใหม่
+      if (t < lastT - 1) setCycle((c) => c + 1);
+      lastT = t;
+      // fade in ตอนเริ่ม / fade out ตอนจบ (ทั้งวิดีโอและเส้น)
+      const dur = video.duration || track.keys[track.keys.length - 1][0];
+      const fade = Math.max(0, Math.min(1, t / FADE, (dur - t) / FADE));
+      video.style.opacity = fade;
+      if (svgRef.current) svgRef.current.style.opacity = fade;
+      const h = homographyAt(t);
       SHAPES.forEach((s, i) => {
         polys.current[i]?.setAttribute("points", s.pts.map((p) => project(h, p).join(",")).join(" "));
         const [x, y] = project(h, s.tag);
@@ -105,30 +133,37 @@ export default function HeroLandOutline({ videoRef }) {
       const loop = () => { draw(); raf = requestAnimationFrame(loop); };
       raf = requestAnimationFrame(loop);
     }
+    // วิดีโอเริ่มเล่นจริงครั้งแรก (อาจช้ากว่าเปิดหน้าถ้าเน็ตช้า) → นับเวลาแอนิเมชันใหม่ให้ตรงกับวิดีโอ
+    const onFirstPlay = () => setCycle((c) => c + 1);
+    video.addEventListener("playing", onFirstPlay, { once: true });
     draw();
     return () => {
+      video.removeEventListener("playing", onFirstPlay);
       cancelAnimationFrame(raf);
       if (vfc) video.cancelVideoFrameCallback?.(vfc);
       video.removeEventListener("seeked", draw);
+      video.style.opacity = "";
     };
   }, [videoRef]);
 
-  const state = (i) => (i === active ? " is-on" : "");
+  const state = (i) => (MODE === "all" ? " is-all" : i === active ? " is-on" : "");
 
   return (
-    <svg className="hero-land" viewBox={`0 0 ${track.w} ${track.h}`} preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      {SHAPES.map((s, i) => (
-        <polygon key={s.label} ref={(el) => { polys.current[i] = el; }} className={`hero-plot is-${i + 1}${state(i)}`} pathLength="1" />
-      ))}
-      {SHAPES.map((s, i) => (
-        <g key={s.label} ref={(el) => { tags.current[i] = el; }} className={`hero-pin is-${i + 1}${state(i)}`}>
-          <g className="hero-pin-drop">
-            <ellipse className="hero-pin-shadow" rx="9" ry="3.5" />
-            <path className="hero-pin-body" d="M0 0C-4-11-16-19-16-31a16 16 0 1 1 32 0C16-19 4-11 0 0Z" />
-            <text y="-31" textAnchor="middle" dominantBaseline="central">{s.label}</text>
+    <svg ref={svgRef} className="hero-land" viewBox={`0 0 ${track.w} ${track.h}`} preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <g key={cycle}>
+        {SHAPES.map((s, i) => (
+          <polygon key={s.label} ref={(el) => { polys.current[i] = el; }} className={`hero-plot is-${i + 1}${state(i)}`} style={{ "--ld": `${LINE_START + i * LINE_GAP}s` }} pathLength="1" />
+        ))}
+        {SHAPES.map((s, i) => (
+          <g key={s.label} ref={(el) => { tags.current[i] = el; }} className={`hero-pin is-${i + 1}${state(i)}`} style={{ "--pd": `${START + i * PIN_GAP}s` }}>
+            <g className="hero-pin-drop">
+              <ellipse className="hero-pin-shadow" rx="9" ry="3.5" />
+              <path className="hero-pin-body" d="M0 0C-4-11-16-19-16-31a16 16 0 1 1 32 0C16-19 4-11 0 0Z" />
+              <text y="-31" textAnchor="middle" dominantBaseline="central">{s.label}</text>
+            </g>
           </g>
-        </g>
-      ))}
+        ))}
+      </g>
     </svg>
   );
 }

@@ -24,7 +24,7 @@ export const SERVICE_LINKS = [
  * ทุกหน้าที่มีในเว็บ
  * lands = รายการที่ดิน (#/lands/<รหัส> = หน้ารายละเอียด), post = ลงประกาศ, admin = แอดมิน (ไม่อยู่ในเมนู)
  */
-export const PAGES = ["home", "lands", "post", "works", "steps", "callback", "faq", "contact", "admin"];
+export const PAGES = ["home", "lands", "post", "works", "steps", "callback", "faq", "contact", "admin", "login", "profile", "mylistings"];
 
 /** ลิงก์เก่าที่ยังต้องใช้ได้ → หน้าใหม่ */
 export const PAGE_ALIASES = { sell: "callback", calc: "post" }; // คำนวณราคาย้ายไปอยู่ในหน้าลงประกาศ

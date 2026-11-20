@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import FitImage from "../../components/common/FitImage";
 import { isSupabaseConfigured } from "../../lib/supabaseClient";
-import { fetchListing, photoUrl } from "../../lib/listingsApi";
+import { fetchListing, isMyListing, photoUrl } from "../../lib/listingsApi";
 import { useToast } from "../../hooks/useToast";
 import { landTypeLabel } from "../../data/landListingOptions";
 import { formatNumber } from "../../utils/formatNumber";
@@ -40,6 +40,10 @@ export default function LandDetailPage({ param }) {
   const [photoIndex, setPhotoIndex] = useState(0);
   const setIndex = useCallback((v) => setPhotoIndex(v), []);
   const mainPhoto = useRef(null);
+  const [mine, setMine] = useState(false); // ประกาศนี้เป็นของบัญชีที่เข้าระบบอยู่ → โชว์ปุ่มแก้ไข
+  useEffect(() => {
+    if (isSupabaseConfigured && Number.isInteger(id) && id > 0) isMyListing(id).then(setMine);
+  }, [id]);
   useEffect(() => {
     if (!isSupabaseConfigured) return undefined;
     if (!Number.isInteger(id) || id <= 0) {
@@ -158,6 +162,7 @@ export default function LandDetailPage({ param }) {
           <button type="button" className="btn btn-line" onClick={askAboutListing}>สนใจแปลงนี้ ติดต่อทาง LINE</button>
           <button type="button" className="btn btn-ghost" onClick={askForContour}>ขอ Contour ที่ดินแปลงนี้</button>
           <button type="button" className="btn btn-ghost" onClick={copyLink}>คัดลอกลิงก์</button>
+          {mine && listing.status !== "sold" && <a className="btn ld-mine" href={`#/mylistings/${listing.id}`}>✎ แก้ไขประกาศของฉัน</a>}
           <a className="btn btn-ghost ld-actions-next" href="#/lands">ดูแปลงอื่น →</a>
         </div>
         {sold && <p className="ld-sold-note">ที่ดินแปลงนี้ขายแล้ว ทักทีมงานทาง LINE เพื่อหาแปลงใกล้เคียงได้</p>}

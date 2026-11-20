@@ -19,6 +19,18 @@
   --c-line:#06c755;
   --c-line-deep:#04a947;
   --c-gold:#ffd36b;
+  /* สีแบรนด์ภายนอก: ปุ่มเข้าสู่ระบบ (ตามคู่มือแบรนด์ของแต่ละเจ้า ห้ามเปลี่ยน) */
+  --c-brand-google-blue:#4285f4;
+  --c-brand-google-red:#ea4335;
+  --c-brand-google-yellow:#fbbc05;
+  --c-brand-google-green:#34a853;
+  --c-brand-facebook:#1877f2;
+  /* สีแบรนด์ภายนอก: ปุ่มเข้าสู่ระบบ (ตามคู่มือแบรนด์ของแต่ละเจ้า ห้ามเปลี่ยน) */
+  --c-brand-google-blue:#4285f4;
+  --c-brand-google-red:#ea4335;
+  --c-brand-google-yellow:#fbbc05;
+  --c-brand-google-green:#34a853;
+  --c-brand-facebook:#1877f2;
   /* สีแบ่งแปลงที่ดินบนวิดีโอหน้าแรก (สว่าง เห็นชัดบนพื้นเขียว/มืด) */
   --c-plot-1:#ffc21a;
   --c-plot-2:#ff4545;
@@ -30,6 +42,22 @@
   --c-plot-8:#8ee8f0;
   --c-plot-9:#5a6cff;
   --c-plot-10:#d0844c;
+  /* ป้ายระดับบัญชี (หลังบ้าน / โปรไฟล์) */
+  --c-role-dealer:#ff8a00;
+  --c-role-admin:#ff0033;
+  --c-role-agent:#0ea371;
+  --c-role-agent-2:#2fd08f;
+  --c-agent-tint:#dcf7ea;
+  --c-agent-ink:#08704f;
+  --c-role-admin-2:#ff5c7a;
+  --c-role-dealer-1:#ffe680;
+  --c-role-dealer-2:#ffb800;
+  --c-dealer-ink:#7a4300;
+  --c-dealer-gem-1:#ff8fc0;
+  --c-dealer-gem-2:#ff2d7a;
+  --c-dealer-tint:#fff1c7;
+  --c-admin-ink:#be123c;
+  --c-admin-tint:#ffe4ea;
 
   /* ธีมสว่าง */
   --c-l-page:#f6f8fc;
@@ -221,6 +249,7 @@
   --c-d-ink-rgb:141,176,255;
   --c-d-page-rgb:7,13,26;
   --c-gold-rgb:255,211,107;
+  --c-brand-facebook-rgb:24,119,242;
   --c-plot-1-rgb:255,194,26;
   --c-plot-2-rgb:255,69,69;
   --c-plot-3-rgb:47,211,90;
@@ -231,6 +260,10 @@
   --c-plot-8-rgb:142,232,240;
   --c-plot-9-rgb:90,108,255;
   --c-plot-10-rgb:208,132,76;
+  --c-role-dealer-rgb:255,138,0;
+  --c-role-agent-rgb:14,163,113;
+  --c-dealer-gem-rgb:255,45,122;
+  --c-role-admin-rgb:255,0,51;
   --c-l-page-rgb:246,248,252;
   --c-line-rgb:6,199,85;
   --c-navy-rgb:11,42,91;

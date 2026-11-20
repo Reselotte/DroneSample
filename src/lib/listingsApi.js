@@ -155,6 +155,87 @@ export async function submitListing(listing, photos, deedFiles) {
   return data;
 }
 
+// ── ประกาศของฉัน (เจ้าของแก้ไขประกาศตัวเอง) ─────────────────────────────────
+
+/** ฐานข้อมูลยังไม่มีระบบเจ้าของประกาศ (ยังไม่ได้รัน supabase/schema.sql ใหม่) */
+export class OwnerSchemaError extends Error {}
+const isOwnerSchemaMissing = (error) =>
+  error?.code === "42703" || error?.code === "PGRST202" || /user_id|update_my_listing/.test(error?.message || "");
+
+async function myId() {
+  const { data } = await db().auth.getSession();
+  const id = data.session?.user?.id;
+  if (!id) throw new Error("LOGIN_REQUIRED");
+  return id;
+}
+
+const ownerSelect = () => `${publicColumns()},listing_private(seller_name,phone,line_id)`;
+
+/** ประกาศทั้งหมดที่บัญชีนี้ลง (ทุกสถานะ) */
+export async function fetchMyListings() {
+  const uid = await myId();
+  const { data, error } = await run(() => db().from("listings").select(ownerSelect())
+    .eq("user_id", uid).order("created_at", { ascending: false }));
+  if (error) throw isOwnerSchemaMissing(error) ? new OwnerSchemaError(error.message) : error;
+  return data;
+}
+
+/** ประกาศเดียวของบัญชีนี้ (null = ไม่ใช่ของเรา / ไม่พบ) */
+export async function fetchMyListing(id) {
+  const uid = await myId();
+  const { data, error } = await run(() => db().from("listings").select(ownerSelect())
+    .eq("id", id).eq("user_id", uid).maybeSingle());
+  if (error) throw isOwnerSchemaMissing(error) ? new OwnerSchemaError(error.message) : error;
+  return data;
+}
+
+/** ประกาศนี้เป็นของบัญชีที่เข้าระบบอยู่ไหม (ใช้โชว์ปุ่ม "แก้ไขประกาศของฉัน" ในหน้ารายละเอียด) */
+export async function isMyListing(id) {
+  try {
+    const { data } = await db().auth.getSession();
+    const uid = data.session?.user?.id;
+    if (!uid) return false;
+    const res = await db().from("listings").select("id").eq("id", id).eq("user_id", uid).maybeSingle();
+    return Boolean(res.data);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * บันทึกการแก้ไขของเจ้าของ → ประกาศกลับไป "รอตรวจ"
+ * photos = รายการเรียงตามลำดับ: { path } (รูปเดิม) หรือ { file } (รูปใหม่จาก shrinkImage: { name, type, data })
+ */
+export async function updateMyListing(id, listing, photos) {
+  const newFiles = photos.filter((p) => p.file).map((p) => p.file);
+  const folder = `uploads/${crypto.randomUUID()}`;
+  const uploaded = newFiles.length ? await uploadFiles(PHOTO_BUCKET, folder, newFiles) : [];
+  let n = 0;
+  const paths = photos.map((p) => (p.file ? uploaded[n++] : p.path));
+
+  const { data, error } = await db().rpc("update_my_listing", {
+    p_id: id,
+    p_title: listing.title,
+    p_description: listing.description,
+    p_land_type: listing.landType,
+    p_province: listing.province,
+    p_district: listing.district,
+    p_rai: listing.rai,
+    p_ngan: listing.ngan,
+    p_wah: listing.wah,
+    p_price: listing.price,
+    p_price_unit: listing.priceUnit,
+    p_lat: listing.lat,
+    p_lng: listing.lng,
+    p_photos: paths,
+    p_seller_name: listing.sellerName,
+    p_phone: listing.phone,
+    p_line_id: listing.lineId,
+  });
+  if (error) throw isOwnerSchemaMissing(error) ? new OwnerSchemaError(error.message) : toLimitError(error);
+  return data;
+}
+
 // ── แอดมิน ──────────────────────────────────────────────────────────────────
 
 export const signIn = async (email, password) => {
@@ -168,6 +249,30 @@ export async function checkIsAdmin() {
   const { data, error } = await db().rpc("is_admin");
   if (error) throw error;
   return data === true;
+}
+
+/**
+ * ระดับสิทธิ์ของบัญชีที่เข้าระบบอยู่: "guest" | "user" | "staff" | "admin"
+ * ฐานข้อมูลยังไม่มีระบบ role (ยังไม่ได้รัน schema.sql ใหม่) → ใช้ is_admin() แบบเดิมแทน
+ */
+export async function fetchMyRole() {
+  const { data, error } = await db().rpc("my_role");
+  if (!error) return data || "user";
+  if (error.code === "PGRST202" || /my_role/.test(error.message || "")) return (await checkIsAdmin()) ? "admin" : "user";
+  throw error;
+}
+
+/** หลังบ้าน → สมาชิก: รายชื่อบัญชี (แอดมินเท่านั้น) */
+export async function fetchUsers(search = "") {
+  const { data, error } = await db().rpc("admin_list_users", { p_search: search || null });
+  if (error) throw error;
+  return data || [];
+}
+
+/** เปลี่ยนระดับสิทธิ์ของบัญชี (แอดมินเท่านั้น) */
+export async function setUserRole(userId, role) {
+  const { error } = await db().rpc("set_user_role", { p_user: userId, p_role: role });
+  if (error) throw error;
 }
 
 const adminSelect = (join = "listing_private(*)") => `${publicColumns()},${join}`;
@@ -201,7 +306,8 @@ export async function fetchAdminListings(status) {
 }
 
 /** ประกาศเดียว (ใช้โหลดใหม่หลังแก้ไข) */
-async function fetchAdminListing(id) {
+/** ประกาศเดียวพร้อมข้อมูลผู้ขาย (หน้าแก้ไขประกาศ) */
+export async function fetchAdminListing(id) {
   const { data, error } = await run(() => db().from("listings").select(adminSelect()).eq("id", id).single());
   if (error) throw error;
   return (await withDeedLinks([data]))[0];

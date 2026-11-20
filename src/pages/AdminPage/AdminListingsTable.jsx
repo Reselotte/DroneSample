@@ -5,7 +5,7 @@ import { highlightList } from "../../data/landChecklist";
 import { formatArea, formatBaht, formatThaiDate, listingCode } from "../../utils/listingFormat";
 import { PhoneIcon, PinIcon } from "../../components/common/Icons";
 import ListingHighlights from "../LandsPage/ListingHighlights";
-import AdminListingEditor from "./AdminListingEditor";
+import PhotoLightbox from "../../components/common/PhotoLightbox";
 
 const PAGE_SIZE = 10;
 export const statusLabel = (value) => LISTING_STATUSES.find((s) => s.value === value)?.label || value;
@@ -127,18 +127,26 @@ function ListingDetails({ listing }) {
   const seller = listing.listing_private || {};
   const privateNotes = highlightList(seller.checklist);
   const published = listing.status === "approved" || listing.status === "sold";
+  const photos = (listing.photos || []).map(photoUrl);
+  const [viewing, setViewing] = useState(null); // รูปที่เปิดดูเต็มจอ (null = ปิด)
   return (
     <div className="adm-details">
       <div className="adm-details-photos">
-        {(listing.photos || []).map((path) => (
-          <a key={path} href={photoUrl(path)} target="_blank" rel="noopener noreferrer">
-            <img src={photoUrl(path)} alt="" loading="lazy" />
-          </a>
+        {photos.map((src, i) => (
+          <button key={src} type="button" className="adm-photo-btn" aria-label={`ดูรูปที่ ${i + 1}`} onClick={() => setViewing(i)}>
+            <img src={src} alt="" loading="lazy" />
+          </button>
         ))}
         {!listing.photos?.length && <span className="adm-muted">ไม่มีรูป</span>}
       </div>
       <div className="adm-details-main">
-        <b>{listing.title}</b>
+        <div className="adm-details-head">
+          <b>{listing.title}</b>
+          <a className="btn adm-edit-btn" href={`#/admin/edit/${listing.id}`}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4" /></svg>
+            แก้ไขประกาศ
+          </a>
+        </div>
         <span className="adm-muted">
           {landTypeLabel(listing.land_type)} · {formatArea(listing.rai, listing.ngan, listing.wah)} ·{" "}
           {listing.district ? `${listing.district}, ` : ""}{listing.province}
@@ -170,6 +178,9 @@ function ListingDetails({ listing }) {
           </span>
         )}
       </div>
+      {viewing != null && (
+        <PhotoLightbox photos={photos} index={viewing} onIndex={setViewing} onClose={() => setViewing(null)} title={listing.title} />
+      )}
     </div>
   );
 }
@@ -202,11 +213,10 @@ function Pagination({ page, total, count, onPage }) {
 }
 
 /** ตารางประกาศ: เรียงคอลัมน์ได้ · กดแถวเพื่อดูรายละเอียด · ⋮ = คำสั่ง · แบ่งหน้าละ 10 */
-export default function AdminListingsTable({ items, busyId, phoneCounts, onChangeStatus, onSaved, onDelete, onSearchPhone }) {
+export default function AdminListingsTable({ items, busyId, phoneCounts, onChangeStatus, onDelete, onSearchPhone }) {
   const [sort, setSort] = useState({ key: "date", dir: -1 });
   const [page, setPage] = useState(1);
   const [openId, setOpenId] = useState(null);
-  const [editingId, setEditingId] = useState(null);
 
   // รายการเปลี่ยน (เปลี่ยนสถานะ/ค้นหา) → กลับหน้าแรกถ้าหน้าปัจจุบันหายไป
   const pages = Math.max(1, Math.ceil(items.length / PAGE_SIZE));
@@ -252,7 +262,7 @@ export default function AdminListingsTable({ items, busyId, phoneCounts, onChang
             {rows.map((l) => {
               const seller = l.listing_private || {};
               const dup = phoneCounts[seller.phone] || 0;
-              const open = openId === l.id || editingId === l.id;
+              const open = openId === l.id;
               const busy = busyId === l.id;
               return (
                 <Fragment key={l.id}>
@@ -294,10 +304,10 @@ export default function AdminListingsTable({ items, busyId, phoneCounts, onChang
                           ...ACTIONS[l.status].map(([next, label]) => ({
                             label, disabled: busy, tone: next === "approved" ? "ok" : undefined, onClick: () => onChangeStatus(l, next),
                           })),
-                          { label: "แก้ไขประกาศ", onClick: () => { setEditingId(l.id); setOpenId(null); } },
+                          { label: "แก้ไขประกาศ", href: `#/admin/edit/${l.id}` },
                           { label: open ? "ซ่อนรายละเอียด" : "ดูรายละเอียด", onClick: () => setOpenId((id) => (id === l.id ? null : l.id)) },
                           (l.status === "approved" || l.status === "sold") && { label: "ดูหน้าประกาศ ↗", href: `#/lands/${l.id}` },
-                          { label: "ลบถาวร", tone: "danger", disabled: busy, onClick: () => onDelete(l) },
+                          onDelete && { label: "ลบถาวร", tone: "danger", disabled: busy, onClick: () => onDelete(l) },
                         ]}
                       />
                     </td>
@@ -305,15 +315,7 @@ export default function AdminListingsTable({ items, busyId, phoneCounts, onChang
                   {open && (
                     <tr className="adm-row-more">
                       <td colSpan={8}>
-                        {editingId === l.id ? (
-                          <AdminListingEditor
-                            listing={l}
-                            onCancel={() => setEditingId(null)}
-                            onSaved={(updated) => { setEditingId(null); onSaved(updated); }}
-                          />
-                        ) : (
-                          <ListingDetails listing={l} />
-                        )}
+                        <ListingDetails listing={l} />
                       </td>
                     </tr>
                   )}

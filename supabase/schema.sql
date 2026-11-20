@@ -3,27 +3,187 @@
 -- วิธีใช้: เปิด Supabase → SQL Editor → วางไฟล์นี้ทั้งไฟล์ → Run (รันซ้ำได้ ไม่พัง)
 --
 -- หลักการ
---  • คนทั่วไปลงประกาศได้โดยไม่ต้องล็อกอิน ผ่านฟังก์ชัน submit_listing() เท่านั้น
+--  • ลงประกาศต้องเข้าสู่ระบบ ผ่านฟังก์ชัน submit_listing() เท่านั้น (บันทึกบัญชีเจ้าของไว้ใน listings.user_id)
+--  • เจ้าของแก้ประกาศของตัวเองได้ผ่าน update_my_listing() (แก้แล้วกลับไปรอตรวจ) คนอื่นแก้ไม่ได้
 --    ประกาศใหม่จะเป็นสถานะ 'pending' เสมอ จนกว่าแอดมินจะอนุมัติ
 --  • หน้าเว็บเห็นเฉพาะประกาศที่ 'approved' หรือ 'sold'
 --  • ข้อมูลผู้ขาย (ชื่อ เบอร์ LINE เลขโฉนด สำเนาโฉนด) อยู่ในตาราง listing_private
---    มีแต่แอดมินที่อ่านได้ ไม่ขึ้นหน้าเว็บ (ผู้ซื้อติดต่อผ่าน LINE ทีมงาน)
+--    มีแต่ทีมงาน (staff / admin) ที่อ่านได้ ไม่ขึ้นหน้าเว็บ (ผู้ซื้อติดต่อผ่าน LINE ทีมงาน)
+--  • ทุกบัญชีมีระดับสิทธิ์ใน profiles.role: user (ผู้ใช้งานทั่วไป) / agent (นายหน้า) / dealer (ดีลเลอร์) / staff (ทีมงาน) / admin (ผู้ดูแลระบบ)
 -- ════════════════════════════════════════════════════════════════════════════
   
--- ── แอดมิน ──────────────────────────────────────────────────────────────────
+-- ── บัญชีผู้ใช้ + ระดับสิทธิ์ (role) ─────────────────────────────────────────
+-- ทุกบัญชีมี 1 แถวใน profiles (สร้างให้อัตโนมัติตอนสมัคร)
+--   user  = ผู้ใช้งานทั่วไป (ลงประกาศ / ขอให้ติดต่อกลับ)
+--   agent = นายหน้า (สิทธิ์เท่าผู้ใช้งานทั่วไป มีป้ายบอกว่าเป็นนายหน้า)
+--   dealer = ดีลเลอร์ (สิทธิ์เท่าผู้ใช้งานทั่วไป มีป้าย + เพชรที่รูปโปรไฟล์)
+--   staff = ทีมงาน / ฝ่ายขาย: เข้าหลังบ้าน ดู-อนุมัติ-แก้ไขประกาศ เห็นข้อมูลผู้ขาย (ลบไม่ได้)
+--   admin = ผู้ดูแลระบบ: ทำได้ทุกอย่าง + ลบประกาศ + เปลี่ยนระดับสิทธิ์ของบัญชีอื่น
+-- แอดมินเดิมในตาราง admins ถูกย้ายมาเป็น role 'admin' ให้อัตโนมัติ (ตาราง admins เก็บไว้เฉย ๆ ไม่ได้ใช้แล้ว)
 create table if not exists public.admins (
   user_id uuid primary key references auth.users on delete cascade
 );
-alter table public.admins enable row level security; -- ไม่มี policy = ไม่มีใครอ่านผ่าน API ได้
+alter table public.admins enable row level security;
 
+create table if not exists public.profiles (
+  id         uuid primary key references auth.users on delete cascade,
+  role       text not null default 'user' check (role in ('user', 'agent', 'dealer', 'staff', 'admin')),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+alter table public.profiles enable row level security;
+-- เพิ่มระดับ agent / dealer ให้ตารางที่สร้างไว้ก่อนแล้ว
+alter table public.profiles drop constraint if exists profiles_role_check;
+update public.profiles set role = 'dealer' where role = 'vip'; -- เดิมชื่อ VIP → เปลี่ยนเป็นดีลเลอร์
+alter table public.profiles add constraint profiles_role_check check (role in ('user', 'agent', 'dealer', 'staff', 'admin'));
+-- ล้างระบบกรอบรูปโปรไฟล์ที่เคยทดลอง (ยกเลิกแล้ว)
+drop function if exists public.set_my_frame(text);
+drop trigger if exists profiles_sync_role on public.profiles;
+alter table public.profiles drop column if exists avatar_frame;
+
+-- สมัครใหม่ → สร้างแถวใน profiles เป็น 'user'
+create or replace function public.handle_new_user()
+returns trigger
+language plpgsql security definer set search_path = public
+as $$
+begin
+  insert into public.profiles (id) values (new.id) on conflict (id) do nothing;
+  return new;
+end;
+$$;
+drop trigger if exists on_auth_user_created on auth.users;
+create trigger on_auth_user_created after insert on auth.users
+  for each row execute function public.handle_new_user();
+
+-- บัญชีที่มีอยู่ก่อนแล้ว → เติมแถวให้ครบ + ย้ายแอดมินเดิม
+insert into public.profiles (id) select id from auth.users on conflict (id) do nothing;
+update public.profiles set role = 'admin'
+  where id in (select user_id from public.admins) and role <> 'admin';
+
+-- ระดับสิทธิ์ของคนที่เรียก ('guest' = ยังไม่เข้าสู่ระบบ)
+create or replace function public.my_role()
+returns text
+language sql stable security definer set search_path = public
+as $$
+  select coalesce((select role from public.profiles where id = auth.uid()),
+                  case when auth.uid() is null then 'guest' else 'user' end);
+$$;
+
+-- เข้าหลังบ้านได้ (staff หรือ admin)
+create or replace function public.is_staff()
+returns boolean
+language sql stable security definer set search_path = public
+as $$
+  select exists (select 1 from public.profiles where id = auth.uid() and role in ('staff', 'admin'));
+$$;
+
+-- ผู้ดูแลระบบเท่านั้น
 create or replace function public.is_admin()
 returns boolean
 language sql stable security definer set search_path = public
 as $$
-  select exists (select 1 from public.admins where user_id = auth.uid());
+  select exists (select 1 from public.profiles where id = auth.uid() and role = 'admin');
 $$;
+
+revoke all on function public.my_role() from public;
+revoke all on function public.is_staff() from public;
 revoke all on function public.is_admin() from public;
+grant execute on function public.my_role() to anon, authenticated;
+grant execute on function public.is_staff() to anon, authenticated;
 grant execute on function public.is_admin() to anon, authenticated;
+
+-- ป้ายระดับสิทธิ์ในหน้า Supabase
+--  1) คัดลอก role ไปไว้ที่ app_metadata ของบัญชี → Authentication → Users → กดที่บัญชี → เห็น "role": "admin"
+--     (ผู้ใช้แก้ app_metadata เองไม่ได้ จึงเชื่อถือได้)
+create or replace function public.sync_role_to_auth()
+returns trigger
+language plpgsql security definer set search_path = public
+as $$
+begin
+  update auth.users
+     set raw_app_meta_data = coalesce(raw_app_meta_data, '{}'::jsonb) || jsonb_build_object('role', new.role)
+   where id = new.id;
+  return new;
+end;
+$$;
+drop trigger if exists profiles_sync_role on public.profiles;
+create trigger profiles_sync_role after insert or update of role on public.profiles
+  for each row execute function public.sync_role_to_auth();
+update auth.users u
+   set raw_app_meta_data = (coalesce(u.raw_app_meta_data, '{}'::jsonb) - 'frame') || jsonb_build_object('role', p.role)
+  from public.profiles p
+ where p.id = u.id
+   and ((u.raw_app_meta_data->>'role') is distinct from p.role or u.raw_app_meta_data ? 'frame');
+
+--  2) ตารางดูรวม อีเมล + ชื่อ + ระดับสิทธิ์ → Table Editor → เลือก schema "admin_views" → users_with_roles
+--     อยู่นอก schema public จึงไม่เปิดให้หน้าเว็บ/API อ่านได้ (เห็นเฉพาะในหน้า Supabase)
+create schema if not exists admin_views;
+revoke all on schema admin_views from anon, authenticated;
+create or replace view admin_views.users_with_roles as
+  select coalesce(p.role, 'user') as role,
+         u.email,
+         coalesce(u.raw_user_meta_data->>'display_name', u.raw_user_meta_data->>'full_name', u.raw_user_meta_data->>'name', '') as name,
+         coalesce(nullif(u.phone, ''), u.raw_user_meta_data->>'phone', '') as phone,
+         coalesce(u.raw_app_meta_data->>'provider', '') as provider,
+         u.created_at,
+         u.last_sign_in_at,
+         u.id
+    from auth.users u
+    left join public.profiles p on p.id = u.id
+   order by (p.role = 'admin') desc, (p.role = 'staff') desc, (p.role = 'dealer') desc, (p.role = 'agent') desc, u.created_at desc;
+revoke all on admin_views.users_with_roles from anon, authenticated;
+
+-- อ่าน profiles: ของตัวเอง หรือแอดมินอ่านได้ทั้งหมด · แก้ role ผ่าน set_user_role() เท่านั้น
+drop policy if exists "read own profile" on public.profiles;
+create policy "read own profile" on public.profiles
+  for select to authenticated
+  using (id = auth.uid() or public.is_admin());
+
+-- รายชื่อสมาชิก (หน้าแอดมิน → สมาชิก) — แอดมินเท่านั้น
+create or replace function public.admin_list_users(p_search text default null)
+returns table (
+  id uuid, email text, name text, phone text, provider text, role text,
+  created_at timestamptz, last_sign_in_at timestamptz
+)
+language plpgsql stable security definer set search_path = public
+as $$
+begin
+  if not public.is_admin() then raise exception 'NOT_ADMIN' using errcode = '42501'; end if;
+  return query
+    select u.id, u.email::text,
+           coalesce(u.raw_user_meta_data->>'display_name', u.raw_user_meta_data->>'full_name', u.raw_user_meta_data->>'name', '')::text,
+           coalesce(nullif(u.phone, ''), u.raw_user_meta_data->>'phone', '')::text,
+           coalesce(u.raw_app_meta_data->>'provider', '')::text,
+           coalesce(p.role, 'user'),
+           u.created_at, u.last_sign_in_at
+    from auth.users u
+    left join public.profiles p on p.id = u.id
+    where p_search is null or p_search = ''
+       or u.email ilike '%' || p_search || '%'
+       or coalesce(u.raw_user_meta_data->>'display_name', u.raw_user_meta_data->>'full_name', '') ilike '%' || p_search || '%'
+       or coalesce(u.raw_user_meta_data->>'phone', u.phone, '') ilike '%' || p_search || '%'
+    order by (p.role = 'admin') desc, (p.role = 'staff') desc, (p.role = 'dealer') desc, (p.role = 'agent') desc, u.created_at desc
+    limit 500;
+end;
+$$;
+revoke all on function public.admin_list_users(text) from public;
+grant execute on function public.admin_list_users(text) to authenticated;
+
+-- เปลี่ยนระดับสิทธิ์ — แอดมินเท่านั้น, ลดสิทธิ์ตัวเองไม่ได้ (กันหลังบ้านไม่มีแอดมินเหลือ)
+create or replace function public.set_user_role(p_user uuid, p_role text)
+returns void
+language plpgsql security definer set search_path = public
+as $$
+begin
+  if not public.is_admin() then raise exception 'NOT_ADMIN' using errcode = '42501'; end if;
+  if p_role not in ('user', 'agent', 'dealer', 'staff', 'admin') then raise exception 'BAD_ROLE' using errcode = '22023'; end if;
+  if p_user = auth.uid() and p_role <> 'admin' then raise exception 'SELF_DEMOTE' using errcode = '42501'; end if;
+  insert into public.profiles (id, role) values (p_user, p_role)
+    on conflict (id) do update set role = excluded.role, updated_at = now();
+end;
+$$;
+revoke all on function public.set_user_role(uuid, text) from public;
+grant execute on function public.set_user_role(uuid, text) to authenticated;
 
 -- ── ประกาศ (ข้อมูลที่แสดงบนเว็บ) ────────────────────────────────────────────
 create table if not exists public.listings (
@@ -72,12 +232,24 @@ alter table public.listings enable row level security;
 drop policy if exists "public reads published listings" on public.listings;
 create policy "public reads published listings" on public.listings
   for select to anon, authenticated
-  using (status in ('approved', 'sold') or public.is_admin());
+  using (status in ('approved', 'sold') or public.is_staff());
+
+-- เจ้าของประกาศ (บัญชีที่ลงประกาศ) — ประกาศเก่าก่อนมีระบบสมาชิกจะเป็นค่าว่าง
+alter table public.listings add column if not exists user_id uuid references auth.users on delete set null;
+create index if not exists listings_user_idx on public.listings (user_id, created_at desc);
+
+-- เจ้าของเห็นประกาศของตัวเองทุกสถานะ (หน้า "ประกาศของฉัน")
+drop policy if exists "owners read own listings" on public.listings;
+create policy "owners read own listings" on public.listings
+  for select to authenticated
+  using (user_id = auth.uid());
+-- เจ้าของแก้ไขผ่านฟังก์ชัน update_my_listing() เท่านั้น (ไม่มี policy update ให้เจ้าของโดยตรง → แก้สถานะเองไม่ได้)
 
 drop policy if exists "admins update listings" on public.listings;
-create policy "admins update listings" on public.listings
+drop policy if exists "staff update listings" on public.listings;
+create policy "staff update listings" on public.listings
   for update to authenticated
-  using (public.is_admin()) with check (public.is_admin());
+  using (public.is_staff()) with check (public.is_staff());
 
 drop policy if exists "admins delete listings" on public.listings;
 create policy "admins delete listings" on public.listings
@@ -115,9 +287,16 @@ alter table public.listing_private add constraint listing_private_checklist_chec
 alter table public.listing_private enable row level security;
 
 drop policy if exists "admins manage private info" on public.listing_private;
-create policy "admins manage private info" on public.listing_private
+drop policy if exists "staff manage private info" on public.listing_private;
+create policy "staff manage private info" on public.listing_private
   for all to authenticated
-  using (public.is_admin()) with check (public.is_admin());
+  using (public.is_staff()) with check (public.is_staff());
+
+-- เจ้าของอ่านข้อมูลผู้ขายของประกาศตัวเองได้ (ไว้แสดงในหน้าแก้ไข)
+drop policy if exists "owners read own private info" on public.listing_private;
+create policy "owners read own private info" on public.listing_private
+  for select to authenticated
+  using (exists (select 1 from public.listings l where l.id = listing_id and l.user_id = auth.uid()));
 
 -- ── กันสแปม: จำกัดจำนวนประกาศ / ไฟล์ ───────────────────────────────────────
 --  • เบอร์โทรเดียวกัน ลงได้ไม่เกิน 3 ประกาศ ใน 24 ชั่วโมง          → 'RATE_PHONE'
@@ -178,6 +357,11 @@ declare
 begin
   -- กันสแปม: เช็กจำนวนอีกรอบตอนบันทึกจริง (ล็อกตามเบอร์ กันยิงพร้อมกันหลายครั้ง)
   -- ไม่เช็กโควตาไฟล์ซ้ำ เพราะรูปของประกาศนี้อัปโหลดไปแล้ว
+  -- ต้องเข้าสู่ระบบก่อนลงประกาศ (บังคับที่ฐานข้อมูล ไม่ใช่แค่หน้าเว็บ)
+  if auth.uid() is null then
+    raise exception 'LOGIN_REQUIRED' using errcode = '42501';
+  end if;
+
   perform pg_advisory_xact_lock(hashtext('submit_listing:' || coalesce(p_phone, '')));
   quota_err := public.listing_quota_error(p_phone, false);
   if quota_err is not null then
@@ -193,10 +377,10 @@ begin
   end if;
 
   insert into public.listings
-    (title, description, land_type, province, district, rai, ngan, wah,
+    (user_id, title, description, land_type, province, district, rai, ngan, wah,
      price, price_unit, lat, lng, photos)
   values
-    (trim(p_title), trim(coalesce(p_description, '')), p_land_type, trim(p_province),
+    (auth.uid(), trim(p_title), trim(coalesce(p_description, '')), p_land_type, trim(p_province),
      trim(coalesce(p_district, '')), coalesce(p_rai, 0), coalesce(p_ngan, 0), coalesce(p_wah, 0),
      p_price, p_price_unit, p_lat, p_lng, p_photos)
   returning id into new_id; -- status = 'pending' จากค่าเริ่มต้นเสมอ
@@ -214,6 +398,62 @@ revoke all on function public.submit_listing(
 grant execute on function public.submit_listing(
   text, text, text, text, text, numeric, numeric, numeric, numeric, text,
   double precision, double precision, text[], text, text, text, text, text[]) to anon, authenticated;
+
+-- ── เจ้าของแก้ไขประกาศของตัวเอง ─────────────────────────────────────────────
+-- • แก้ได้เฉพาะประกาศที่บัญชีนี้ลงเอง (คนอื่นแก้ไม่ได้ แม้รู้รหัสประกาศ) · ทีมงานแก้ได้ทุกประกาศทางหลังบ้านเหมือนเดิม
+-- • แก้แล้วประกาศกลับไป "รอตรวจ" (หายจากหน้าเว็บจนทีมงานอนุมัติอีกครั้ง) · ประกาศที่ขายแล้วแก้ไม่ได้
+-- • จุดเด่น (highlights) และข้อมูลภายในเป็นของทีมงาน เจ้าของแก้ไม่ได้
+create or replace function public.update_my_listing(
+  p_id bigint, p_title text, p_description text, p_land_type text, p_province text, p_district text,
+  p_rai numeric, p_ngan numeric, p_wah numeric, p_price numeric, p_price_unit text,
+  p_lat double precision, p_lng double precision, p_photos text[],
+  p_seller_name text, p_phone text, p_line_id text
+)
+returns text
+language plpgsql security definer set search_path = public
+as $$
+declare
+  cur_owner uuid;
+  cur_status text;
+  path_re constant text := '^uploads/[0-9a-f-]{36}/[A-Za-z0-9._-]+$';
+begin
+  if auth.uid() is null then
+    raise exception 'LOGIN_REQUIRED' using errcode = '42501';
+  end if;
+  select user_id, status into cur_owner, cur_status from public.listings where id = p_id for update;
+  if not found or cur_owner is distinct from auth.uid() then
+    raise exception 'NOT_OWNER' using errcode = '42501';
+  end if;
+  if cur_status = 'sold' then
+    raise exception 'SOLD_LOCKED';
+  end if;
+  if cardinality(coalesce(p_photos, '{}')) < 1 then
+    raise exception 'ต้องมีรูปที่ดินอย่างน้อย 1 รูป';
+  end if;
+  if exists (select 1 from unnest(p_photos) as p where p !~ path_re) then
+    raise exception 'invalid file path';
+  end if;
+
+  update public.listings set
+    title = trim(p_title), description = trim(coalesce(p_description, '')), land_type = p_land_type,
+    province = trim(p_province), district = trim(coalesce(p_district, '')),
+    rai = coalesce(p_rai, 0), ngan = coalesce(p_ngan, 0), wah = coalesce(p_wah, 0),
+    price = p_price, price_unit = p_price_unit, lat = p_lat, lng = p_lng, photos = p_photos,
+    status = 'pending'
+  where id = p_id;
+
+  update public.listing_private set
+    seller_name = trim(p_seller_name), phone = p_phone, line_id = trim(coalesce(p_line_id, ''))
+  where listing_id = p_id;
+
+  return 'pending';
+end $$;
+revoke all on function public.update_my_listing(
+  bigint, text, text, text, text, text, numeric, numeric, numeric, numeric, text,
+  double precision, double precision, text[], text, text, text) from public;
+grant execute on function public.update_my_listing(
+  bigint, text, text, text, text, text, numeric, numeric, numeric, numeric, text,
+  double precision, double precision, text[], text, text, text) to authenticated;
 
 -- ── ที่เก็บไฟล์ ─────────────────────────────────────────────────────────────
 -- listing-photos : รูปที่ดิน (สาธารณะ เปิดดูได้จากลิงก์)
@@ -241,19 +481,43 @@ drop policy if exists "admins read deed files" on storage.objects;
 drop policy if exists "admins read listing files" on storage.objects;
 create policy "admins read listing files" on storage.objects
   for select to authenticated
-  using (bucket_id in ('listing-photos', 'deed-files') and public.is_admin());
+  using (bucket_id in ('listing-photos', 'deed-files') and public.is_staff());
 
 drop policy if exists "admins delete listing files" on storage.objects;
 create policy "admins delete listing files" on storage.objects
   for delete to authenticated
   using (bucket_id in ('listing-photos', 'deed-files') and public.is_admin());
 
+-- avatars : รูปโปรไฟล์ (สาธารณะ) — แต่ละคนอัปโหลด/ลบได้เฉพาะในโฟลเดอร์ของตัวเอง avatars/<user id>/...
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('avatars', 'avatars', true, 2097152, array['image/jpeg', 'image/png', 'image/webp'])
+on conflict (id) do update
+  set public = excluded.public,
+      file_size_limit = excluded.file_size_limit,
+      allowed_mime_types = excluded.allowed_mime_types;
+
+drop policy if exists "members upload own avatar" on storage.objects;
+create policy "members upload own avatar" on storage.objects
+  for insert to authenticated
+  with check (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+
+drop policy if exists "members read own avatar" on storage.objects;
+create policy "members read own avatar" on storage.objects
+  for select to authenticated
+  using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+
+drop policy if exists "members delete own avatar" on storage.objects;
+create policy "members delete own avatar" on storage.objects
+  for delete to authenticated
+  using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+
 -- ════════════════════════════════════════════════════════════════════════════
--- เพิ่มแอดมิน (ทำหลังรันไฟล์นี้):
+-- เพิ่มแอดมินคนแรก (ทำหลังรันไฟล์นี้):
 --  1) Authentication → Users → Add user  (ใส่อีเมล + รหัสผ่าน, ติ๊ก Auto Confirm)
+--     หรือให้คนนั้นเข้าสู่ระบบด้วย Google ที่หน้าเว็บก่อน 1 ครั้ง
 --  2) รันคำสั่งนี้ โดยเปลี่ยนอีเมลเป็นของแอดมิน
---     insert into public.admins (user_id)
---     select id from auth.users where email = 'admin@example.com'
---     on conflict do nothing;
+--     update public.profiles set role = 'admin'
+--     where id = (select id from auth.users where email = 'admin@example.com');
+--  หลังจากนั้นแอดมินเปลี่ยนระดับสิทธิ์คนอื่นได้เองในหน้าเว็บ: หลังบ้าน → สมาชิก
 -- ════════════════════════════════════════════════════════════════════════════
 

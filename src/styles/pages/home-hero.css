@@ -146,10 +146,21 @@ section[data-page]:not([hidden]):not(.hero){animation:fadeUp .55s both}
 .hero-pin-body{fill:rgb(var(--pc));stroke:var(--c-white);stroke-width:2.5;filter:drop-shadow(0 4px 8px rgba(var(--c-black-rgb),.45))}
 .hero-pin-shadow{fill:rgba(var(--c-black-rgb),.4)}
 .hero-pin text{fill:var(--c-navy);font-size:17px;font-weight:800;font-family:inherit}
+/* โหมด "all": หมุดปักเรียงทีละแปลง (--pd) → เส้นวาดตามกันทีละแปลง (--ld) → พื้นสีจาง ๆ ขึ้น แล้วค้างไว้ (หน่วงเวลาตั้งใน JSX) */
+.hero-plot.is-all{animation:heroplotall 1.6s var(--ld,0s) linear forwards}
+.hero-pin.is-all{opacity:1}
+.hero-pin.is-all .hero-pin-drop{animation:heropindrop .55s var(--pd,0s) cubic-bezier(.3,1.5,.5,1) both}
+@keyframes heroplotall{
+  0%{opacity:1;stroke-dashoffset:1;fill:rgba(var(--pc),0)}
+  70%{opacity:1;stroke-dashoffset:0;fill:rgba(var(--pc),0)}
+  100%{opacity:1;stroke-dashoffset:0;fill:rgba(var(--pc),.16)}
+}
 /* ปิดแอนิเมชันในเครื่อง: ยังไล่ทีละแปลง แต่ไม่มีการเคลื่อนไหว (ไม่มีหมุดตก/เส้นวิ่ง) แค่ค่อย ๆ ปรากฏแล้วจางหาย */
 @media(prefers-reduced-motion:reduce){
   .hero-plot.is-on{stroke-dashoffset:0;fill:rgba(var(--pc),.16);animation:heropinfade2 var(--step) linear forwards}
   .hero-pin.is-on{animation:heropinfade2 var(--step) linear forwards}
   .hero-pin.is-on .hero-pin-drop{animation:none}
+  .hero-plot.is-all{animation:none;opacity:1;stroke-dashoffset:0;fill:rgba(var(--pc),.16)}
+  .hero-pin.is-all .hero-pin-drop{animation:none}
 }
 @keyframes heropinfade2{0%{opacity:0}12%,85%{opacity:1}100%{opacity:0}}

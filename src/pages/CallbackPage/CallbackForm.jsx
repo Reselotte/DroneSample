@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useAuth from "../../hooks/useAuth";
+import { fillContact } from "../../lib/auth";
 import siteConfig from "../../config/siteConfig";
 import useDeedFiles from "../../hooks/useDeedFiles";
 import DeedUploader from "./DeedUploader";
@@ -28,7 +30,12 @@ const EMPTY_VALUES = {
  * ตรวจข้อมูล แล้วส่งไปที่ siteConfig.formEndpoint
  */
 export default function CallbackForm({ hidden, onSent }) {
+  const { user } = useAuth();
   const [values, setValues] = useState(EMPTY_VALUES);
+  // เข้าสู่ระบบแล้ว → กรอกชื่อ เบอร์ LINE จากบัญชีให้ (เฉพาะช่องที่ยังว่าง แก้ต่อได้)
+  useEffect(() => {
+    if (user) setValues((v) => fillContact(v, user, { name: "name", phone: "phone", lineId: "lineId" }, formatThaiPhone));
+  }, [user]);
   const [errors, setErrors] = useState({});
   const [sending, setSending] = useState(false);
   const deed = useDeedFiles();

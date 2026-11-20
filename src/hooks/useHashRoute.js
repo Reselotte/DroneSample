@@ -5,9 +5,11 @@ import { PAGE_ALIASES, PAGES } from "../data/navigationMenu";
  * อ่านหน้าจาก URL แบบ hash
  *  index.html#/works     → { page: "works", param: "" }
  *  index.html#/lands/12  → { page: "lands", param: "12" }
+ *  index.html#/admin/edit/12 → { page: "admin", param: "edit/12" } (ส่วนที่เหลือทั้งหมดเป็น param)
  */
 function readRouteFromHash() {
-  const [first = "", second = ""] = window.location.hash.replace(/^#\/?/, "").split("/");
+  const [first = "", ...rest] = window.location.hash.replace(/^#\/?/, "").split("/");
+  const second = rest.join("/");
   let page = first || "home";
   page = PAGE_ALIASES[page] || page; // ลิงก์เก่า เช่น #/sell → #/callback
   if (!PAGES.includes(page)) return { page: "home", param: "" };

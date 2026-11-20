@@ -40,7 +40,7 @@ html[data-text-size] .term-pop b{font-size:calc(15px * var(--ts))}
 .copy{font-size:13.5px}
 .side-tab-short{font-size:12.5px}
 
-/* ── ปุ่มปรับขนาด (ข้างปุ่มธีม) ── */
+/* ── ปุ่มปรับขนาด (ตำแหน่งจริงอยู่ใน auth.css: ลอยมุมขวาล่าง) ── */
 header .wrap{padding-right:calc(max(16px,env(safe-area-inset-right)) + 108px)}
 .text-size-toggle{position:fixed;top:10px;right:calc(max(16px,env(safe-area-inset-right)) + 52px);z-index:25;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:44px;height:44px;min-height:44px;padding:0;
@@ -88,12 +88,7 @@ html[data-theme="dark"] .text-size-toggle:hover{background:var(--c-x-blue-16)}
 .text-size-toggle:focus-visible .tst-glyph{animation:tst-pop .45s var(--tst-ease)}
 @keyframes tst-pop{0%{transform:scale(1)}40%{transform:scale(1.22) rotate(-6deg)}100%{transform:none}}
 
-/* ดันปุ่ม "ติดต่อเรา": แถบเมนูเว้นที่เพิ่มตามที่ปุ่มยืด (เลื่อนพร้อมกันด้วยจังหวะเดียวกัน) */
-header .wrap{transition:padding-right .5s var(--tst-ease)}
-@media(min-width:1200px){
-  body:has(.text-size-toggle:hover) header .wrap,
-  body:has(.text-size-toggle:focus-visible) header .wrap{padding-right:calc(max(16px,env(safe-area-inset-right)) + 108px + var(--tst-open))}
-}
+/* (เดิมดันปุ่ม "ติดต่อเรา" ตอนปุ่มยืด — ปุ่มย้ายไปลอยมุมขวาล่างแล้ว ไม่ต้องดัน: ดู auth.css) */
 
 @media(hover:none){
   .text-size-toggle:hover .tst-label{max-width:0;padding-left:0}

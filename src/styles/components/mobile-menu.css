@@ -1,5 +1,5 @@
 /* ── มือถือ: ปุ่ม ☰ มุมขวาบน + แผงเมนูเลื่อนออกมาจากขอบขวา (รายการเรียงลงมา ทยอยเด้งเข้ามา) ──
- * ปุ่มลอยมุมขวาบนเรียงจากขวา: ☰ → ปุ่มธีม → ปุ่ม ก (ห่างกันช่องละ 52px)
+ * ปุ่มลอยมุมขวาบนเรียงจากขวา: ☰ → ปุ่มธีม → ปุ่มเข้าสู่ระบบ (ห่างกันช่องละ 52px) · ปุ่ม ก ลอยมุมขวาล่าง
  * ไฟล์นี้โหลดหลัง text-size.css จึงทับตำแหน่งปุ่มลอยของจอมือถือได้ */
 .nav-burger,.nav-drawer,.nav-backdrop{display:none}
 @media(max-width:899px){
@@ -12,7 +12,8 @@
   .nav-burger:focus-visible{outline:3px solid var(--c-sky);outline-offset:2px}
 
   .theme-toggle{right:calc(max(16px,env(safe-area-inset-right)) + 52px)}
-  .text-size-toggle{right:calc(max(16px,env(safe-area-inset-right)) + 104px)}
+  .auth-btn,.auth-box{right:calc(max(16px,env(safe-area-inset-right)) + 104px)}
+  .auth-box .auth-btn{right:auto}
   header .pill{margin-right:172px}
   #nav{display:none!important} /* มือถือใช้แผงด้านข้างแทน */
 
@@ -30,6 +31,7 @@
   .nav-drawer a.on{background:var(--accent-grad,var(--c-grad-primary-l));color:var(--c-white);font-weight:700}
   .nav-drawer a.is-contact{margin-top:8px;border:1px solid var(--line)}
   .nav-drawer a.is-contact.on{border-color:transparent}
+  .nav-drawer a.is-signout{color:var(--c-red-ink)}
 
   /* ท้ายแผง: บริการ + ติดต่อ (ตัวเล็ก สีจาง) */
   .nav-drawer-extra{display:flex;flex-direction:column;gap:14px;margin-top:auto;padding:18px 8px 0;border-top:1px solid var(--line);opacity:0;transition:opacity .4s ease}
@@ -42,7 +44,8 @@
 }
 @media(max-width:360px){
   .theme-toggle{right:calc(max(16px,env(safe-area-inset-right)) + 48px)}
-  .text-size-toggle{right:calc(max(16px,env(safe-area-inset-right)) + 94px)}
+  .auth-btn,.auth-box{right:calc(max(16px,env(safe-area-inset-right)) + 94px)}
+  .auth-box .auth-btn{right:auto}
 }
 /* จอแคบมาก: แถวบนไม่พอวาง "ติดต่อเรา" → ซ่อนไว้ (กดจากแผงเมนูแทน) */
 @media(max-width:399px){
@@ -64,3 +67,4 @@ html[data-theme="dark"] .nav-drawer a:hover{background:rgba(var(--c-white-rgb),.
 html[data-theme="dark"] .nav-drawer a.on{color:var(--c-white)}
 html[data-theme="dark"] .nav-drawer a.is-contact{border-color:var(--c-d-border)}
 html[data-theme="dark"] .nav-backdrop{background:rgba(var(--c-black-rgb),.55)}
+html[data-theme="dark"] .nav-drawer a.is-signout{color:var(--c-x-red-77)}

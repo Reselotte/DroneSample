@@ -4,6 +4,8 @@ import PhotoSlots, { missingRequired, orderedPhotos } from "./PhotoSlots";
 import LineLink from "../../components/common/LineLink";
 import useFileAttachments from "../../hooks/useFileAttachments";
 import useThaiAddress from "../../hooks/useThaiAddress";
+import useAuth from "../../hooks/useAuth";
+import { fillContact } from "../../lib/auth";
 import { isSupabaseConfigured } from "../../lib/supabaseClient";
 import { ListingLimitError, submitListing } from "../../lib/listingsApi";
 import { LAND_TYPES, PRICE_UNITS, PROVINCES } from "../../data/landListingOptions";
@@ -129,7 +131,12 @@ function validate(values, photoSlots) {
 
 /** หน้าลงประกาศขายที่ดิน (#/post) — ใครก็ลงได้ ประกาศจะขึ้นเว็บเมื่อทีมงานอนุมัติ */
 export default function PostListingPage() {
+  const { user } = useAuth();
   const [values, setValues] = useState(EMPTY_VALUES);
+  // เข้าสู่ระบบแล้ว → กรอกชื่อ เบอร์ LINE ผู้ขายจากบัญชีให้ (เฉพาะช่องที่ยังว่าง แก้ต่อได้)
+  useEffect(() => {
+    if (user) setValues((v) => fillContact(v, user, { sellerName: "name", phone: "phone", lineId: "lineId" }, formatThaiPhone));
+  }, [user]);
   const [errors, setErrors] = useState({});
   const [sending, setSending] = useState(false);
   const [sentId, setSentId] = useState(null);
@@ -271,6 +278,7 @@ export default function PostListingPage() {
             {typeof sentId === "number" && <p>รหัสประกาศ <b>{listingCode(sentId)}</b></p>}
             <p>ทีมงานจะตรวจสอบข้อมูลก่อนเผยแพร่ และอาจโทรติดต่อเพื่อยืนยันข้อมูล ภายใน 1–2 วันทำการ</p>
             <div className="post-ok-act">
+              <a className="btn btn-ghost" href="#/mylistings">ดูประกาศของฉัน</a>
               <a className="btn btn-ghost" href="#/lands">ดูที่ดินประกาศขาย</a>
               <LineLink>สอบถามทีมงานทาง LINE</LineLink>
             </div>

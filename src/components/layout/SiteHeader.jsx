@@ -6,6 +6,14 @@ import LineLink from "../common/LineLink";
 import useMediaQuery from "../../hooks/useMediaQuery";
 import useNavMagnify from "../../hooks/useNavMagnify";
 import useHideOnScrollDown from "../../hooks/useHideOnScrollDown";
+import { signOutUser } from "../../lib/auth";
+
+/** หน้าตั้งค่าบัญชี (#/profile) บนมือถือ: แผงเมนูเปลี่ยนเป็นเมนูตั้งค่าแทนเมนูหลักของเว็บ */
+const SETTINGS_ITEMS = [
+  { key: "", href: "#/profile", label: "ข้อมูลส่วนตัว" },
+  { key: "security", href: "#/profile/security", label: "ความปลอดภัย" },
+  { key: "mylistings", href: "#/mylistings", label: "ประกาศของฉัน" },
+];
 
 /**
  * แถบเมนูด้านบน
@@ -13,7 +21,7 @@ import useHideOnScrollDown from "../../hooks/useHideOnScrollDown";
  * - มือถือ: ปุ่ม ☰ มุมขวาบน (ลอยค้างเหมือนปุ่มธีม) กดแล้วแผงเมนูเลื่อนออกมาจากขอบขวา รายการเรียงลงมา
  * - เลื่อนลงแล้วแถบซ่อนไป เลื่อนขึ้นแล้วแถบโผล่กลับมา (เปิดเมนูอยู่ = ไม่ซ่อน)
  */
-export default function SiteHeader({ currentPage }) {
+export default function SiteHeader({ currentPage, currentParam = "" }) {
   const headerRef = useRef(null);
   const navRef = useRef(null);
   const pillRef = useRef(null);
@@ -26,7 +34,7 @@ export default function SiteHeader({ currentPage }) {
   const hidden = useHideOnScrollDown(menuOpen);
 
   // เปลี่ยนหน้า / กดนอกเมนู / กด Esc / ขยายจอเป็นคอม → หุบเมนู
-  useEffect(() => setMenuOpen(false), [currentPage]);
+  useEffect(() => setMenuOpen(false), [currentPage, currentParam]);
   useEffect(() => { if (!isMobile) setMenuOpen(false); }, [isMobile]);
   useEffect(() => {
     const onDocClick = (e) => {
@@ -51,6 +59,9 @@ export default function SiteHeader({ currentPage }) {
   }, [menuOpen]);
 
   const drawerItems = [...NAV_ITEMS, { page: CONTACT_PAGE, label: "ติดต่อเรา" }];
+  const settingsMode = currentPage === "profile" || currentPage === "mylistings"; // หน้าในส่วนตั้งค่าบัญชี
+  // แท็บที่เปิดอยู่ อ่านจาก URL ตรง ๆ (#/profile/security → "security", #/mylistings → "mylistings")
+  const settingsTab = currentPage === "mylistings" ? "mylistings" : (currentParam || window.location.hash.split("/")[2] || "").split("?")[0];
 
   return (
     <header ref={headerRef} className={hidden ? "is-hidden" : undefined}>
@@ -93,8 +104,28 @@ export default function SiteHeader({ currentPage }) {
             aria-hidden={!menuOpen}
             inert={menuOpen ? undefined : ""}
           >
-            <b className="nav-drawer-title">เมนู</b>
-            {drawerItems.map(({ page, label }, i) => (
+            <b className="nav-drawer-title">{settingsMode ? "ตั้งค่าบัญชี" : "เมนู"}</b>
+            {settingsMode && (
+              <>
+                {SETTINGS_ITEMS.map(({ key, href, label }, i) => {
+                  const on = key === settingsTab;
+                  return (
+                    <a key={href} href={href} style={{ "--i": i }} className={on ? "on" : undefined} aria-current={on ? "page" : undefined} onClick={() => setMenuOpen(false)}>
+                      {label}
+                    </a>
+                  );
+                })}
+                <a
+                  href="#/home"
+                  style={{ "--i": SETTINGS_ITEMS.length }}
+                  className="is-contact is-signout"
+                  onClick={async (e) => { e.preventDefault(); setMenuOpen(false); await signOutUser(); window.location.hash = "#/home"; }}
+                >
+                  ออกจากระบบ
+                </a>
+              </>
+            )}
+            {!settingsMode && drawerItems.map(({ page, label }, i) => (
               <a
                 key={page}
                 href={`#/${page}`}
@@ -108,7 +139,7 @@ export default function SiteHeader({ currentPage }) {
             ))}
 
             {/* ท้ายแผง: ข้อมูลจากส่วนท้ายเว็บ (ตัวเล็ก สีจาง ไม่แย่งความเด่นจากเมนู) */}
-            <div className="nav-drawer-extra">
+            {!settingsMode && <div className="nav-drawer-extra">
               <div>
                 <b>บริการของเรา</b>
                 {SERVICE_LINKS.map((l) => (
@@ -122,7 +153,7 @@ export default function SiteHeader({ currentPage }) {
                 <LineLink variant="plain">LINE: {siteConfig.lineId}</LineLink>
                 <small>{siteConfig.replyText}</small>
               </div>
-            </div>
+            </div>}
           </nav>
         </>,
         document.body,

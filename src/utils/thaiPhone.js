@@ -30,3 +30,11 @@ export const isIntlFormat = (input) => /^\s*(\+|66)/.test(String(input ?? ""));
 
 export const PHONE_PLACEHOLDER = "08x-xxx-xxxx หรือ +66 8x-xxx-xxxx";
 export const PHONE_ERROR = "หมายเลขโทรศัพท์ไม่ถูกต้อง เช่น 0812345678 หรือ +66 81 234 5678";
+
+/** เบอร์มือถือไทย (ใช้รับ OTP ได้): 06 / 08 / 09 ตามด้วย 8 หลัก */
+export const isThaiMobile = (input) => /^0[689]\d{8}$/.test(normalizeThaiPhone(input));
+
+/** 0812345678 → +66812345678 (รูปแบบสากลที่ระบบส่ง SMS ต้องใช้) */
+export const toE164 = (input) => `+66${normalizeThaiPhone(input).slice(1)}`;
+
+export const MOBILE_ERROR = "กรุณาใส่เบอร์มือถือ (06 / 08 / 09) เช่น 0812345678 หรือ +66 81 234 5678";
