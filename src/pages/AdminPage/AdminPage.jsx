@@ -13,6 +13,7 @@ import AdminSalesChecklist from "./AdminSalesChecklist";
 import AdminListingsTable, { StatCards, statusLabel } from "./AdminListingsTable";
 import ListingsReport from "./ListingsReport";
 import AdminMembers from "./AdminMembers";
+import { ADMIN_SECTIONS } from "../../data/adminSections";
 import AdminSystemCheck from "./AdminSystemCheck";
 import { canUseBackoffice, roleLabel } from "../../data/roles";
 import AdminListingEditor from "./AdminListingEditor";
@@ -28,15 +29,6 @@ const ICONS = {
   search: icon("M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4"),
   members: icon("M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM2 21c0-3.9 3.1-6.5 7-6.5s7 2.6 7 6.5M17 11a3.5 3.5 0 1 0 0-7M22 21c0-3-1.8-5.3-4.5-6.1"),
 };
-
-/** เมนูแอดมิน: แต่ละเมนูมีที่อยู่ของตัวเอง (#/admin, #/admin/colors) */
-const ADMIN_SECTIONS = [
-  { key: "listings", href: "#/admin", label: "จัดการประกาศ", title: "จัดการประกาศ", sub: "ตรวจ อนุมัติ และแก้ไขประกาศขายที่ดิน" },
-  { key: "checklist", href: "#/admin/checklist", label: "เช็กลิสต์ฝ่ายขาย", title: "เช็กลิสต์ฝ่ายขาย", sub: "ถามเจ้าของที่ดินทีละหัวข้อ สรุปและพิมพ์ได้" },
-  { key: "colors", href: "#/admin/colors", label: "คู่มือสีเว็บ", title: "คู่มือสีเว็บ", sub: "ชุดสีทั้งหมดของเว็บ ดาวน์โหลดไปใช้ต่อได้" },
-  { key: "members", href: "#/admin/members", label: "สมาชิก", title: "สมาชิก", sub: "บัญชีทั้งหมดในระบบ และระดับสิทธิ์ (ผู้ดูแลระบบเท่านั้น)", adminOnly: true },
-  { key: "system", href: "#/admin/system", label: "ตรวจระบบ", title: "ตรวจระบบ", sub: "เช็กความพร้อมของฐานข้อมูล และเช็กลิสต์ทดสอบฟีเจอร์ (ผู้ดูแลระบบเท่านั้น)", adminOnly: true },
-];
 
 const STATUS_VALUES = LISTING_STATUSES.map((s) => s.value);
 

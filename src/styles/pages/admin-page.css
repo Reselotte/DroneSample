@@ -130,6 +130,9 @@
 .adm-pager-btns button:disabled{opacity:.45;cursor:default}
 .adm-pager-gap{display:grid;place-items:center;min-width:24px}
 
+/* มือถือ: เมนูหลังบ้านย้ายไปอยู่ในแผงเมนู ☰ (SiteHeader) */
+@media (max-width:899px){.adm-side{display:none!important}}
+
 /* จอเล็ก: เมนูซ้ายกลายเป็นแถบบน */
 @media (max-width:900px){
   .adm-app{grid-template-columns:minmax(0,1fr)}

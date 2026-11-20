@@ -32,6 +32,9 @@
   .nav-drawer a.is-contact{margin-top:8px;border:1px solid var(--line)}
   .nav-drawer a.is-contact.on{border-color:transparent}
   .nav-drawer a.is-signout{color:var(--c-red-ink)}
+  .nav-drawer-who{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:14px 8px 0;padding-top:12px;border-top:1px solid var(--line)}
+  .nav-drawer-who small{flex-basis:100%;font-size:13px;color:var(--mu);overflow-wrap:anywhere}
+  .nav-drawer-who .adm-role{margin:0}
 
   /* ท้ายแผง: บริการ + ติดต่อ (ตัวเล็ก สีจาง) */
   .nav-drawer-extra{display:flex;flex-direction:column;gap:14px;margin-top:auto;padding:18px 8px 0;border-top:1px solid var(--line);opacity:0;transition:opacity .4s ease}
@@ -68,3 +71,4 @@ html[data-theme="dark"] .nav-drawer a.on{color:var(--c-white)}
 html[data-theme="dark"] .nav-drawer a.is-contact{border-color:var(--c-d-border)}
 html[data-theme="dark"] .nav-backdrop{background:rgba(var(--c-black-rgb),.55)}
 html[data-theme="dark"] .nav-drawer a.is-signout{color:var(--c-x-red-77)}
+html[data-theme="dark"] .nav-drawer-who{border-color:var(--c-d-border)}

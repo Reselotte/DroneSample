@@ -32,12 +32,12 @@ export async function runSystemChecks(myId) {
         : { status: "warn", detail: `บัญชีนี้เป็น "${data}" ไม่ใช่ผู้ดูแลระบบ` };
     }),
 
-    check("dealer", "ฐานข้อมูล", "ระดับ ดีลเลอร์", async () => {
-      // ลองตั้งตัวเองเป็น dealer → ถ้ารองรับ ดีลเลอร์ จะโดนปฏิเสธเพราะ "ลดสิทธิ์ตัวเองไม่ได้" (ไม่มีอะไรเปลี่ยน)
+    check("dealer", "ฐานข้อมูล", "ระดับดีลเลอร์", async () => {
+      // ลองตั้งตัวเองเป็น dealer → ถ้ารองรับดีลเลอร์จะโดนปฏิเสธเพราะ "ลดสิทธิ์ตัวเองไม่ได้" (ไม่มีอะไรเปลี่ยน)
       const { error } = await supabase.rpc("set_user_role", { p_user: myId, p_role: "dealer" });
       const m = msgOf(error);
-      if (/SELF_DEMOTE/.test(m)) return { status: "ok", detail: "ตั้งบัญชีเป็น ดีลเลอร์ ได้" };
-      if (/BAD_ROLE/.test(m)) return { status: "fail", detail: "ฐานข้อมูลยังไม่รู้จักระดับ ดีลเลอร์", fix: RUN_SQL };
+      if (/SELF_DEMOTE/.test(m)) return { status: "ok", detail: "ตั้งบัญชีเป็นดีลเลอร์ได้" };
+      if (/BAD_ROLE/.test(m)) return { status: "fail", detail: "ฐานข้อมูลยังไม่รู้จักระดับดีลเลอร์", fix: RUN_SQL };
       if (missingFn(error)) return { status: "fail", detail: "ยังไม่มีฟังก์ชันเปลี่ยนระดับ", fix: RUN_SQL };
       return { status: "warn", detail: m || "ผลไม่ตรงที่คาด" };
     }),

@@ -7,8 +7,12 @@ import useMediaQuery from "../../hooks/useMediaQuery";
 import useNavMagnify from "../../hooks/useNavMagnify";
 import useHideOnScrollDown from "../../hooks/useHideOnScrollDown";
 import { signOutUser } from "../../lib/auth";
+import { ADMIN_SECTIONS } from "../../data/adminSections";
+import { canUseBackoffice, roleLabel } from "../../data/roles";
+import useAuth from "../../hooks/useAuth";
+import useRole from "../../hooks/useRole";
 
-/** หน้าตั้งค่าบัญชี (#/profile) บนมือถือ: แผงเมนูเปลี่ยนเป็นเมนูตั้งค่าแทนเมนูหลักของเว็บ */
+/** มือถือ: ในหน้าตั้งค่าบัญชี / หลังบ้าน แผงเมนู ☰ เปลี่ยนเป็นเมนูของส่วนนั้นแทนเมนูหลักของเว็บ */
 const SETTINGS_ITEMS = [
   { key: "", href: "#/profile", label: "ข้อมูลส่วนตัว" },
   { key: "security", href: "#/profile/security", label: "ความปลอดภัย" },
@@ -58,10 +62,24 @@ export default function SiteHeader({ currentPage, currentParam = "" }) {
     return () => { document.body.style.overflow = prev; };
   }, [menuOpen]);
 
+  const { user } = useAuth();
+  const role = useRole();
   const drawerItems = [...NAV_ITEMS, { page: CONTACT_PAGE, label: "ติดต่อเรา" }];
-  const settingsMode = currentPage === "profile" || currentPage === "mylistings"; // หน้าในส่วนตั้งค่าบัญชี
-  // แท็บที่เปิดอยู่ อ่านจาก URL ตรง ๆ (#/profile/security → "security", #/mylistings → "mylistings")
-  const settingsTab = currentPage === "mylistings" ? "mylistings" : (currentParam || window.location.hash.split("/")[2] || "").split("?")[0];
+  // เมนูเฉพาะส่วน (มือถือ): ตั้งค่าบัญชี หรือ หลังบ้าน (เฉพาะทีมงาน / ผู้ดูแลระบบ)
+  const section = (() => {
+    if (currentPage === "profile" || currentPage === "mylistings") {
+      // แท็บที่เปิดอยู่ อ่านจาก URL ตรง ๆ (#/profile/security → "security", #/mylistings → "mylistings")
+      const tab = currentPage === "mylistings" ? "mylistings" : (currentParam || window.location.hash.split("/")[2] || "").split("?")[0];
+      return { title: "ตั้งค่าบัญชี", tab, items: SETTINGS_ITEMS };
+    }
+    if (currentPage === "admin" && canUseBackoffice(role)) {
+      const items = ADMIN_SECTIONS.filter((x) => !x.adminOnly || role === "admin");
+      const key = (currentParam || "").split("/")[0];
+      const tab = items.some((x) => x.key === key) ? key : "listings"; // #/admin/edit/12 = อยู่ในจัดการประกาศ
+      return { title: "หลังบ้าน", tab, items, backoffice: true };
+    }
+    return null;
+  })();
 
   return (
     <header ref={headerRef} className={hidden ? "is-hidden" : undefined}>
@@ -104,28 +122,37 @@ export default function SiteHeader({ currentPage, currentParam = "" }) {
             aria-hidden={!menuOpen}
             inert={menuOpen ? undefined : ""}
           >
-            <b className="nav-drawer-title">{settingsMode ? "ตั้งค่าบัญชี" : "เมนู"}</b>
-            {settingsMode && (
+            <b className="nav-drawer-title">{section ? section.title : "เมนู"}</b>
+            {section && (
               <>
-                {SETTINGS_ITEMS.map(({ key, href, label }, i) => {
-                  const on = key === settingsTab;
+                {section.items.map(({ key, href, label }, i) => {
+                  const on = key === section.tab;
                   return (
                     <a key={href} href={href} style={{ "--i": i }} className={on ? "on" : undefined} aria-current={on ? "page" : undefined} onClick={() => setMenuOpen(false)}>
                       {label}
                     </a>
                   );
                 })}
+                {section.backoffice && (
+                  <a href="#/home" style={{ "--i": section.items.length }} className="is-contact" onClick={() => setMenuOpen(false)}>← กลับหน้าแรก</a>
+                )}
                 <a
                   href="#/home"
-                  style={{ "--i": SETTINGS_ITEMS.length }}
-                  className="is-contact is-signout"
+                  style={{ "--i": section.items.length + 1 }}
+                  className={`is-signout${section.backoffice ? "" : " is-contact"}`}
                   onClick={async (e) => { e.preventDefault(); setMenuOpen(false); await signOutUser(); window.location.hash = "#/home"; }}
                 >
                   ออกจากระบบ
                 </a>
+                {section.backoffice && user && (
+                  <div className="nav-drawer-who">
+                    <small>{user.email}</small>
+                    {role && <em className={`adm-role is-${role}`}>{roleLabel(role)}</em>}
+                  </div>
+                )}
               </>
             )}
-            {!settingsMode && drawerItems.map(({ page, label }, i) => (
+            {!section && drawerItems.map(({ page, label }, i) => (
               <a
                 key={page}
                 href={`#/${page}`}
@@ -139,7 +166,7 @@ export default function SiteHeader({ currentPage, currentParam = "" }) {
             ))}
 
             {/* ท้ายแผง: ข้อมูลจากส่วนท้ายเว็บ (ตัวเล็ก สีจาง ไม่แย่งความเด่นจากเมนู) */}
-            {!settingsMode && <div className="nav-drawer-extra">
+            {!section && <div className="nav-drawer-extra">
               <div>
                 <b>บริการของเรา</b>
                 {SERVICE_LINKS.map((l) => (
