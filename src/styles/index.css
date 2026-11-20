@@ -28,5 +28,6 @@
 @import "./components/theme-transition.css";
 @import "./components/location-picker.css";
 @import "./components/photo-lightbox.css";
+@import "./components/confirm-dialog.css";
 @import "./theme-light.css"; /* ธีมต้องอยู่ท้ายสุด */
 @import "./theme-dark.css";

@@ -17,6 +17,7 @@ import { ADMIN_SECTIONS } from "../../data/adminSections";
 import AdminSystemCheck from "./AdminSystemCheck";
 import { canUseBackoffice, roleLabel } from "../../data/roles";
 import AdminListingEditor from "./AdminListingEditor";
+import { useConfirm } from "../../hooks/useConfirm";
 
 /** ไอคอนเมนู (เส้น ใช้สีตามตัวอักษร) */
 const icon = (d) => <svg viewBox="0 0 24 24" aria-hidden="true"><path d={d} /></svg>;
@@ -27,6 +28,7 @@ const ICONS = {
   print: icon("M7 9V3h10v6M7 17H4v-7h16v7h-3M7 14h10v7H7z"),
   logout: icon("M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 16l-4-4 4-4M6 12h10"),
   search: icon("M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4"),
+  system: icon("M9 12.5l2 2 4-4.5M12 3l7.5 3v5.5c0 4.5-3.2 8.3-7.5 9.5-4.3-1.2-7.5-5-7.5-9.5V6z"),
   members: icon("M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM2 21c0-3.9 3.1-6.5 7-6.5s7 2.6 7 6.5M17 11a3.5 3.5 0 1 0 0-7M22 21c0-3-1.8-5.3-4.5-6.1"),
 };
 
@@ -97,6 +99,7 @@ function AdminEditPage({ id, onSaved }) {
 
 /** หน้าแอดมิน (#/admin) — ไม่มีในเมนู เข้าผ่านลิงก์โดยตรง · param = เมนูในแถบเครื่องมือ */
 export default function AdminPage({ param }) {
+  const ask = useConfirm();
   const [role, setRole] = useState(null); // ระดับสิทธิ์: staff = ทีมงาน, admin = ผู้ดูแลระบบ
   const isTopAdmin = role === "admin";
   const sections = ADMIN_SECTIONS.filter((s) => !s.adminOnly || isTopAdmin);
@@ -186,9 +189,12 @@ export default function AdminPage({ param }) {
   };
 
   const remove = async (listing) => {
-    const ok = window.confirm(
-      `ลบประกาศ ${listingCode(listing.id)} "${listing.title}" ถาวร?\n\nข้อมูลผู้ขาย รูป และสำเนาโฉนดจะถูกลบทั้งหมด กู้คืนไม่ได้`
-    );
+    const ok = await ask({
+      title: `ลบประกาศ ${listingCode(listing.id)} ถาวร?`,
+      message: `"${listing.title}"\nข้อมูลผู้ขาย รูป และสำเนาโฉนดจะถูกลบทั้งหมด กู้คืนไม่ได้`,
+      confirmText: "ลบถาวร",
+      tone: "danger",
+    });
     if (!ok) return;
     setBusyId(listing.id);
     try {

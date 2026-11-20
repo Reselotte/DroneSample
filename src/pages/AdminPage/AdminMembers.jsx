@@ -4,11 +4,13 @@ import { ROLES, roleLabel } from "../../data/roles";
 import { useToast } from "../../hooks/useToast";
 import { formatThaiPhone } from "../../utils/thaiPhone";
 import { formatThaiDate } from "../../utils/listingFormat";
+import { useConfirm } from "../../hooks/useConfirm";
 
-const PROVIDER = { google: "Google", facebook: "Facebook", email: "อีเมล" };
+const PROVIDER = { google: "Google", facebook: "Facebook", email: "อีเมล", "custom:line": "LINE", line: "LINE" };
 
 /** หลังบ้าน → สมาชิก: รายชื่อบัญชีทั้งหมด + เปลี่ยนระดับสิทธิ์ (แอดมินเท่านั้น) */
 export default function AdminMembers({ myId }) {
+  const ask = useConfirm();
   const toast = useToast();
   const [rows, setRows] = useState([]);
   const [state, setState] = useState("loading"); // loading | ready | error | outdated
@@ -32,7 +34,22 @@ export default function AdminMembers({ myId }) {
 
   const change = async (u, role) => {
     if (role === u.role) return;
-    const ok = window.confirm(`เปลี่ยน ${u.name || u.email} จาก "${roleLabel(u.role)}" เป็น "${roleLabel(role)}"?`);
+    const ok = await ask({
+      title: "เปลี่ยนระดับสมาชิก?",
+      message: u.name || u.email,
+      confirmText: "เปลี่ยนระดับ",
+      tone: role === "admin" ? "warn" : "info",
+      body: (
+        <>
+          <div className="cfm-change">
+            <em className={`adm-role is-${u.role} cfm-from`}>{roleLabel(u.role)}</em>
+            <i>→</i>
+            <em className={`adm-role is-${role}`}>{roleLabel(role)}</em>
+          </div>
+          <p className="cfm-note">{ROLES.find((r) => r.value === role)?.note}</p>
+        </>
+      ),
+    });
     if (!ok) return;
     setBusyId(u.id);
     try {

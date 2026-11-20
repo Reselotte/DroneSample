@@ -4,6 +4,7 @@ import { profileOf } from "../../lib/auth";
 import { runSystemChecks } from "../../lib/systemCheck";
 import { ROLES } from "../../data/roles";
 import Avatar from "../../components/common/Avatar";
+import { useConfirm } from "../../hooks/useConfirm";
 
 /** เช็กลิสต์ทดสอบด้วยมือ (ติ๊กแล้วจำไว้ในเครื่องนี้) */
 const MANUAL = [
@@ -68,6 +69,7 @@ const STATUS = {
 
 /** หลังบ้าน → ตรวจระบบ (ผู้ดูแลระบบเท่านั้น) */
 export default function AdminSystemCheck({ myId }) {
+  const ask = useConfirm();
   const { user } = useAuth();
   const [checks, setChecks] = useState(null);
   const [checkedAt, setCheckedAt] = useState(null);
@@ -85,8 +87,8 @@ export default function AdminSystemCheck({ myId }) {
     try { localStorage.setItem(STORE, JSON.stringify(next)); } catch { /* ไม่จำก็ได้ */ }
     return next;
   });
-  const reset = () => {
-    if (!window.confirm("ล้างเครื่องหมายทดสอบทั้งหมด?")) return;
+  const reset = async () => {
+    if (!(await ask({ title: "ล้างเครื่องหมายทดสอบทั้งหมด?", message: "ข้อที่ติ๊กไว้จะกลับเป็นยังไม่ได้ทดสอบ", confirmText: "ล้างทั้งหมด", tone: "warn" }))) return;
     setDone({});
     try { localStorage.removeItem(STORE); } catch { /* ไม่เป็นไร */ }
   };

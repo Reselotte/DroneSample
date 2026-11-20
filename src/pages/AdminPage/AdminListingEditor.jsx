@@ -7,6 +7,7 @@ import { LAND_TYPES, PRICE_UNITS, PROVINCES } from "../../data/landListingOption
 import { formatThaiDate, isInThailand, listingCode, parseLatLng } from "../../utils/listingFormat";
 import { StatusBadge } from "./AdminListingsTable";
 import { isThaiPhone, normalizeThaiPhone } from "../../utils/thaiPhone";
+import { useConfirm } from "../../hooks/useConfirm";
 
 /** ค่าเริ่มต้นของฟอร์มจากประกาศเดิม */
 function toForm(listing) {
@@ -104,6 +105,7 @@ function CardHead({ n, title, note, children }) {
  * แถบล่างค้างจอ: บอกว่ามีการแก้ที่ยังไม่บันทึก + ปุ่มบันทึก/ยกเลิก
  */
 export default function AdminListingEditor({ listing, onCancel, onSaved }) {
+  const ask = useConfirm();
   const initial = useMemo(() => toForm(listing), [listing]);
   const [form, setForm] = useState(initial);
   const [errors, setErrors] = useState({});
@@ -133,8 +135,8 @@ export default function AdminListingEditor({ listing, onCancel, onSaved }) {
   const restorePhotos = () => setForm((f) => ({ ...f, photos: [...listing.photos] }));
   const removedCount = (listing.photos || []).length - form.photos.length;
 
-  const cancel = () => {
-    if (dirty && !window.confirm("ยังไม่ได้บันทึกการแก้ไข ออกจากหน้านี้เลยไหม?")) return;
+  const cancel = async () => {
+    if (dirty && !(await ask({ title: "ออกโดยไม่บันทึก?", message: "การแก้ไขที่ยังไม่ได้บันทึกจะหายไป", confirmText: "ออกจากหน้านี้", cancelText: "อยู่ต่อ", tone: "warn" }))) return;
     onCancel();
   };
 

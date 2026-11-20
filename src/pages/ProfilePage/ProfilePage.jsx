@@ -13,6 +13,7 @@ import { MOBILE_ERROR, PHONE_PLACEHOLDER, formatThaiPhone, isThaiMobile, normali
 import { formatThaiDate } from "../../utils/listingFormat";
 import BRAND_ICONS from "../../components/common/BrandIcons";
 import SetupNotice from "../LandsPage/SetupNotice";
+import { useConfirm } from "../../hooks/useConfirm";
 
 /** เมนูซ้าย: #/profile = ข้อมูลส่วนตัว, #/profile/security = ความปลอดภัย */
 const TABS = [
@@ -317,6 +318,7 @@ function qrSrc(qr = "") {
 }
 
 function TwoFactorBox() {
+  const ask = useConfirm();
   const toast = useToast();
   const [factors, setFactors] = useState(null); // null = กำลังโหลด
   const [setup, setSetup] = useState(null); // { id, qr, secret } ระหว่างผูกแอป
@@ -356,7 +358,7 @@ function TwoFactorBox() {
     setBusy(false);
   };
   const turnOff = async () => {
-    if (!window.confirm("ปิดการยืนยันตัวตน 2 ขั้นตอน?\nหลังปิด เข้าสู่ระบบได้โดยไม่ต้องใช้รหัสจากแอป")) return;
+    if (!(await ask({ title: "ปิดการยืนยันตัวตน 2 ขั้นตอน?", message: "หลังปิด เข้าสู่ระบบได้โดยไม่ต้องใช้รหัสจากแอป บัญชีจะปลอดภัยน้อยลง", confirmText: "ปิด 2FA", tone: "danger" }))) return;
     setBusy(true);
     setErr("");
     try {
@@ -429,8 +431,9 @@ function TwoFactorBox() {
 }
 
 function SecurityTab({ user }) {
+  const ask = useConfirm();
   const logoutAll = async () => {
-    if (!window.confirm("ออกจากระบบทุกอุปกรณ์?\nรวมถึงเครื่องนี้ด้วย ต้องเข้าสู่ระบบใหม่ทุกเครื่อง")) return;
+    if (!(await ask({ title: "ออกจากระบบทุกอุปกรณ์?", message: "รวมถึงเครื่องนี้ด้วย ต้องเข้าสู่ระบบใหม่ทุกเครื่อง", confirmText: "ออกจากระบบ", tone: "warn" }))) return;
     await signOutEverywhere();
     window.location.hash = "#/home";
   };

@@ -14,6 +14,7 @@ import {
 } from "../../utils/thaiPhone";
 import LocationField from "../../components/common/LocationField";
 import PhotoLightbox from "../../components/common/PhotoLightbox";
+import { useConfirm } from "../../hooks/useConfirm";
 
 const MAX_PHOTOS = 10;
 
@@ -108,6 +109,7 @@ function toForm(l) {
 
 /** ฟอร์มแก้ไขประกาศของฉัน */
 function MyEdit({ listing }) {
+  const ask = useConfirm();
   const toast = useToast();
   const address = useThaiAddress();
   const initial = useMemo(() => toForm(listing), [listing]);
@@ -155,8 +157,8 @@ function MyEdit({ listing }) {
   };
   const srcOf = (p) => (p.file ? p.file.data : photoUrl(p.path));
 
-  const cancel = () => {
-    if (dirty && !window.confirm("ยังไม่ได้บันทึกการแก้ไข ออกจากหน้านี้เลยไหม?")) return;
+  const cancel = async () => {
+    if (dirty && !(await ask({ title: "ออกโดยไม่บันทึก?", message: "การแก้ไขที่ยังไม่ได้บันทึกจะหายไป", confirmText: "ออกจากหน้านี้", cancelText: "อยู่ต่อ", tone: "warn" }))) return;
     window.location.hash = "#/mylistings";
   };
 
@@ -186,7 +188,12 @@ function MyEdit({ listing }) {
       requestAnimationFrame(() => document.querySelector(".ae .err:not(:empty)")?.scrollIntoView({ behavior: "smooth", block: "center" }));
       return;
     }
-    if (published && !window.confirm("บันทึกแล้วประกาศจะกลับไปรอทีมงานตรวจอีกครั้ง และจะหายจากหน้าเว็บชั่วคราว ยืนยันไหม?")) return;
+    if (published && !(await ask({
+      title: "บันทึกและส่งให้ทีมงานตรวจใหม่?",
+      message: "ประกาศจะกลับไปรอทีมงานตรวจอีกครั้ง และหายจากหน้าเว็บชั่วคราวจนกว่าจะอนุมัติ",
+      confirmText: "บันทึก",
+      tone: "warn",
+    }))) return;
 
     setSaving(true);
     try {

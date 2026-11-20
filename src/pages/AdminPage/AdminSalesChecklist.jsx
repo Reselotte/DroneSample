@@ -7,6 +7,7 @@ import { PROVINCES } from "../../data/landListingOptions";
 import { useToast } from "../../hooks/useToast";
 import Accordion, { useAccordionSteps } from "./Accordion";
 import ChecklistPrint from "./ChecklistPrint";
+import { useConfirm } from "../../hooks/useConfirm";
 
 /** ข้อมูลเจ้าของ + ที่ดินที่กรอกแล้ว [{ label, value }] (เนื้อที่รวมเป็นบรรทัดเดียว) */
 function infoList(info) {
@@ -43,6 +44,7 @@ function summaryText(owner, required, answers) {
 
 /** เช็กลิสต์ฝ่ายขาย (#/admin/checklist): ถามเจ้าของทีละหัวข้อ ติ๊กเฉพาะข้อที่ "ใช่" แล้วดูสรุป */
 export default function AdminSalesChecklist() {
+  const ask = useConfirm();
   const toast = useToast();
   const [owner, setOwner] = useState({});
   const [required, setRequired] = useState({}); // { label: true }
@@ -68,8 +70,8 @@ export default function AdminSalesChecklist() {
     return next;
   });
 
-  const clear = () => {
-    if (!window.confirm("ล้างคำตอบทั้งหมด เพื่อเริ่มถามเจ้าของคนใหม่?")) return;
+  const clear = async () => {
+    if (!(await ask({ title: "ล้างคำตอบทั้งหมด?", message: "เพื่อเริ่มถามเจ้าของที่ดินคนใหม่ คำตอบที่กรอกไว้จะหายไป", confirmText: "ล้างคำตอบ", tone: "warn" }))) return;
     setOwner({});
     setRequired({});
     setAnswers({});

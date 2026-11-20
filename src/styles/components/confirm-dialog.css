@@ -1,0 +1,36 @@
+/* ── กล่องยืนยัน (hooks/useConfirm.jsx) — ใช้แทน window.confirm ── */
+.cfm-backdrop{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(var(--c-navy-rgb),.42);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);animation:cfm-fade .18s ease-out}
+.cfm{width:min(420px,100%);padding:26px 24px 20px;border-radius:22px;background:var(--c-white);box-shadow:0 30px 80px rgba(var(--c-navy-rgb),.35),0 0 0 1px rgba(var(--c-navy-rgb),.06);text-align:center;animation:cfm-pop .32s cubic-bezier(.2,.9,.3,1.25)}
+.cfm-ic{display:flex;align-items:center;justify-content:center;width:58px;height:58px;margin:0 auto 14px;border-radius:50%;background:rgba(var(--c-blue-rgb),.12);color:var(--c-blue)}
+.cfm-ic svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cfm.is-danger .cfm-ic{background:rgba(var(--c-role-admin-rgb),.12);color:var(--c-role-admin)}
+.cfm.is-warn .cfm-ic{background:rgba(var(--c-role-dealer-rgb),.15);color:var(--c-role-dealer)}
+.cfm-title{margin:0;font-size:19px;line-height:1.35;color:var(--tx);text-align:center}
+.cfm-title::after{display:none}
+.cfm-msg{margin:8px 0 0;font-size:14.5px;line-height:1.6;color:var(--mu);white-space:pre-line}
+.cfm-body{margin-top:14px}
+.cfm-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}
+.cfm-actions .btn{min-height:46px;justify-content:center;font-size:15px}
+.cfm-ok{border:0;background:var(--accent-grad,var(--c-grad-primary-l));color:var(--c-white)!important}
+.cfm.is-danger .cfm-ok{background:linear-gradient(135deg,var(--c-role-admin-2),var(--c-role-admin))}
+.cfm.is-warn .cfm-ok{background:linear-gradient(135deg,var(--c-role-dealer-1),var(--c-role-dealer-2));color:var(--c-dealer-ink)!important}
+.cfm-ok:focus-visible,.cfm-cancel:focus-visible{outline:3px solid var(--c-sky);outline-offset:2px}
+.cfm-backdrop.is-closing{animation:cfm-fade-out .16s ease-in forwards}
+.cfm-backdrop.is-closing .cfm{animation:cfm-pop-out .16s ease-in forwards}
+/* เปลี่ยนระดับสมาชิก: ป้ายเดิม → ป้ายใหม่ */
+.cfm-change{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;padding:12px;border-radius:14px;background:var(--c-l-tint)}
+.cfm-change .adm-role{margin:0;font-size:13px}
+.cfm-change .cfm-from{opacity:.6}
+.cfm-change i{font-style:normal;font-weight:800;color:var(--mu)}
+.cfm-note{margin:8px 0 0;font-size:13px;color:var(--mu)}
+@keyframes cfm-fade{from{opacity:0}}
+@keyframes cfm-fade-out{to{opacity:0}}
+@keyframes cfm-pop{from{opacity:0;transform:translateY(14px) scale(.92)}}
+@keyframes cfm-pop-out{to{opacity:0;transform:translateY(6px) scale(.96)}}
+@media (prefers-reduced-motion:reduce){.cfm-backdrop,.cfm{animation:none!important}}
+@media (max-width:420px){.cfm{padding:22px 18px 16px;border-radius:18px}}
+html[data-theme="dark"] .cfm-backdrop{background:rgba(var(--c-black-rgb),.55)}
+html[data-theme="dark"] .cfm{background:var(--c-d-card);box-shadow:0 30px 80px rgba(var(--c-black-rgb),.6),0 0 0 1px var(--c-d-border)}
+html[data-theme="dark"] .cfm-title{color:var(--c-d-heading)}
+html[data-theme="dark"] .cfm-msg,html[data-theme="dark"] .cfm-note{color:var(--c-d-muted)}
+html[data-theme="dark"] .cfm-change{background:rgba(var(--c-white-rgb),.05)}
