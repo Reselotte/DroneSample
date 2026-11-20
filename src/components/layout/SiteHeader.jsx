@@ -11,12 +11,13 @@ import { ADMIN_SECTIONS } from "../../data/adminSections";
 import { canUseBackoffice, roleLabel } from "../../data/roles";
 import useAuth from "../../hooks/useAuth";
 import useRole from "../../hooks/useRole";
+import { navigate } from "../../lib/router";
 
 /** มือถือ: ในหน้าตั้งค่าบัญชี / หลังบ้าน แผงเมนู ☰ เปลี่ยนเป็นเมนูของส่วนนั้นแทนเมนูหลักของเว็บ */
 const SETTINGS_ITEMS = [
-  { key: "", href: "#/profile", label: "ข้อมูลส่วนตัว" },
-  { key: "security", href: "#/profile/security", label: "ความปลอดภัย" },
-  { key: "mylistings", href: "#/mylistings", label: "ประกาศของฉัน" },
+  { key: "", href: "/profile", label: "ข้อมูลส่วนตัว" },
+  { key: "security", href: "/profile/security", label: "ความปลอดภัย" },
+  { key: "mylistings", href: "/mylistings", label: "ประกาศของฉัน" },
 ];
 
 /**
@@ -68,14 +69,14 @@ export default function SiteHeader({ currentPage, currentParam = "" }) {
   // เมนูเฉพาะส่วน (มือถือ): ตั้งค่าบัญชี หรือ หลังบ้าน (เฉพาะทีมงาน / ผู้ดูแลระบบ)
   const section = (() => {
     if (currentPage === "profile" || currentPage === "mylistings") {
-      // แท็บที่เปิดอยู่ อ่านจาก URL ตรง ๆ (#/profile/security → "security", #/mylistings → "mylistings")
-      const tab = currentPage === "mylistings" ? "mylistings" : (currentParam || window.location.hash.split("/")[2] || "").split("?")[0];
+      // แท็บที่เปิดอยู่ อ่านจาก URL ตรง ๆ (/profile/security → "security", /mylistings → "mylistings")
+      const tab = currentPage === "mylistings" ? "mylistings" : (currentParam || window.location.pathname.split("/")[2] || "").split("?")[0];
       return { title: "ตั้งค่าบัญชี", tab, items: SETTINGS_ITEMS };
     }
     if (currentPage === "admin" && canUseBackoffice(role)) {
       const items = ADMIN_SECTIONS.filter((x) => !x.adminOnly || role === "admin");
       const key = (currentParam || "").split("/")[0];
-      const tab = items.some((x) => x.key === key) ? key : "listings"; // #/admin/edit/12 = อยู่ในจัดการประกาศ
+      const tab = items.some((x) => x.key === key) ? key : "listings"; // /admin/edit/12 = อยู่ในจัดการประกาศ
       return { title: "หลังบ้าน", tab, items, backoffice: true };
     }
     return null;
@@ -84,12 +85,12 @@ export default function SiteHeader({ currentPage, currentParam = "" }) {
   return (
     <header ref={headerRef} className={hidden ? "is-hidden" : undefined}>
       <div className="wrap">
-        <a className="brand" href="#/home" id="brand">{siteConfig.brand}</a>
+        <a className="brand" href="/" id="brand">{siteConfig.brand}</a>
         <nav id="nav" ref={navRef} className={menuOpen ? "open" : undefined} aria-label="เมนูหลัก">
           {NAV_ITEMS.map(({ page, label }) => (
             <a
               key={page}
-              href={`#/${page}`}
+              href={`/${page}`}
               data-p={page}
               className={page === currentPage ? "on" : undefined}
               aria-current={page === currentPage ? "page" : undefined}
@@ -102,7 +103,7 @@ export default function SiteHeader({ currentPage, currentParam = "" }) {
         <a
           ref={pillRef}
           className="pill"
-          href={`#/${CONTACT_PAGE}`}
+          href={`/${CONTACT_PAGE}`}
           data-p={CONTACT_PAGE}
         >
           ติดต่อเรา
@@ -134,13 +135,13 @@ export default function SiteHeader({ currentPage, currentParam = "" }) {
                   );
                 })}
                 {section.backoffice && (
-                  <a href="#/home" style={{ "--i": section.items.length }} className="is-contact" onClick={() => setMenuOpen(false)}>← กลับหน้าแรก</a>
+                  <a href="/" style={{ "--i": section.items.length }} className="is-contact" onClick={() => setMenuOpen(false)}>← กลับหน้าแรก</a>
                 )}
                 <a
-                  href="#/home"
+                  href="/"
                   style={{ "--i": section.items.length + 1 }}
                   className={`is-signout${section.backoffice ? "" : " is-contact"}`}
-                  onClick={async (e) => { e.preventDefault(); setMenuOpen(false); await signOutUser(); window.location.hash = "#/home"; }}
+                  onClick={async (e) => { e.preventDefault(); setMenuOpen(false); await signOutUser(); navigate("/"); }}
                 >
                   ออกจากระบบ
                 </a>
@@ -155,7 +156,7 @@ export default function SiteHeader({ currentPage, currentParam = "" }) {
             {!section && drawerItems.map(({ page, label }, i) => (
               <a
                 key={page}
-                href={`#/${page}`}
+                href={`/${page}`}
                 style={{ "--i": i }}
                 className={`${page === currentPage ? "on" : ""}${page === CONTACT_PAGE ? " is-contact" : ""}` || undefined}
                 aria-current={page === currentPage ? "page" : undefined}

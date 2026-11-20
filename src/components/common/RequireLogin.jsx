@@ -2,6 +2,7 @@ import useAuth from "../../hooks/useAuth";
 import { PHONE_MODE, needsPhone, rememberNext } from "../../lib/auth";
 import { isSupabaseConfigured } from "../../lib/supabaseClient";
 import { LockIcon } from "./Icons";
+import { currentHref } from "../../lib/router";
 
 /** ข้อความของแต่ละหน้าที่ต้องเข้าสู่ระบบก่อนใช้ */
 const COPY = {
@@ -22,7 +23,7 @@ export default function RequireLogin({ page, children }) {
   if (!isSupabaseConfigured) return children;
 
   const copy = COPY[page] || { title: "เข้าสู่ระบบ", what: "ใช้งานส่วนนี้" };
-  const here = window.location.hash || `#/${page}`; // จำที่อยู่เต็ม (เช่น #/mylistings/12) ไว้พากลับ
+  const here = currentHref() || `/${page}`; // จำที่อยู่เต็ม (เช่น /mylistings/12) ไว้พากลับ
 
   let card = null;
   if (!ready) {
@@ -38,7 +39,7 @@ export default function RequireLogin({ page, children }) {
           <li>ทีมงานติดต่อกลับตามเบอร์ในบัญชีของคุณ</li>
           <li>ช่วยกันประกาศปลอมและสแปม</li>
         </ul>
-        <a className="btn rl-btn" href="#/login" onClick={() => rememberNext(here)}>เข้าสู่ระบบ / สมัครสมาชิก</a>
+        <a className="btn rl-btn" href="/login" onClick={() => rememberNext(here)}>เข้าสู่ระบบ / สมัครสมาชิก</a>
       </div>
     );
   } else if (needsPhone(user)) {
@@ -47,7 +48,7 @@ export default function RequireLogin({ page, children }) {
         <div className="rl-ic"><LockIcon /></div>
         <h3>{PHONE_MODE === "otp" ? "ยืนยันเบอร์มือถือก่อน" : "กรอกเบอร์มือถือก่อน"}{copy.what}</h3>
         <p>ทีมงานต้องใช้เบอร์มือถือเพื่อติดต่อกลับ กรอกครั้งเดียวใช้ได้ตลอด</p>
-        <a className="btn rl-btn" href="#/login" onClick={() => rememberNext(here)}>
+        <a className="btn rl-btn" href="/login" onClick={() => rememberNext(here)}>
           {PHONE_MODE === "otp" ? "ยืนยันเบอร์มือถือ" : "กรอกเบอร์มือถือ"}
         </a>
       </div>

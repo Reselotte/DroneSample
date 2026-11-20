@@ -27,7 +27,7 @@ const LOGIN_REQUIRED = ["post", "callback", "mylistings"];
 // หน้าที่ใช้บัญชี: บัญชีที่เปิด 2FA ต้องกรอกรหัสจากแอปก่อน
 const MFA_PAGES = [...LOGIN_REQUIRED, "login", "profile", "admin"];
 
-/** ชื่อหน้าใน URL (#/ชื่อ) → หน้านั้น */
+/** ชื่อหน้าใน URL (/ชื่อ) → หน้านั้น */
 const PAGE_COMPONENTS = {
   home: HomePage,
   lands: LandsPage,
@@ -45,7 +45,7 @@ const PAGE_COMPONENTS = {
 
 export default function App() {
   const { page, param } = useHashRoute();
-  // #/lands/<รหัส> = หน้ารายละเอียดประกาศ
+  // /lands/<รหัส> = หน้ารายละเอียดประกาศ
   const Page = page === "lands" && param ? LandDetailPage : PAGE_COMPONENTS[page];
 
   return (

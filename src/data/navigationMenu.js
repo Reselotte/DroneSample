@@ -1,4 +1,4 @@
-/** เมนูด้านบน (page = ชื่อหน้าใน URL เช่น #/home) */
+/** เมนูด้านบน (page = ชื่อหน้าใน URL เช่น /home) */
 export const NAV_ITEMS = [
   { page: "home", label: "หน้าแรก" },
   { page: "lands", label: "ซื้อขายที่ดิน" },
@@ -12,17 +12,17 @@ export const CONTACT_PAGE = "contact";
 
 /** ลิงก์ "บริการของเรา" (ส่วนท้ายเว็บ + ท้ายแผงเมนูบนมือถือ) */
 export const SERVICE_LINKS = [
-  { href: "#/home", label: "เกษตรกรรม" },
-  { href: "#/home", label: "โรงงานและอุตสาหกรรม" },
-  { href: "#/home", label: "อสังหา / จัดสรร" },
-  { href: "#/callback", label: "นัดบินสำรวจพื้นที่" },
-  { href: "#/post", label: "ลงประกาศขาย + คำนวณราคา" },
-  { href: "#/lands", label: "ประกาศซื้อขายที่ดิน" },
+  { href: "/", label: "เกษตรกรรม" },
+  { href: "/", label: "โรงงานและอุตสาหกรรม" },
+  { href: "/", label: "อสังหา / จัดสรร" },
+  { href: "/callback", label: "นัดบินสำรวจพื้นที่" },
+  { href: "/post", label: "ลงประกาศขาย + คำนวณราคา" },
+  { href: "/lands", label: "ประกาศซื้อขายที่ดิน" },
 ];
 
 /**
  * ทุกหน้าที่มีในเว็บ
- * lands = รายการที่ดิน (#/lands/<รหัส> = หน้ารายละเอียด), post = ลงประกาศ, admin = แอดมิน (ไม่อยู่ในเมนู)
+ * lands = รายการที่ดิน (/lands/<รหัส> = หน้ารายละเอียด), post = ลงประกาศ, admin = แอดมิน (ไม่อยู่ในเมนู)
  */
 export const PAGES = ["home", "lands", "post", "works", "steps", "callback", "faq", "contact", "admin", "login", "profile", "mylistings"];
 

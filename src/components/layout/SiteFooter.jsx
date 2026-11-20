@@ -20,9 +20,9 @@ export default function SiteFooter() {
           </div>
           <div>
             <h4>เกี่ยวกับเรา</h4>
-            <a href="#/works">ตัวอย่างผลงาน</a>
-            <a href="#/steps">ขั้นตอนการทำงาน</a>
-            <a href="#/faq">คำถามที่พบบ่อย</a>
+            <a href="/works">ตัวอย่างผลงาน</a>
+            <a href="/steps">ขั้นตอนการทำงาน</a>
+            <a href="/faq">คำถามที่พบบ่อย</a>
           </div>
           <div>
             <h4>ติดต่อเรา</h4>

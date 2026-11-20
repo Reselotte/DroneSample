@@ -8,6 +8,7 @@ import useAuth from "../../hooks/useAuth";
 import { MOBILE_ERROR, PHONE_PLACEHOLDER, formatThaiPhone, isThaiMobile, normalizeThaiPhone, toE164 } from "../../utils/thaiPhone";
 import SetupNotice from "../LandsPage/SetupNotice";
 import BRAND_ICONS from "../../components/common/BrandIcons";
+import { navigate } from "../../lib/router";
 
 const RESEND_SECONDS = 60;
 
@@ -95,7 +96,7 @@ function ChooseProvider({ error }) {
     setBusy(p.key);
     const { error: e } = await signInWith(p.provider);
     if (e) { setErr(authErrorText(e)); setBusy(""); }
-    // สำเร็จ = เบราว์เซอร์ไปหน้าของ Google / LINE / Facebook แล้วกลับมาที่ #/login
+    // สำเร็จ = เบราว์เซอร์ไปหน้าของ Google / LINE / Facebook แล้วกลับมาที่ /login
   };
 
   return (
@@ -324,7 +325,7 @@ function SignedIn({ user }) {
   );
 }
 
-/** หน้าเข้าสู่ระบบ (#/login) */
+/** หน้าเข้าสู่ระบบ (/login) */
 export default function LoginPage() {
   const { user, ready } = useAuth();
   const [oauthError] = useState(() => {
@@ -340,7 +341,7 @@ export default function LoginPage() {
   }, [ready]);
 
   // ยืนยันเบอร์เสร็จ → พากลับหน้าที่อยู่ก่อนกดเข้าสู่ระบบ
-  const done = () => { window.location.hash = takeNext(); };
+  const done = () => { navigate(takeNext()); };
 
   let body;
   let step = 1;

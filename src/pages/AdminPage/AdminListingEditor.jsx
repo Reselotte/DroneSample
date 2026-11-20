@@ -100,7 +100,7 @@ function CardHead({ n, title, note, children }) {
 }
 
 /**
- * หน้าแก้ไขประกาศ (#/admin/edit/<รหัส>) — แยกเป็นหน้าของตัวเอง
+ * หน้าแก้ไขประกาศ (/admin/edit/<รหัส>) — แยกเป็นหน้าของตัวเอง
  * ซ้าย: รูป → ข้อมูลที่ดิน → ตำแหน่ง/รายละเอียด → จุดเด่น · ขวา: ผู้ขาย (ข้อมูลภายใน)
  * แถบล่างค้างจอ: บอกว่ามีการแก้ที่ยังไม่บันทึก + ปุ่มบันทึก/ยกเลิก
  */
@@ -181,7 +181,7 @@ export default function AdminListingEditor({ listing, onCancel, onSaved }) {
           </div>
           <div className="ae-h">{form.title || "—"}</div>
         </div>
-        {published && <a className="btn btn-ghost ae-view" href={`#/lands/${listing.id}`} target="_blank" rel="noopener noreferrer">ดูหน้าประกาศ ↗</a>}
+        {published && <a className="btn btn-ghost ae-view" href={`/lands/${listing.id}`} target="_blank" rel="noopener noreferrer">ดูหน้าประกาศ ↗</a>}
       </div>
 
       <div className="ae-grid">

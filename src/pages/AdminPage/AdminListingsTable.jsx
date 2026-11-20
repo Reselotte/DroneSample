@@ -142,7 +142,7 @@ function ListingDetails({ listing }) {
       <div className="adm-details-main">
         <div className="adm-details-head">
           <b>{listing.title}</b>
-          <a className="btn adm-edit-btn" href={`#/admin/edit/${listing.id}`}>
+          <a className="btn adm-edit-btn" href={`/admin/edit/${listing.id}`}>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4" /></svg>
             แก้ไขประกาศ
           </a>
@@ -159,7 +159,7 @@ function ListingDetails({ listing }) {
               <PinIcon /> Google Maps
             </a>
           )}
-          {published && <a href={`#/lands/${listing.id}`}>ดูหน้าประกาศ ↗</a>}
+          {published && <a href={`/lands/${listing.id}`}>ดูหน้าประกาศ ↗</a>}
         </div>
       </div>
       <div className="adm-seller">
@@ -304,9 +304,9 @@ export default function AdminListingsTable({ items, busyId, phoneCounts, onChang
                           ...ACTIONS[l.status].map(([next, label]) => ({
                             label, disabled: busy, tone: next === "approved" ? "ok" : undefined, onClick: () => onChangeStatus(l, next),
                           })),
-                          { label: "แก้ไขประกาศ", href: `#/admin/edit/${l.id}` },
+                          { label: "แก้ไขประกาศ", href: `/admin/edit/${l.id}` },
                           { label: open ? "ซ่อนรายละเอียด" : "ดูรายละเอียด", onClick: () => setOpenId((id) => (id === l.id ? null : l.id)) },
-                          (l.status === "approved" || l.status === "sold") && { label: "ดูหน้าประกาศ ↗", href: `#/lands/${l.id}` },
+                          (l.status === "approved" || l.status === "sold") && { label: "ดูหน้าประกาศ ↗", href: `/lands/${l.id}` },
                           onDelete && { label: "ลบถาวร", tone: "danger", disabled: busy, onClick: () => onDelete(l) },
                         ]}
                       />

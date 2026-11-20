@@ -42,7 +42,7 @@ function summaryText(owner, required, answers) {
   return lines.join("\n");
 }
 
-/** เช็กลิสต์ฝ่ายขาย (#/admin/checklist): ถามเจ้าของทีละหัวข้อ ติ๊กเฉพาะข้อที่ "ใช่" แล้วดูสรุป */
+/** เช็กลิสต์ฝ่ายขาย (/admin/checklist): ถามเจ้าของทีละหัวข้อ ติ๊กเฉพาะข้อที่ "ใช่" แล้วดูสรุป */
 export default function AdminSalesChecklist() {
   const ask = useConfirm();
   const toast = useToast();
@@ -96,7 +96,7 @@ export default function AdminSalesChecklist() {
     <div className={`ckl-sheet${picked ? " has-picks" : ""}`}>
       <p className="ckl-howto">
         ถามทีละหัวข้อ ติ๊กเฉพาะข้อที่ "ใช่" (ข้อที่ไม่ติ๊กจะไม่ขึ้นในสรุป) แล้วกด <b>ถัดไป</b> ·
-        เสร็จแล้วไปที่ <a href="#/admin">จัดการประกาศ</a> → <b>แก้ไข</b> → เลือกจุดเด่นตามสรุป
+        เสร็จแล้วไปที่ <a href="/admin">จัดการประกาศ</a> → <b>แก้ไข</b> → เลือกจุดเด่นตามสรุป
       </p>
 
       <div className="acc-list">

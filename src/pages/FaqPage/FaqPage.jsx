@@ -2,7 +2,7 @@ import LineLink from "../../components/common/LineLink";
 import faqItems from "../../data/faqItems";
 import GlossarySection from "./GlossarySection";
 
-/** หน้าคำถามที่พบบ่อย (#/faq) */
+/** หน้าคำถามที่พบบ่อย (/faq) */
 export default function FaqPage() {
   return (
     <section className="alt" data-page="faq">

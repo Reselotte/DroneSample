@@ -21,7 +21,7 @@ export default function ListingList({ items }) {
         const cover = l.photos?.[0];
         const { perRai } = unitPrices(l.total_price, l.area_wah);
         return (
-          <a key={l.id} className="llist-row" role="row" href={`#/lands/${l.id}`}>
+          <a key={l.id} className="llist-row" role="row" href={`/lands/${l.id}`}>
             <span role="cell" className="c-name">
               <span className="llist-thumb">
                 {cover ? <FitImage src={photoUrl(cover)} /> : <ContourMapSvg mode="ortho" cover />}

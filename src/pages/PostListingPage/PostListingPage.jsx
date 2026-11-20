@@ -129,7 +129,7 @@ function validate(values, photoSlots) {
   return { errors, listing };
 }
 
-/** หน้าลงประกาศขายที่ดิน (#/post) — ใครก็ลงได้ ประกาศจะขึ้นเว็บเมื่อทีมงานอนุมัติ */
+/** หน้าลงประกาศขายที่ดิน (/post) — ใครก็ลงได้ ประกาศจะขึ้นเว็บเมื่อทีมงานอนุมัติ */
 export default function PostListingPage() {
   const { user } = useAuth();
   const [values, setValues] = useState(EMPTY_VALUES);
@@ -278,8 +278,8 @@ export default function PostListingPage() {
             {typeof sentId === "number" && <p>รหัสประกาศ <b>{listingCode(sentId)}</b></p>}
             <p>ทีมงานจะตรวจสอบข้อมูลก่อนเผยแพร่ และอาจโทรติดต่อเพื่อยืนยันข้อมูล ภายใน 1–2 วันทำการ</p>
             <div className="post-ok-act">
-              <a className="btn btn-ghost" href="#/mylistings">ดูประกาศของฉัน</a>
-              <a className="btn btn-ghost" href="#/lands">ดูที่ดินประกาศขาย</a>
+              <a className="btn btn-ghost" href="/mylistings">ดูประกาศของฉัน</a>
+              <a className="btn btn-ghost" href="/lands">ดูที่ดินประกาศขาย</a>
               <LineLink>สอบถามทีมงานทาง LINE</LineLink>
             </div>
           </div>

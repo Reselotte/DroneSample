@@ -18,7 +18,7 @@ const VIEWS = [
 // จำตัวกรองล่าสุดไว้ เวลากดเข้าไปดูประกาศแล้วกดกลับมา จะไม่ต้องเลือกใหม่
 let lastFilters = EMPTY_FILTERS;
 
-/** หน้ารายการที่ดินประกาศขาย (#/lands) */
+/** หน้ารายการที่ดินประกาศขาย (/lands) */
 export default function LandsPage() {
   const [filters, setFilters] = useState(lastFilters);
   const [items, setItems] = useState([]);
@@ -69,7 +69,7 @@ export default function LandsPage() {
             <h2>ที่ดินประกาศขาย</h2>
             <p className="sub">ทุกประกาศผ่านการตรวจสอบจากทีมงาน สนใจแปลงไหน ติดต่อทีมงานทาง LINE ได้เลย</p>
           </div>
-          <a className="btn btn-line" href="#/post">+ ลงประกาศขายฟรี</a>
+          <a className="btn btn-line" href="/post">+ ลงประกาศขายฟรี</a>
         </div>
 
         {!isSupabaseConfigured ? (
@@ -92,7 +92,7 @@ export default function LandsPage() {
                 <div className="lands-msg">
                   <b>ยังไม่มีประกาศที่ตรงกับเงื่อนไข</b>
                   <span>ลองเปลี่ยนตัวกรอง หรือเป็นคนแรกที่ลงประกาศในพื้นที่นี้</span>
-                  <a className="btn btn-line" href="#/post">ลงประกาศขายฟรี</a>
+                  <a className="btn btn-line" href="/post">ลงประกาศขายฟรี</a>
                 </div>
               ) : (
                 <>

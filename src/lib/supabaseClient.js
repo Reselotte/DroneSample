@@ -11,7 +11,7 @@ const key = import.meta.env.VITE_SUPABASE_ANON_KEY;
 export const isSupabaseConfigured = Boolean(url && key);
 
 // flowType "pkce": หลังเข้าสู่ระบบด้วย Google / LINE / Facebook จะกลับมาพร้อม ?code= (ไม่ใช่ #access_token=)
-// เว็บนี้ใช้ # เป็นที่อยู่หน้า (#/login) ถ้ากลับมาเป็น # จะชนกัน
+// เว็บนี้ใช้ # เป็นที่อยู่หน้า (/login) ถ้ากลับมาเป็น # จะชนกัน
 export const supabaseUrl = url;
 export const supabaseKey = key;
 export const supabase = isSupabaseConfigured ? createClient(url, key, { auth: { flowType: "pkce" } }) : null;

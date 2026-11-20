@@ -2,7 +2,7 @@ import { useState } from "react";
 import CallbackForm from "./CallbackForm";
 import { CalculatorIcon, CheckCircleIcon } from "../../components/common/Icons";
 
-/** หน้า "ให้ทีมงานติดต่อกลับ" (#/callback): ทิ้งชื่อ-เบอร์ไว้ ทีมงานโทรกลับเพื่อสอบถามและนัดบินสำรวจพื้นที่ */
+/** หน้า "ให้ทีมงานติดต่อกลับ" (/callback): ทิ้งชื่อ-เบอร์ไว้ ทีมงานโทรกลับเพื่อสอบถามและนัดบินสำรวจพื้นที่ */
 export default function CallbackPage() {
   const [sent, setSent] = useState(false);
 
@@ -33,7 +33,7 @@ export default function CallbackPage() {
         แท็บลอยขอบขวากลางจอ พาไปหน้าลงประกาศขาย (มีคำนวณราคาในตัว)
         วางไว้นอก <section> เพราะ section มีแอนิเมชัน transform ที่ทำให้ position:fixed เพี้ยน
       */}
-      <a className="side-tab" href="#/post" aria-label="ขายที่ดิน? ลงประกาศฟรี พร้อมคำนวณราคา">
+      <a className="side-tab" href="/post" aria-label="ขายที่ดิน? ลงประกาศฟรี พร้อมคำนวณราคา">
         <span className="side-tab-ic"><CalculatorIcon /></span>
         <span className="side-tab-tx">
           <small>ขายที่ดิน? คำนวณราคาให้ด้วย</small>

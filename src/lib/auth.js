@@ -39,8 +39,8 @@ export const isProviderEnabled = (p, settings) => {
   return settings?.[name] ?? settings?.[p.provider] ?? p.key === "line";
 };
 
-/** ที่อยู่ให้กลับมาหลังเข้าสู่ระบบ = หน้า #/login ของเว็บนี้ (ต้องอยู่ใน Redirect URLs ของ Supabase) */
-const returnUrl = () => `${window.location.origin}${window.location.pathname}#/login`;
+/** ที่อยู่ให้กลับมาหลังเข้าสู่ระบบ = หน้า /login ของเว็บนี้ (ต้องอยู่ใน Redirect URLs ของ Supabase) */
+const returnUrl = () => `${window.location.origin}/login`;
 
 export const signInWith = (provider) =>
   supabase.auth.signInWithOAuth({ provider, options: { redirectTo: returnUrl() } });
@@ -288,8 +288,8 @@ export const takeNext = () => {
   try {
     const v = sessionStorage.getItem(NEXT_KEY);
     sessionStorage.removeItem(NEXT_KEY);
-    return v && !v.startsWith("#/login") ? v : "#/home";
+    return v && !v.startsWith("/login") ? v : "/";
   } catch {
-    return "#/home";
+    return "/";
   }
 };

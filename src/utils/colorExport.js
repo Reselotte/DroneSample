@@ -1,7 +1,7 @@
 import { GRADIENTS } from "../data/colorGuide";
 
 /**
- * ส่งออกชุดสีของเว็บเป็นไฟล์ (ใช้ในคู่มือสี #/admin/colors)
+ * ส่งออกชุดสีของเว็บเป็นไฟล์ (ใช้ในคู่มือสี /admin/colors)
  * groups = กลุ่มสีทั้งหมดที่แสดงในคู่มือ (รวมสีเสริม) · values = { "--c-navy": "#0b2a5b", ... } ค่าจริงจาก color-tokens.css
  */
 

@@ -33,7 +33,7 @@ function ReplyText({ text }) {
   );
 }
 
-/** หน้าติดต่อเรา (#/contact) */
+/** หน้าติดต่อเรา (/contact) */
 export default function ContactPage() {
   return (
     <section data-page="contact" className="ct">

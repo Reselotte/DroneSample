@@ -14,11 +14,12 @@ import { formatThaiDate } from "../../utils/listingFormat";
 import BRAND_ICONS from "../../components/common/BrandIcons";
 import SetupNotice from "../LandsPage/SetupNotice";
 import { useConfirm } from "../../hooks/useConfirm";
+import { currentHref, navigate } from "../../lib/router";
 
-/** เมนูซ้าย: #/profile = ข้อมูลส่วนตัว, #/profile/security = ความปลอดภัย */
+/** เมนูซ้าย: /profile = ข้อมูลส่วนตัว, /profile/security = ความปลอดภัย */
 const TABS = [
-  { key: "", label: "ข้อมูลส่วนตัว", href: "#/profile", title: "ข้อมูลส่วนตัว", sub: "จัดการชื่อ ช่องทางติดต่อ และบัญชีที่ใช้เข้าสู่ระบบ" },
-  { key: "security", label: "ความปลอดภัย", href: "#/profile/security", title: "ความปลอดภัย", sub: "รหัสผ่าน การยืนยันตัวตน 2 ขั้นตอน และการออกจากระบบ" },
+  { key: "", label: "ข้อมูลส่วนตัว", href: "/profile", title: "ข้อมูลส่วนตัว", sub: "จัดการชื่อ ช่องทางติดต่อ และบัญชีที่ใช้เข้าสู่ระบบ" },
+  { key: "security", label: "ความปลอดภัย", href: "/profile/security", title: "ความปลอดภัย", sub: "รหัสผ่าน การยืนยันตัวตน 2 ขั้นตอน และการออกจากระบบ" },
 ];
 
 /** ชื่อช่องทางเข้าสู่ระบบ: google / facebook / custom:line → { key, label } */
@@ -435,7 +436,7 @@ function SecurityTab({ user }) {
   const logoutAll = async () => {
     if (!(await ask({ title: "ออกจากระบบทุกอุปกรณ์?", message: "รวมถึงเครื่องนี้ด้วย ต้องเข้าสู่ระบบใหม่ทุกเครื่อง", confirmText: "ออกจากระบบ", tone: "warn" }))) return;
     await signOutEverywhere();
-    window.location.hash = "#/home";
+    navigate("/");
   };
   return (
     <>
@@ -472,7 +473,7 @@ function ProfileLayout({ user, tab }) {
   return (
     <div className="pf-layout">
       <aside className="pf-side">
-        <a className="pf-back" href="#/home">← กลับหน้าแรก</a>
+        <a className="pf-back" href="/">← กลับหน้าแรก</a>
         <div className="pf-me">
           <Avatar src={prof.avatar} name={prof.name} size={72} gem={role === "dealer"} />
           <div className="pf-me-tx">
@@ -490,8 +491,8 @@ function ProfileLayout({ user, tab }) {
             <a key={t.key} href={t.href} className={t.key === cur.key ? "is-on" : undefined} aria-current={t.key === cur.key ? "page" : undefined}>{t.label}</a>
           ))}
           <div className="pf-nav-h">อื่น ๆ</div>
-          <a href="#/mylistings">ประกาศของฉัน</a>
-          <button type="button" onClick={async () => { await signOutUser(); window.location.hash = "#/home"; }}>ออกจากระบบ</button>
+          <a href="/mylistings">ประกาศของฉัน</a>
+          <button type="button" onClick={async () => { await signOutUser(); navigate("/"); }}>ออกจากระบบ</button>
         </nav>
       </aside>
 
@@ -506,7 +507,7 @@ function ProfileLayout({ user, tab }) {
   );
 }
 
-/** หน้าโปรไฟล์ (#/profile, #/profile/security) — ต้องเข้าสู่ระบบก่อน */
+/** หน้าโปรไฟล์ (/profile, /profile/security) — ต้องเข้าสู่ระบบก่อน */
 export default function ProfilePage({ param }) {
   const { user, ready } = useAuth();
 
@@ -517,7 +518,7 @@ export default function ProfilePage({ param }) {
     body = (
       <div className="lands-msg">
         <b>กรุณาเข้าสู่ระบบก่อน</b>
-        <a className="btn" href="#/login" onClick={() => rememberNext(window.location.hash || "#/profile")}>เข้าสู่ระบบ</a>
+        <a className="btn" href="/login" onClick={() => rememberNext(currentHref() || "/profile")}>เข้าสู่ระบบ</a>
       </div>
     );
   } else body = <ProfileLayout user={user} tab={param || ""} />;

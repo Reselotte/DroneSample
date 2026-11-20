@@ -58,7 +58,7 @@ function readExtraTokens() {
   return found;
 }
 
-/** คู่มือสีเว็บ (#/admin/colors) — แต่ละกลุ่มพับเก็บไว้ กดหัวข้อเพื่อเปิด · กดที่สีเพื่อคัดลอกโค้ด */
+/** คู่มือสีเว็บ (/admin/colors) — แต่ละกลุ่มพับเก็บไว้ กดหัวข้อเพื่อเปิด · กดที่สีเพื่อคัดลอกโค้ด */
 export default function AdminColorGuide() {
   const toast = useToast();
   const [formatKey, setFormatKey] = useState("json");

@@ -11,7 +11,7 @@ export default function ListingCard({ listing }) {
   const cover = listing.photos?.[0];
 
   return (
-    <a className="lcard" href={`#/lands/${listing.id}`}>
+    <a className="lcard" href={`/lands/${listing.id}`}>
       <div className="lcard-im">
         {cover ? (
           <FitImage src={photoUrl(cover)} alt={listing.title} />

@@ -31,7 +31,7 @@ function HighlightTags({ highlights, max = 6 }) {
   );
 }
 
-/** หน้ารายละเอียดประกาศ (#/lands/<รหัส>) */
+/** หน้ารายละเอียดประกาศ (/lands/<รหัส>) */
 export default function LandDetailPage({ param }) {
   const [listing, setListing] = useState(null);
   const [status, setStatus] = useState("loading"); // loading | ready | notfound | error
@@ -66,7 +66,7 @@ export default function LandDetailPage({ param }) {
     return () => { cancelled = true; };
   }, [id]);
 
-  const back = <a className="ld-back" href="#/lands">← กลับไปหน้ารายการ</a>;
+  const back = <a className="ld-back" href="/lands">← กลับไปหน้ารายการ</a>;
 
   if (!isSupabaseConfigured) {
     return <section className="alt lands" data-page="lands"><div className="wrap">{back}<SetupNotice /></div></section>;
@@ -162,8 +162,8 @@ export default function LandDetailPage({ param }) {
           <button type="button" className="btn btn-line" onClick={askAboutListing}>สนใจแปลงนี้ ติดต่อทาง LINE</button>
           <button type="button" className="btn btn-ghost" onClick={askForContour}>ขอ Contour ที่ดินแปลงนี้</button>
           <button type="button" className="btn btn-ghost" onClick={copyLink}>คัดลอกลิงก์</button>
-          {mine && listing.status !== "sold" && <a className="btn ld-mine" href={`#/mylistings/${listing.id}`}>✎ แก้ไขประกาศของฉัน</a>}
-          <a className="btn btn-ghost ld-actions-next" href="#/lands">ดูแปลงอื่น →</a>
+          {mine && listing.status !== "sold" && <a className="btn ld-mine" href={`/mylistings/${listing.id}`}>✎ แก้ไขประกาศของฉัน</a>}
+          <a className="btn btn-ghost ld-actions-next" href="/lands">ดูแปลงอื่น →</a>
         </div>
         {sold && <p className="ld-sold-note">ที่ดินแปลงนี้ขายแล้ว ทักทีมงานทาง LINE เพื่อหาแปลงใกล้เคียงได้</p>}
 

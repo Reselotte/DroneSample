@@ -15,6 +15,7 @@ import {
 import LocationField from "../../components/common/LocationField";
 import PhotoLightbox from "../../components/common/PhotoLightbox";
 import { useConfirm } from "../../hooks/useConfirm";
+import { navigate } from "../../lib/router";
 
 const MAX_PHOTOS = 10;
 
@@ -59,7 +60,7 @@ function MyList() {
       <div className="lands-msg">
         <b>ยังไม่มีประกาศ</b>
         <span>ลงประกาศขายที่ดินฟรี ระบบคำนวณราคาให้ทันที</span>
-        <a className="btn" href="#/post">+ ลงประกาศขาย</a>
+        <a className="btn" href="/post">+ ลงประกาศขาย</a>
       </div>
     );
   }
@@ -77,8 +78,8 @@ function MyList() {
               <small className="ml-note">{STATUS[l.status]?.note} · ลงเมื่อ {formatThaiDate(l.created_at)}</small>
             </div>
             <div className="ml-act">
-              {l.status !== "sold" && <a className="btn ml-edit" href={`#/mylistings/${l.id}`}>แก้ไข</a>}
-              {live && <a className="btn btn-ghost" href={`#/lands/${l.id}`}>ดูหน้าประกาศ</a>}
+              {l.status !== "sold" && <a className="btn ml-edit" href={`/mylistings/${l.id}`}>แก้ไข</a>}
+              {live && <a className="btn btn-ghost" href={`/lands/${l.id}`}>ดูหน้าประกาศ</a>}
             </div>
           </div>
         );
@@ -159,7 +160,7 @@ function MyEdit({ listing }) {
 
   const cancel = async () => {
     if (dirty && !(await ask({ title: "ออกโดยไม่บันทึก?", message: "การแก้ไขที่ยังไม่ได้บันทึกจะหายไป", confirmText: "ออกจากหน้านี้", cancelText: "อยู่ต่อ", tone: "warn" }))) return;
-    window.location.hash = "#/mylistings";
+    navigate("/mylistings");
   };
 
   const save = async (e) => {
@@ -205,7 +206,7 @@ function MyEdit({ listing }) {
         sellerName: form.sellerName.trim(), phone: normalizeThaiPhone(form.phone), lineId: form.lineId.trim(),
       }, photos);
       toast(`${listingCode(listing.id)}: บันทึกแล้ว รอทีมงานตรวจ`);
-      window.location.hash = "#/mylistings";
+      navigate("/mylistings");
     } catch (x) {
       console.error(x);
       const msg = x?.message || "";
@@ -402,7 +403,7 @@ function MyEditLoader({ id }) {
       <div className="lands-msg">
         <b>แก้ไขประกาศนี้ไม่ได้</b>
         <span>แก้ไขได้เฉพาะประกาศที่บัญชีของคุณลงไว้เท่านั้น</span>
-        <a className="btn btn-ghost" href="#/mylistings">ไปที่ประกาศของฉัน</a>
+        <a className="btn btn-ghost" href="/mylistings">ไปที่ประกาศของฉัน</a>
       </div>
     );
   }
@@ -411,7 +412,7 @@ function MyEditLoader({ id }) {
       <div className="lands-msg">
         <b>ประกาศนี้ขายแล้ว</b>
         <span>ประกาศที่ขายแล้วแก้ไขไม่ได้ หากต้องการเปิดขายอีกครั้ง ติดต่อทีมงานทาง LINE</span>
-        <a className="btn btn-ghost" href="#/mylistings">กลับไปประกาศของฉัน</a>
+        <a className="btn btn-ghost" href="/mylistings">กลับไปประกาศของฉัน</a>
       </div>
     );
   }
@@ -419,7 +420,7 @@ function MyEditLoader({ id }) {
   return <MyEdit listing={listing} />;
 }
 
-/** หน้าประกาศของฉัน (#/mylistings) และแก้ไข (#/mylistings/<รหัส>) — ต้องเข้าสู่ระบบ */
+/** หน้าประกาศของฉัน (/mylistings) และแก้ไข (/mylistings/<รหัส>) — ต้องเข้าสู่ระบบ */
 export default function MyListingsPage({ param }) {
   const id = Number(param);
   const editing = Number.isInteger(id) && id > 0;
@@ -432,7 +433,7 @@ export default function MyListingsPage({ param }) {
               <h2>ประกาศของฉัน</h2>
               <p className="sub">ประกาศที่คุณลงไว้ทั้งหมด แก้ไขได้เฉพาะประกาศของคุณเอง</p>
             </div>
-            <a className="btn ml-new-btn" href="#/post">+ ลงประกาศใหม่</a>
+            <a className="btn ml-new-btn" href="/post">+ ลงประกาศใหม่</a>
           </div>
         )}
         {editing ? <MyEditLoader id={id} /> : <MyList />}

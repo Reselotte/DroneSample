@@ -5,6 +5,7 @@ import { canUseBackoffice, roleLabel } from "../../data/roles";
 import Avatar from "../common/Avatar";
 import { PHONE_MODE, isPhoneVerified, needsPhone, phoneOf, profileOf, rememberNext, signOutUser } from "../../lib/auth";
 import { formatThaiPhone } from "../../utils/thaiPhone";
+import { currentHref } from "../../lib/router";
 
 const UserIcon = () => (
   <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" /></svg>
@@ -12,7 +13,7 @@ const UserIcon = () => (
 
 /**
  * ปุ่มเข้าสู่ระบบ (มุมขวาบน ข้างปุ่มธีม)
- * - ยังไม่เข้าระบบ: "เข้าสู่ระบบ" → หน้า #/login (จำหน้าปัจจุบันไว้ เสร็จแล้วพากลับ)
+ * - ยังไม่เข้าระบบ: "เข้าสู่ระบบ" → หน้า /login (จำหน้าปัจจุบันไว้ เสร็จแล้วพากลับ)
  * - เข้าระบบแล้ว: รูปโปรไฟล์ กดเปิดเมนู (ชื่อ, เบอร์, ออกจากระบบ) · จุดแดง = ยังไม่ยืนยันเบอร์
  */
 export default function AuthButton({ currentPage }) {
@@ -37,8 +38,8 @@ export default function AuthButton({ currentPage }) {
     return (
       <a
         className={`auth-btn is-guest${currentPage === "login" ? " on" : ""}`}
-        href="#/login"
-        onClick={() => { if (currentPage !== "login") rememberNext(window.location.hash || "#/home"); }}
+        href="/login"
+        onClick={() => { if (currentPage !== "login") rememberNext(currentHref() || "/"); }}
         aria-label="เข้าสู่ระบบ"
       >
         <UserIcon />
@@ -74,13 +75,13 @@ export default function AuthButton({ currentPage }) {
             )}
           </div>
           {pending && (
-            <a role="menuitem" className="auth-warn" href="#/login" onClick={() => setOpen(false)}>
+            <a role="menuitem" className="auth-warn" href="/login" onClick={() => setOpen(false)}>
               ⚠ {PHONE_MODE === "otp" ? "ยืนยันเบอร์มือถือ" : "กรอกเบอร์มือถือ"}
             </a>
           )}
-          <a role="menuitem" href="#/mylistings" onClick={() => setOpen(false)}>ประกาศของฉัน</a>
-          <a role="menuitem" href="#/profile" onClick={() => setOpen(false)}>แก้ไขโปรไฟล์</a>
-          {canUseBackoffice(role) && <a role="menuitem" href="#/admin" onClick={() => setOpen(false)}>หลังบ้าน</a>}
+          <a role="menuitem" href="/mylistings" onClick={() => setOpen(false)}>ประกาศของฉัน</a>
+          <a role="menuitem" href="/profile" onClick={() => setOpen(false)}>แก้ไขโปรไฟล์</a>
+          {canUseBackoffice(role) && <a role="menuitem" href="/admin" onClick={() => setOpen(false)}>หลังบ้าน</a>}
           <button type="button" role="menuitem" onClick={() => { setOpen(false); signOutUser(); }}>ออกจากระบบ</button>
         </div>
       )}

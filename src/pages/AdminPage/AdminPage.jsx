@@ -18,6 +18,7 @@ import AdminSystemCheck from "./AdminSystemCheck";
 import { canUseBackoffice, roleLabel } from "../../data/roles";
 import AdminListingEditor from "./AdminListingEditor";
 import { useConfirm } from "../../hooks/useConfirm";
+import { navigate } from "../../lib/router";
 
 /** ไอคอนเมนู (เส้น ใช้สีตามตัวอักษร) */
 const icon = (d) => <svg viewBox="0 0 24 24" aria-hidden="true"><path d={d} /></svg>;
@@ -71,7 +72,7 @@ function LoginForm() {
   );
 }
 
-/** หน้าแก้ไขประกาศ (#/admin/edit/<รหัส>): โหลดประกาศเดียว แล้วแสดงฟอร์มเต็มหน้า */
+/** หน้าแก้ไขประกาศ (/admin/edit/<รหัส>): โหลดประกาศเดียว แล้วแสดงฟอร์มเต็มหน้า */
 function AdminEditPage({ id, onSaved }) {
   const [listing, setListing] = useState(null);
   const [state, setState] = useState("loading"); // loading | ready | notfound
@@ -84,27 +85,27 @@ function AdminEditPage({ id, onSaved }) {
     return () => { alive = false; };
   }, [id]);
 
-  const back = () => { window.location.hash = "#/admin"; };
+  const back = () => { navigate("/admin"); };
   if (state === "loading") return <div className="lands-msg">กำลังโหลดประกาศ…</div>;
   if (state === "notfound") {
     return (
       <div className="lands-msg">
         <b>ไม่พบประกาศ {listingCode(id)}</b>
-        <a className="btn btn-ghost" href="#/admin">กลับไปรายการประกาศ</a>
+        <a className="btn btn-ghost" href="/admin">กลับไปรายการประกาศ</a>
       </div>
     );
   }
   return <AdminListingEditor key={listing.id} listing={listing} onCancel={back} onSaved={(updated) => { onSaved(updated); back(); }} />;
 }
 
-/** หน้าแอดมิน (#/admin) — ไม่มีในเมนู เข้าผ่านลิงก์โดยตรง · param = เมนูในแถบเครื่องมือ */
+/** หน้าแอดมิน (/admin) — ไม่มีในเมนู เข้าผ่านลิงก์โดยตรง · param = เมนูในแถบเครื่องมือ */
 export default function AdminPage({ param }) {
   const ask = useConfirm();
   const [role, setRole] = useState(null); // ระดับสิทธิ์: staff = ทีมงาน, admin = ผู้ดูแลระบบ
   const isTopAdmin = role === "admin";
   const sections = ADMIN_SECTIONS.filter((s) => !s.adminOnly || isTopAdmin);
   const section = sections.find((s) => s.key === param) || sections[0];
-  const editId = /^edit\/\d+$/.test(param || "") ? Number(param.slice(5)) : null; // #/admin/edit/12
+  const editId = /^edit\/\d+$/.test(param || "") ? Number(param.slice(5)) : null; // /admin/edit/12
   const onListings = section.key === "listings" && !editId;
   const [session, setSession] = useState(undefined); // undefined = กำลังเช็ก
   const [isAdmin, setIsAdmin] = useState(null);

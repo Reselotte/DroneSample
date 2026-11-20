@@ -6,13 +6,13 @@ const POINTS = ["ปรึกษาฟรี ไม่มีค่าใช้�
 
 /**
  * แบนเนอร์ชวนเจ้าของที่ดิน "อยากรู้ไหมว่าที่ดินขายได้ดีแค่ไหน?" (วางต่อจาก Hero ในหน้าแรก)
- * กดแล้วไปหน้าให้ทีมงานติดต่อกลับ (#/callback)
+ * กดแล้วไปหน้าให้ทีมงานติดต่อกลับ (/callback)
  */
 export default function SellPotentialSection() {
   return (
     <section className="sellpot" data-page="home">
       <div className="wrap">
-        <a className="sellpot-card" href="#/callback">
+        <a className="sellpot-card" href="/callback">
           <div className="sellpot-tx">
             <span className="sellpot-badge">สำหรับเจ้าของที่ดิน</span>
             <h2>

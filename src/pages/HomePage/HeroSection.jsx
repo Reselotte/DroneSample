@@ -33,7 +33,7 @@ export default function HeroSection() {
         </div>
         <div className="cta">
           <LineLink variant="btn-w">ขอรับ Contour ฟรีผ่าน LINE</LineLink>
-          <a className="btn btn-k" href="#/works">ชมตัวอย่างผลงาน</a>
+          <a className="btn btn-k" href="/works">ชมตัวอย่างผลงาน</a>
         </div>
       </div>
     </section>
