@@ -11,6 +11,18 @@ import BRAND_ICONS from "../../components/common/BrandIcons";
 
 const RESEND_SECONDS = 60;
 
+/** ข้อความเมื่อกลับมาจาก Google / LINE / Facebook แบบไม่สำเร็จ (?error=...&error_description=...) */
+function oauthErrorText(code, desc) {
+  if (!desc && !code) return "";
+  const d = String(desc || "").toLowerCase();
+  if (code === "access_denied" || d.includes("cancel") || d.includes("denied")) return "ยกเลิกการเข้าสู่ระบบ ลองใหม่ได้เลย";
+  if (d.includes("exchange external code")) {
+    return "เชื่อมต่อกับบัญชีนี้ไม่สำเร็จ (ระบบเข้าสู่ระบบยังตั้งค่าไม่ถูกต้อง) กรุณาลองช่องทางอื่น หรือแจ้งทีมงาน";
+  }
+  if (d.includes("email")) return "บัญชีนี้ไม่ได้แชร์อีเมล ระบบยังไม่รองรับ กรุณาลองช่องทางอื่น หรือแจ้งทีมงาน";
+  return "เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่อีกครั้ง";
+}
+
 /** แถบขั้นตอน: 1 เลือกบัญชี → 2 ยืนยันเบอร์ */
 function Steps({ step }) {
   return (
@@ -317,7 +329,7 @@ export default function LoginPage() {
   const { user, ready } = useAuth();
   const [oauthError] = useState(() => {
     const q = new URLSearchParams(window.location.search);
-    return q.get("error_description") ? "เข้าสู่ระบบไม่สำเร็จ หรือยกเลิกกลางทาง กรุณาลองใหม่" : "";
+    return oauthErrorText(q.get("error"), q.get("error_description"));
   });
 
   // กลับมาจาก Google / LINE / Facebook: ลบ ?code= / ?error= ออกจากที่อยู่เว็บ (ระบบใช้รหัสไปแล้ว)
