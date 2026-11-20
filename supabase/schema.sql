@@ -9,6 +9,7 @@
 --  • หน้าเว็บเห็นเฉพาะประกาศที่ 'approved' หรือ 'sold'
 --  • ข้อมูลผู้ขาย (ชื่อ เบอร์ LINE เลขโฉนด สำเนาโฉนด) อยู่ในตาราง listing_private
 --    มีแต่ทีมงาน (staff / admin) ที่อ่านได้ ไม่ขึ้นหน้าเว็บ (ผู้ซื้อติดต่อผ่าน LINE ทีมงาน)
+--  • เบอร์มือถือของบัญชีเก็บที่ profiles.phone — 1 เบอร์ใช้ได้ 1 บัญชี (บันทึกผ่าน claim_phone() เท่านั้น)
 --  • ทุกบัญชีมีระดับสิทธิ์ใน profiles.role: user (ผู้ใช้งานทั่วไป) / agent (นายหน้า) / dealer (ดีลเลอร์) / staff (ทีมงาน) / admin (ผู้ดูแลระบบ)
 -- ════════════════════════════════════════════════════════════════════════════
   
@@ -41,6 +42,12 @@ drop function if exists public.set_my_frame(text);
 drop trigger if exists profiles_sync_role on public.profiles;
 alter table public.profiles drop column if exists avatar_frame;
 
+-- เบอร์มือถือของบัญชี (0812345678) — ห้ามซ้ำกัน 1 เบอร์ = 1 บัญชี
+alter table public.profiles add column if not exists phone text;
+alter table public.profiles drop constraint if exists profiles_phone_check;
+alter table public.profiles add constraint profiles_phone_check check (phone is null or phone ~ '^0[0-9]{9}$');
+create unique index if not exists profiles_phone_key on public.profiles (phone) where phone is not null;
+
 -- สมัครใหม่ → สร้างแถวใน profiles เป็น 'user'
 create or replace function public.handle_new_user()
 returns trigger
@@ -59,6 +66,22 @@ create trigger on_auth_user_created after insert on auth.users
 insert into public.profiles (id) select id from auth.users on conflict (id) do nothing;
 update public.profiles set role = 'admin'
   where id in (select user_id from public.admins) and role <> 'admin';
+
+-- ย้ายเบอร์ที่เคยกรอกไว้ (user_metadata.phone) มาเก็บที่ profiles.phone
+-- เบอร์ซ้ำกันหลายบัญชี → บัญชีที่สมัครก่อนได้เบอร์ไป บัญชีหลัง ๆ ถูกล้างเบอร์ (ระบบจะขอให้กรอกเบอร์ใหม่ตอนเข้าใช้)
+update public.profiles p set phone = r.phone
+  from (
+    select u.id, u.raw_user_meta_data->>'phone' as phone,
+           row_number() over (partition by u.raw_user_meta_data->>'phone' order by u.created_at) as rn
+      from auth.users u
+     where coalesce(u.raw_user_meta_data->>'phone', '') ~ '^0[0-9]{9}$'
+  ) r
+ where p.id = r.id and r.rn = 1 and p.phone is null
+   and not exists (select 1 from public.profiles x where x.phone = r.phone);
+update auth.users u
+   set raw_user_meta_data = u.raw_user_meta_data - 'phone' - 'phone_verified'
+ where u.raw_user_meta_data ? 'phone'
+   and exists (select 1 from public.profiles p where p.phone = u.raw_user_meta_data->>'phone' and p.id <> u.id);
 
 -- ระดับสิทธิ์ของคนที่เรียก ('guest' = ยังไม่เข้าสู่ระบบ)
 create or replace function public.my_role()
@@ -101,19 +124,21 @@ language plpgsql security definer set search_path = public
 as $$
 begin
   update auth.users
-     set raw_app_meta_data = coalesce(raw_app_meta_data, '{}'::jsonb) || jsonb_build_object('role', new.role)
+     set raw_app_meta_data = coalesce(raw_app_meta_data, '{}'::jsonb) || jsonb_build_object('role', new.role, 'phone', new.phone)
    where id = new.id;
   return new;
 end;
 $$;
 drop trigger if exists profiles_sync_role on public.profiles;
-create trigger profiles_sync_role after insert or update of role on public.profiles
+create trigger profiles_sync_role after insert or update of role, phone on public.profiles
   for each row execute function public.sync_role_to_auth();
 update auth.users u
-   set raw_app_meta_data = (coalesce(u.raw_app_meta_data, '{}'::jsonb) - 'frame') || jsonb_build_object('role', p.role)
+   set raw_app_meta_data = (coalesce(u.raw_app_meta_data, '{}'::jsonb) - 'frame') || jsonb_build_object('role', p.role, 'phone', p.phone)
   from public.profiles p
  where p.id = u.id
-   and ((u.raw_app_meta_data->>'role') is distinct from p.role or u.raw_app_meta_data ? 'frame');
+   and ((u.raw_app_meta_data->>'role') is distinct from p.role
+        or (u.raw_app_meta_data->>'phone') is distinct from p.phone
+        or u.raw_app_meta_data ? 'frame');
 
 --  2) ตารางดูรวม อีเมล + ชื่อ + ระดับสิทธิ์ → Table Editor → เลือก schema "admin_views" → users_with_roles
 --     อยู่นอก schema public จึงไม่เปิดให้หน้าเว็บ/API อ่านได้ (เห็นเฉพาะในหน้า Supabase)
@@ -184,6 +209,32 @@ end;
 $$;
 revoke all on function public.set_user_role(uuid, text) from public;
 grant execute on function public.set_user_role(uuid, text) to authenticated;
+
+-- บันทึก / เปลี่ยนเบอร์มือถือของบัญชีตัวเอง — เบอร์ที่บัญชีอื่นใช้อยู่แล้ว = PHONE_TAKEN
+create or replace function public.claim_phone(p_phone text)
+returns void
+language plpgsql security definer set search_path = public
+as $$
+declare
+  v text := regexp_replace(coalesce(p_phone, ''), '[^0-9]', '', 'g');
+begin
+  if auth.uid() is null then raise exception 'LOGIN_REQUIRED' using errcode = '42501'; end if;
+  if v !~ '^0[689][0-9]{8}$' then raise exception 'BAD_PHONE' using errcode = '22023'; end if;
+  if exists (select 1 from public.profiles where phone = v and id <> auth.uid()) then
+    raise exception 'PHONE_TAKEN' using errcode = '23505';
+  end if;
+  insert into public.profiles (id, phone) values (auth.uid(), v)
+    on conflict (id) do update set phone = excluded.phone, updated_at = now();
+  -- ให้หน้าเว็บอ่านเบอร์ได้จากบัญชีเหมือนเดิม (เปลี่ยนเบอร์ = ยังไม่ได้ยืนยัน)
+  update auth.users
+     set raw_user_meta_data = coalesce(raw_user_meta_data, '{}'::jsonb) || jsonb_build_object('phone', v, 'phone_verified', false)
+   where id = auth.uid() and coalesce(raw_user_meta_data->>'phone', '') <> v;
+exception
+  when unique_violation then raise exception 'PHONE_TAKEN' using errcode = '23505'; -- กดพร้อมกัน 2 บัญชี
+end;
+$$;
+revoke all on function public.claim_phone(text) from public;
+grant execute on function public.claim_phone(text) to authenticated;
 
 -- ── ประกาศ (ข้อมูลที่แสดงบนเว็บ) ────────────────────────────────────────────
 create table if not exists public.listings (

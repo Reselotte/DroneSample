@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { isSupabaseConfigured } from "../../lib/supabaseClient";
 import {
   PHONE_MODE, authErrorText, hasPassword, isPhoneVerified, listTotp, phoneOf, profileOf, providerAvatarOf, rememberNext, removeAvatar,
-  removeTotp, setPassword, signOutEverywhere, signOutUser, startTotp, updateProfile, uploadAvatar, verifyTotp,
+  removeTotp, savePhone, setPassword, signOutEverywhere, signOutUser, startTotp, updateProfile, uploadAvatar, verifyTotp,
 } from "../../lib/auth";
 import useAuth from "../../hooks/useAuth";
 import useRole from "../../hooks/useRole";
@@ -153,12 +153,14 @@ function PreferencesTab({ user, role }) {
 
     setBusy(true);
     try {
+      // เปลี่ยนเบอร์ → ฐานข้อมูลเช็กก่อนว่าไม่ซ้ำกับบัญชีอื่น (ซ้ำ = ไม่บันทึกอะไรเลย)
+      const phone = normalizeThaiPhone(form.phone);
+      if (!phoneLocked && phone !== phoneOf(user)) await savePhone(phone);
       await updateProfile({
         first_name: form.firstName.trim(),
         last_name: form.lastName.trim(),
         display_name: form.name.trim(),
         line_id: form.lineId.trim(),
-        ...(phoneLocked ? {} : { phone: normalizeThaiPhone(form.phone), phone_verified: false }),
       });
       toast("บันทึกข้อมูลส่วนตัวแล้ว");
     } catch (x) {

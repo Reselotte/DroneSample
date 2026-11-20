@@ -79,6 +79,15 @@ export async function runSystemChecks(myId) {
       return { status: "warn", detail: msgOf(error) || "ผลไม่ตรงที่คาด" };
     }),
 
+    check("phone", "ฐานข้อมูล", "เบอร์มือถือห้ามซ้ำกัน", async () => {
+      // ส่งเบอร์ผิดรูปแบบ → ต้องถูกปฏิเสธว่า BAD_PHONE (ไม่มีอะไรเปลี่ยน)
+      const { error } = await supabase.rpc("claim_phone", { p_phone: "x" });
+      const m = msgOf(error);
+      if (/BAD_PHONE/.test(m)) return { status: "ok", detail: "พร้อม · 1 เบอร์ใช้ได้ 1 บัญชี" };
+      if (missingFn(error)) return { status: "fail", detail: "ยังไม่มีระบบกันเบอร์ซ้ำ (บัญชีต่าง ๆ ใส่เบอร์เดียวกันได้)", fix: RUN_SQL };
+      return { status: "warn", detail: m || "ผลไม่ตรงที่คาด" };
+    }),
+
     check("avatars", "ฐานข้อมูล", "ที่เก็บรูปโปรไฟล์ (avatars)", async () => {
       const { error } = await supabase.storage.from("avatars").list(myId, { limit: 1 });
       if (error) return /not found/i.test(msgOf(error))

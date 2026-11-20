@@ -51,7 +51,8 @@ export const signOutUser = () => supabase.auth.signOut();
 export function phoneOf(user) {
   if (!user) return "";
   if (user.phone_confirmed_at && user.phone) return `0${user.phone.slice(2)}`;
-  return PHONE_MODE === "collect" ? user.user_metadata?.phone || "" : "";
+  // collect: เบอร์ที่ฐานข้อมูลจองให้แล้ว (app_metadata แก้เองไม่ได้) · ยังไม่ได้รัน schema ใหม่ = ใช้ที่กรอกไว้เดิม
+  return PHONE_MODE === "collect" ? user.app_metadata?.phone || user.user_metadata?.phone || "" : "";
 }
 export const isPhoneVerified = (user) => Boolean(user?.phone_confirmed_at);
 
@@ -59,10 +60,15 @@ export const isPhoneVerified = (user) => Boolean(user?.phone_confirmed_at);
 export const needsPhone = (user) =>
   Boolean(user) && user.app_metadata?.provider !== "email" && !phoneOf(user);
 
-/** โหมด collect: บันทึกเบอร์ไว้กับบัญชี (ไม่ส่ง SMS) — phone = 0812345678 */
+/**
+ * บันทึก / เปลี่ยนเบอร์มือถือของบัญชี (โหมด collect ไม่ส่ง SMS) — phone = 0812345678
+ * ฐานข้อมูลเช็กให้: 1 เบอร์ใช้ได้ 1 บัญชี (เบอร์ที่บัญชีอื่นใช้อยู่ = error PHONE_TAKEN)
+ */
 export async function savePhone(phone) {
-  const { data, error } = await supabase.auth.updateUser({ data: { phone, phone_verified: false } });
+  const { error } = await supabase.rpc("claim_phone", { p_phone: phone });
   if (error) throw error;
+  const { data, error: e2 } = await supabase.auth.refreshSession(); // ดึงเบอร์ที่บันทึกแล้วกลับมา
+  if (e2) throw e2;
   return data.user;
 }
 
@@ -244,6 +250,11 @@ export function authErrorText(err) {
     return "ระบบยืนยันตัวตน 2 ขั้นตอนยังไม่เปิดใน Supabase";
   }
   if (code === "insufficient_aal" || msg.includes("aal2")) return "กรุณายืนยันรหัส 2 ขั้นตอนก่อน แล้วลองใหม่";
+  if (msg.includes("phone_taken")) return "เบอร์นี้ผูกกับบัญชีอื่นแล้ว กรุณาใช้เบอร์อื่น หรือเข้าสู่ระบบด้วยบัญชีเดิมที่ใช้เบอร์นี้";
+  if (msg.includes("bad_phone")) return "กรุณาใส่เบอร์มือถือ (06 / 08 / 09) เช่น 0812345678";
+  if (msg.includes("claim_phone") || (code === "PGRST202" && msg.includes("phone"))) {
+    return "ระบบบันทึกเบอร์ยังไม่พร้อม (ต้องรัน supabase/schema.sql ใหม่ใน Supabase)";
+  }
   if (code === "phone_exists" || msg.includes("already been registered") || msg.includes("already registered")) {
     return "เบอร์นี้ผูกกับบัญชีอื่นแล้ว กรุณาใช้เบอร์อื่น หรือเข้าสู่ระบบด้วยบัญชีเดิม";
   }
